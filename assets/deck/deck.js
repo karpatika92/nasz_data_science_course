@@ -88,8 +88,37 @@
     }
   }
 
+  function renderVisual(visual) {
+    const wrap = el("div", "slide-visual");
+
+    if (visual.kind === "doors") {
+      const row = el("div", "doors");
+      [1, 2, 3].forEach((n) => {
+        const isOpen = visual.openIndex === n;
+        const door = el("div", "door" + (isOpen ? " door--open" : ""));
+        door.appendChild(el("div", "door-label", isOpen ? "ÜRES" : String(n)));
+        row.appendChild(door);
+      });
+      wrap.appendChild(row);
+      return wrap;
+    }
+
+    if (visual.kind === "image") {
+      const fig = el("figure", "figure figure--visual");
+      const img = el("img");
+      img.src = visual.src;
+      img.alt = visual.alt || "";
+      fig.appendChild(img);
+      if (visual.caption) fig.appendChild(el("figcaption", "", visual.caption));
+      wrap.appendChild(fig);
+      return wrap;
+    }
+
+    return wrap;
+  }
+
   function buildSlide(data, index, total) {
-    const slide = el("section", "slide slide--" + data.type);
+    const slide = el("section", "slide slide--" + data.type + (data.visual ? " has-visual" : ""));
     slide.dataset.index = String(index);
 
     const meta = el("div", "meta-bar");
@@ -101,23 +130,30 @@
       slide.appendChild(el("div", "slide-number-huge", data.index));
     }
 
-    if (data.eyebrow) slide.appendChild(el("p", "eyebrow", data.eyebrow));
+    const target = data.visual ? el("div", "content-col") : slide;
+
+    if (data.eyebrow) target.appendChild(el("p", "eyebrow", data.eyebrow));
 
     if (data.title) {
       const tag = data.type === "content" ? "h2" : "h1";
-      slide.appendChild(el(tag, "headline", data.title));
+      target.appendChild(el(tag, "headline", data.title));
     }
 
-    if (data.kicker) slide.appendChild(el("p", "kicker", data.kicker));
+    if (data.kicker) target.appendChild(el("p", "kicker", data.kicker));
 
     if (data.blocks && data.blocks.length) {
       const stack = el("div", "body-stack");
       data.blocks.forEach((block) => stack.appendChild(renderBlock(block)));
-      slide.appendChild(stack);
+      target.appendChild(stack);
     }
 
     if (data.note) {
-      slide.appendChild(el("div", "note", data.note));
+      target.appendChild(el("div", "note", data.note));
+    }
+
+    if (data.visual) {
+      slide.appendChild(target);
+      slide.appendChild(renderVisual(data.visual));
     }
 
     return slide;

@@ -67,10 +67,13 @@ itt szinte mindenkit cserben hagy.
 **Tudománytörténet:** 1990-ben Marilyn vos Savant (a Guinness szerint akkoriban a
 legmagasabb mért IQ-jú ember) leírta a helyes választ (válts ajtót!) a *Parade*
 magazin rovatában. Kb. **10 000 olvasó** írt neki válaszlevelet, hogy téved — közülük
-kb. **1000-en doktori fokozattal** rendelkeztek, néhányan matematikából. Paul Erdőst,
+kb. **1000-en doktori fokozattal** rendelkeztek, néhányan matematikából. Erdős Pált,
 a XX. század egyik legtermékenyebb matematikusát is csak egy számítógépes szimuláció
 győzte meg. **Ez a lesson 1 központi üzenete: az intuíció itt szisztematikusan
 téved, ezért kellenek formális eszközök — ez az egész óra ürügye.**
+
+*(A `slides.html`-en a Monty Hall-diákon most már 3 ajtó is látszik vizuálisan —
+ne csak mondd el, mutasd is.)*
 
 **Híd a következő témához:** „Amit most csináltatok — új infó hatására megváltoztattátok
 (vagy nem) a hitünket egy esemény valószínűségéről — pontosan ezt formalizálja a
@@ -85,7 +88,19 @@ Ne a képlettel indíts. Vezesd le velük **alulról-fölfelé** a Monty Hall-on
 Mi változott — az esemény, vagy a *tudásunk* róla?" Csak ezután írd fel formálisan:
 P(A|B) = P(B|A)·P(A) / P(B).
 
-**Fő diszkussziós példa (klasszikus, direktbe kötődik a 2. órához):** ritka betegség,
+**Utána azonnal vezesd le számszerűen magán a Monty Hall-on** (külön dia,
+`slides.html`): a 3-as ajtó felnyitásának valószínűsége attól függ, hogy hol a
+nyeremény — P(nyit 3|nyer 1)=1/2, P(nyit 3|nyer 2)=1, P(nyit 3|nyer 3)=0 — és
+ebből Bayes-szel P(nyer 2|nyitotta a 3-ast) = 2/3. Ez az a pillanat, amikor a
+diákok látják, hogy a formalizmus **pontosan visszaadja** a szimuláció (és a
+táblás játék) eredményét — ne csak elvi szinten hagyd a Bayes-tételt, kösd
+vissza a konkrét számokhoz.
+
+**Fő diszkussziós példa** — most jön a *második*, önálló Bayes-példa (a
+betegségteszt), ami már nem Monty Hall: a diákon van egy vizuális, területarányos
+ábra is (3Blue1Brown-tól) a P(A|B) vs. P(B|A) szemléltetésére — érdemes rámutatni,
+melyik terület melyik valószínűségnek felel meg, mielőtt a konkrét számokat
+levezetitek. (klasszikus, direktbe kötődik a 2. órához):** ritka betegség,
 prevalencia 1%, a teszt 99%-ban helyesen jelez pozitívat beteg esetén (szenzitivitás)
 és 99%-ban helyesen jelez negatívat egészséges esetén (specificitás). Valaki pozitív
 lesz — mekkora eséllyel *tényleg* beteg?

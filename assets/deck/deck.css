@@ -68,6 +68,7 @@ body {
   flex-direction: column;
   justify-content: center;
   padding: clamp(24px, 6vw, 96px) clamp(20px, 8vw, 140px);
+  overflow-y: auto;
   background: var(--bg);
 }
 
@@ -301,6 +302,105 @@ h2.headline {
   color: var(--ink-dim);
 }
 
+/* ---------- slide with a right-side visual ---------- */
+/* Alapból a diák tartalma balra igazított, korlátozott szélességű (olvashatóság
+   miatt) — ez sok helyen szándékos negatív tér. Amikor viszont van hozzá valós
+   ábra (ajtók, diagram), azt ide, jobbra tesszük, hogy legyen mit ránézni. */
+
+.slide.has-visual {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
+}
+
+.slide.has-visual .content-col {
+  flex: 1 1 56%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.slide-visual {
+  flex: 1 1 40%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 760px) {
+  .slide.has-visual {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .slide.has-visual .content-col,
+  .slide-visual {
+    flex: none;
+  }
+}
+
+/* ---------- Monty Hall ajtók ---------- */
+
+.doors {
+  display: flex;
+  gap: clamp(12px, 2vw, 22px);
+}
+
+.door {
+  width: clamp(64px, 9vw, 100px);
+  height: clamp(130px, 20vw, 210px);
+  border: 2px solid var(--accent);
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(180deg, var(--bg-raised), var(--bg));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.door::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  transform: translateY(-50%);
+}
+
+.door-label {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  color: var(--accent);
+}
+
+.door--open {
+  border-color: var(--ink-dim);
+  border-style: dashed;
+  background: repeating-linear-gradient(
+    135deg,
+    var(--bg),
+    var(--bg) 7px,
+    rgba(0, 0, 0, 0.28) 7px,
+    rgba(0, 0, 0, 0.28) 14px
+  );
+}
+
+.door--open::after {
+  display: none;
+}
+
+.door--open .door-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-dim);
+}
+
 /* ---------- fragments ---------- */
 
 [data-step] {
@@ -320,6 +420,11 @@ h2.headline {
 .slide--divider {
   justify-content: center;
   align-items: flex-start;
+}
+
+.slide--content {
+  justify-content: flex-start;
+  padding-top: clamp(72px, 14vh, 120px);
 }
 
 .slide--divider {

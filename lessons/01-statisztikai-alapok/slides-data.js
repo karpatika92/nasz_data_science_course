@@ -24,6 +24,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Monty Hall",
     title: "A játék",
+    visual: { kind: "doors" },
     blocks: [
       { kind: "text", html: "3 ajtó. Az egyik mögött főnyeremény, kettő mögött semmi. Választasz egyet." },
       { kind: "text", step: 1, html: "A műsorvezető — <strong>aki tudja, hol a nyeremény</strong> — kinyit egy másik, üres ajtót." },
@@ -42,7 +43,7 @@ window.SLIDES = [
         items: [
           "~10 000 olvasó írt neki, hogy téved",
           "közülük ~1000-en doktori fokozattal rendelkeztek",
-          "Paul Erdőst is csak egy szimuláció győzte meg",
+          "Erdős Pált is csak egy szimuláció győzte meg",
         ],
       },
       { kind: "ask", step: 2, html: "Miért téved itt szinte mindenki — beleértve a matematikusokat is?" },
@@ -63,7 +64,20 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Bayes-tétel",
+    title: "Monty Hall, formálisan",
+    visual: { kind: "doors", openIndex: 3 },
+    blocks: [
+      { kind: "text", html: "Az 1-es ajtót választottad. A műsorvezető kinyitja a 3-ast — üres." },
+      { kind: "text", step: 1, html: "<span style='font-family:var(--font-mono); color:var(--ink-dim)'>Kiindulás: P(nyer.=1) = P(nyer.=2) = P(nyer.=3) = 1/3</span>" },
+      { kind: "text", step: 2, html: "<span style='font-family:var(--font-mono); color:var(--ink-dim)'>Mennyi eséllyel nyitja pont a 3-ast, ha ott lenne a nyeremény?<br>P(nyit 3 | nyer 1) = 1/2 &nbsp;·&nbsp; P(nyit 3 | nyer 2) = 1 &nbsp;·&nbsp; P(nyit 3 | nyer 3) = 0</span>" },
+      { kind: "ask", step: 3, label: "Bayes-tétellel", html: "P(nyer 2 | nyitotta a 3-ast) = 2/3 — pontosan amit a szimulációban láttunk." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Bayes-tétel",
     title: "A teszt paradoxona",
+    visual: { kind: "image", src: "assets/bayes-area-diagram.png", alt: "Bayes-tétel területarányos ábrázolása", caption: "Forrás: 3Blue1Brown — Bayes theorem, the geometry of changing beliefs" },
     blocks: [
       { kind: "text", html: "Egy ritka betegség prevalenciája <strong>1%</strong>. A teszt 99%-ban helyesen jelez pozitívat betegnél, és 99%-ban helyesen jelez negatívat egészségesnél." },
       { kind: "ask", step: 1, html: "Pozitív lettél. Mekkora eséllyel vagy <em>tényleg</em> beteg?" },
