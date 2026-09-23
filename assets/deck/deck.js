@@ -90,6 +90,7 @@
 
   function renderVisual(visual) {
     const wrap = el("div", "slide-visual");
+    if (visual.step) wrap.dataset.step = String(visual.step);
 
     if (visual.kind === "doors") {
       const row = el("div", "doors");
@@ -100,6 +101,42 @@
         row.appendChild(door);
       });
       wrap.appendChild(row);
+      return wrap;
+    }
+
+    if (visual.kind === "causal") {
+      const box = el("div", "causal-diagram");
+
+      const direct = el("div", "causal-panel");
+      direct.appendChild(el("div", "causal-label", "Közvetlen ok"));
+      const directRow = el("div", "causal-row");
+      directRow.appendChild(el("div", "causal-node", "A"));
+      directRow.appendChild(el("div", "causal-arrow", "→"));
+      directRow.appendChild(el("div", "causal-node", "B"));
+      direct.appendChild(directRow);
+      box.appendChild(direct);
+
+      const reverse = el("div", "causal-panel");
+      reverse.appendChild(el("div", "causal-label", "Fordított ok"));
+      const reverseRow = el("div", "causal-row");
+      reverseRow.appendChild(el("div", "causal-node", "B"));
+      reverseRow.appendChild(el("div", "causal-arrow", "→"));
+      reverseRow.appendChild(el("div", "causal-node", "A"));
+      reverse.appendChild(reverseRow);
+      box.appendChild(reverse);
+
+      const confound = el("div", "causal-panel");
+      confound.appendChild(el("div", "causal-label", "Közös ok (confounder)"));
+      confound.appendChild(el("div", "causal-node causal-node--top", "C"));
+      confound.appendChild(el("div", "causal-arrows-fan", "↙&nbsp;&nbsp;&nbsp;&nbsp;↘"));
+      const confoundRow = el("div", "causal-row");
+      confoundRow.appendChild(el("div", "causal-node", "A"));
+      confoundRow.appendChild(el("div", "", ""));
+      confoundRow.appendChild(el("div", "causal-node", "B"));
+      confound.appendChild(confoundRow);
+      box.appendChild(confound);
+
+      wrap.appendChild(box);
       return wrap;
     }
 

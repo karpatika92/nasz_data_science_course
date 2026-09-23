@@ -29,8 +29,15 @@ mert az intuíciójuk (vagy a híres tudósoké) tévedett.
 | 9 | Lineáris regresszió | 8 | 87 |
 | 10 | Logisztikus regresszió (LPM-ből) | 10 | 97 |
 
-**Ez 97 perc, nem 90.** Reális Szókratész-tempóban ez mindig túlfut — ha az órán ez
-történik, ebben a sorrendben vágj:
+**Ez 97 perc volt eredetileg — és azóta tovább nőtt.** Utólag bekerült: a Monty
+Hall Bayes-tételes levezetése, a prior/likelihood/evidence/posterior szótár, a
+nagy számok törvényének és a CLT-nek a formális kimondása, a checkers.com konkrét
+A/B teszt + valódi p-érték, a Lady Tasting Tea kísérlet számszerű levezetése
+(C(8,4)=70), a három-oksági-magyarázat diagram, és a regresszió-a-középhez
+jelenség rendes levezetése. **Ez most már inkább egy "menü", amiből válogass, mint
+egy percre pontos script** — a fenti táblázat sorrendje és aránya nagyjából
+stimmel, de minden szakasz kb. 20-30%-kal hosszabb lett. Reális Szókratész-tempóban
+ez mindig túlfut — ha az órán ez történik, ebben a sorrendben vágj:
 1. **Dimenzió-átok (8. pont)** → 3 percre húzható: mondd ki a lényeget, ne nyisd meg
    vitának, csak linkeld előre a 2. órához (overfitting sok feature esetén).
 2. **Simpson-paradoxon (7. pont)** → a Berkeley-sztori bemutatása maradjon, de a
@@ -181,18 +188,30 @@ Galton 1889-ben megépítette a "bean machine"-t (Galton-deszka) — egy fizikai
 eszközt, ami golyók leejtésével *vizuálisan* demonstrálja a CLT-t; ma is kapható
 játékként. Ha van rá mód, érdemes egy videót vetíteni róla (l. homework linkek).
 
+*(A `slides.html`-en most már mindkét diának van saját ábrája: a kérdés-dián egy
+tiszta Normal(μ,σ²) haranggörbe a formális kimondáshoz, a történeti dián pedig
+Galton 1889-es eredeti quincunx-diagramja — ne csak szóban meséld, mutasd is.)*
+
 ---
 
 ## 5. Hipotézisvizsgálat alapjai (45–57 perc)
 
-**Nyitókérdés:** „Lefuttattok egy A/B tesztet, és B jobban teljesít, mint A. Mikor
-hiszitek el, hogy ez valódi különbség, és mikor gondoljátok, hogy csak zaj?"
+**Konkrét eset, ne elvont A/B teszt:** a checkers.com új regisztrációs oldalt
+tesztel. Kontroll (A): 1000 látogatóból 84 regisztrált (8.4%). Új verzió (B): 1000
+látogatóból 103 regisztrált (10.3%). **Nyitókérdés:** „Tényleg jobb az új oldal,
+vagy ez csak véletlen ingadozás?"
 
 Vezesd le: nullhipotézis (nincs különbség), alternatív hipotézis, p-érték.
 **Explicit debunkolandó tévhit** (mondd ki hangosan, mert szinte mindenki rosszul
 tanulja meg): a p-érték **NEM** "annak a valószínűsége, hogy a nullhipotézis igaz."
 A p-érték: "milyen valószínű, hogy *legalább ilyen extrém* adatot látnék, HA a
 nullhipotézis igaz volna." Ez a leggyakoribb hiba a szakirodalomban is.
+
+**A checkers.com adatán (`demo.ipynb`, permutációs teszt): p = 0.170.** Ez
+**nem** szignifikáns a szokásos 5%-os küszöbön — a megfigyelt +1.9 százalékpontos
+különbség simán előfordulhat puszta véletlenből. Szándékosan nem "szép,
+egyértelmű" eredményt választottam: ez a valósághű tanulság — a legtöbb A/B teszt
+NEM hoz egyértelmű győztest, és pont ez a p-érték lényege.
 
 - 🌱-nak: „Mi a különbség aközött, hogy 'statisztikailag szignifikáns' és
   'gyakorlatilag fontos'?" (nagy mintán apró, lényegtelen hatás is szignifikáns
@@ -214,17 +233,28 @@ egymással vitázó iskola hibrid keveréke. (Jó Szókratész-pont: ha még a m
 megalapozó tudósok sem értettek egyet, nem szégyen kritikusan gondolkodni a
 "p < 0.05" szabályról, nem kell vakon követni.)
 
+**A kísérlet konkrét számai (mondd is el, ne csak a nevét):** Fisher **8 csészét**
+készített — 4-et tej-előbb, 4-et tea-előbb módszerrel —, véletlen sorrendben adta
+Bristolnak, akinek pontosan 4-4-re kellett szétválogatnia őket. Ha csak tippel,
+C(8,4) = **70** féleképp választhatja ki a "tej-előbb" négyest — tehát 1/70
+(≈1.4%) eséllyel találja el mind a nyolcat pusztán véletlenül. Bristol **mind a
+8-at eltalálta.** Ez a lecke saját, kézzelfogható p-értéke — vezesd le a táblán,
+ne csak mondd ki a végeredményt.
+
 ---
 
 ## 6. Korreláció vs. kauzalitás (57–65 perc)
 
-Mutass 1-2 "spurious correlation" példát (Tyler Vigen oldala/könyve, pl. Nicolas
-Cage-filmek száma és a medencébe fulladások korrelációja, vagy sajtfogyasztás és
-ágyneműbe gabalyodva bekövetkezett halálesetek). Nevettessetek egyet, aztán:
+Mutasd meg a Nicolas Cage-filmek és a fulladásos halálesetek grafikonját —
+**ez valódi, publikált adat** (tylervigen.com, r = 0.559), nem kitaláció.
+Nevettessétek el magatokat, aztán:
 
 **Kérdés:** „Mi kellene ahhoz, hogy A okozza B-t, szemben azzal, hogy B okozza A-t,
-vagy hogy egy harmadik C okozza mindkettőt?" — vezessétek be közösen a
-konfounder/reverse causation fogalmát egy-egy általuk hozott példán.
+vagy hogy egy harmadik C okozza mindkettőt?" A `slides.html`-en ezután megjelenik a
+három forgatókönyv (közvetlen ok, fordított ok, közös ok) diagramként —
+**kérd meg mindenkit, hogy mondjon egy-egy saját, valódi példát mindhárom
+típusra**, mielőtt a fagylalt/hőség példát megmutatnád (az csak backup, ha
+elakadnak).
 
 - 🌱-nak: konkrét, hétköznapi példa kérése tőlük (pl. "fagylaltfogyasztás és
   vízbefulladás nyáron együtt nő" — a közös ok a meleg időjárás).
@@ -292,8 +322,17 @@ könnyű overfittelni.
 
 ## 9. Lineáris regresszió (79–87 perc)
 
-Gyors, mert várhatóan a fele csoport már látta. Vezesd le a legkisebb négyzetek
-elvét: keressük azt az egyenest, ami minimalizálja a hibák **négyzetösszegét**.
+Gyors, mert várhatóan a fele csoport már látta. Írd fel az egyenletet:
+**y = β₀ + β₁x + ε**. Kérdezd meg, mielőtt te mondanád: „Mit jelent β₀? Mit jelent
+β₁? Mi az ε?" — β₀ a tengelymetszet (predikció x=0-nál), β₁ a meredekség (mennyit
+változik y, ha x eggyel nő), ε a hiba/reziduum (amit a modell nem magyaráz meg).
+Vezesd le a legkisebb négyzetek elvét: keressük azt az egyenest, ami minimalizálja
+a hibák **négyzetösszegét**.
+
+**`demo.ipynb`/`slides.html` ábra:** illesztett egyenes + néhány pont
+reziduumvonala kiemelve (y = ŷ + ε vizuálisan szétbontva) + a modell **R²**-je
+kiírva. Mondd ki: R² = a kimenet varianciájának hányad része magyarázható a
+modellel, 0 és 1 között.
 
 **Kérdés (jó szintkülönböztető):** „Miért a hiba *négyzetét* minimalizáljuk, nem az
 abszolút értékét?"
@@ -302,16 +341,28 @@ abszolút értékét?"
   zárt alakú megoldás létezik, és MLE-ként adódik normális eloszlású hibák
   feltevése mellett.
 
+**Regresszió a középszerűséghez — vezesd le rendesen, ne csak nevezd meg:**
+Galton észrevette, hogy a magas szülők gyerekei átlagosan alacsonyabbak a
+szülőknél, az alacsony szülők gyerekei pedig magasabbak. **Kérdés:** „Ez azt
+jelenti, hogy a populáció idővel 'ellaposodik'?" — **Nem.** Ha egy mérés részben
+véletlenből (zajból) is áll, egy szélsőséges megfigyelés részben szerencse — egy
+megismételt/kapcsolódó mérés valószínűleg kevésbé lesz szélsőséges, **anélkül,
+hogy bármi oksági történne**. Ez pusztán statisztikai artefaktum, nem valódi
+"visszahúzó erő". **Konkrét, relatable példa:** egy kiemelkedő rookie szezon után
+a legtöbb sportoló "visszaesik" a következő évben ("sophomore slump") — nem mert
+rosszabb lett, hanem mert a kiugró első szezon részben szerencse volt. Ugyanez:
+egy kiváló vizsgaeredmény után a következő vizsga valószínűleg "gyengébb" lesz,
+anélkül hogy bármit rosszul csinálnál.
+
 **Tudománytörténet:** magát a "regresszió" szót Francis Galton adta a
-jelenségnek 1886-ban, amikor észrevette, hogy a magas szülők gyerekei átlagosan
-alacsonyabbak a szülőknél, az alacsony szülők gyerekei pedig magasabbak — "regresszió
-a középszerűséghez" (ma: "regresszió az átlaghoz"). Magát a legkisebb négyzetek
-módszerét Adrien-Marie Legendre publikálta először (1805), de Carl Friedrich Gauss
-azt állította, ő már 1795 óta használta — az elsőbbségi vita mindmáig lezáratlan.
-Gauss híres demonstrációja: 1801-ben a legkisebb négyzetek módszerével **helyesen
-megjósolta**, hol fog újra feltűnni az égen a Ceres törpebolygó, miután Giuseppe
-Piazzi felfedezése után az égitest a Nap mögé került és "elveszett" — ez volt a
-módszer első nagy, látványos gyakorlati igazolása.
+jelenségnek 1886-ban — "regresszió a középszerűséghez" (ma: "regresszió az
+átlaghoz"). Magát a legkisebb négyzetek módszerét Adrien-Marie Legendre publikálta
+először (1805), de Carl Friedrich Gauss azt állította, ő már 1795 óta használta —
+az elsőbbségi vita mindmáig lezáratlan. Gauss híres demonstrációja: 1801-ben a
+legkisebb négyzetek módszerével **helyesen megjósolta**, hol fog újra feltűnni az
+égen a Ceres törpebolygó, miután Giuseppe Piazzi felfedezése után az égitest a Nap
+mögé került és "elveszett" — ez volt a módszer első nagy, látványos gyakorlati
+igazolása.
 
 ---
 

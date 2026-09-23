@@ -302,6 +302,11 @@ h2.headline {
   color: var(--ink-dim);
 }
 
+.figure--visual {
+  max-width: none;
+  width: 100%;
+}
+
 /* ---------- slide with a right-side visual ---------- */
 /* Alapból a diák tartalma balra igazított, korlátozott szélességű (olvashatóság
    miatt) — ez sok helyen szándékos negatív tér. Amikor viszont van hozzá valós
@@ -314,14 +319,14 @@ h2.headline {
 }
 
 .slide.has-visual .content-col {
-  flex: 1 1 56%;
+  flex: 1 1 50%;
   min-width: 0;
   display: flex;
   flex-direction: column;
 }
 
 .slide-visual {
-  flex: 1 1 40%;
+  flex: 1 1 48%;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -399,6 +404,70 @@ h2.headline {
   font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--ink-dim);
+}
+
+/* ---------- korrelació vs. kauzalitás — oksági diagramok ---------- */
+
+.causal-diagram {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.causal-panel {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.causal-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.causal-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.causal-node {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.causal-node--top {
+  margin-bottom: -4px;
+}
+
+.causal-arrow {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  color: var(--ink-dim);
+}
+
+.causal-arrows-fan {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--ink-dim);
+  letter-spacing: 0.3em;
 }
 
 /* ---------- fragments ---------- */
