@@ -93,8 +93,44 @@ async function checkDeck(browser, filePath, screensDir) {
         fillPct = Math.round((maxRight / 1600) * 100);
       }
 
+      // CHECK 4 — content area vs. available canvas. Check 3 only asks "does
+      // content reach far enough right"; it says nothing about whether the
+      // content is rendered at a size that actually USES the space it has,
+      // vertically as well as horizontally. Font sizes here are set with
+      // viewport-relative clamp()s, so the same slide always renders the same
+      // type size regardless of how little text is on it — a one-sentence
+      // slide, now vertically centered, still renders that sentence at normal
+      // body size, which reads as "too small" against a mostly-empty 1600x900
+      // canvas even though nothing is technically broken. This check catches
+      // that: it's not about any single element's font-size, it's about how
+      // much of the available canvas the content's bounding box actually
+      // covers. Only content-type slides are checked (dividers/title are
+      // deliberately sparse — a giant outlined numeral is the whole point).
+      let areaPct = null;
+      if (type === "content") {
+        const candidates = slide.querySelectorAll(
+          ".eyebrow, .headline, .kicker, .body-stack, .columns, .slide-visual"
+        );
+        let left = Infinity, top = Infinity, right = 0, bottom = 0;
+        candidates.forEach((el) => {
+          const cs = getComputedStyle(el);
+          if (cs.display === "none" || parseFloat(cs.opacity) === 0) return;
+          const r = el.getBoundingClientRect();
+          if (r.width === 0 || r.height === 0) return;
+          left = Math.min(left, r.left);
+          top = Math.min(top, r.top);
+          right = Math.max(right, r.right);
+          bottom = Math.max(bottom, r.bottom);
+        });
+        if (right > left && bottom > top) {
+          const contentArea = (right - left) * (bottom - top);
+          const availableArea = 1600 * 900; // full slide canvas, incl. its own padding
+          areaPct = Math.round((contentArea / availableArea) * 100);
+        }
+      }
+
       slide.classList.remove("is-active");
-      return { index: idx + 1, title, type, hasVisual, overflowPx, metaGap, fillPct };
+      return { index: idx + 1, title, type, hasVisual, overflowPx, metaGap, fillPct, areaPct };
     }, i);
 
     const flags = [];
@@ -105,13 +141,32 @@ async function checkDeck(browser, filePath, screensDir) {
     if (info.type === "content" && info.fillPct !== null && info.fillPct < 65) {
       flags.push(`sparse (content only reaches ${info.fillPct}% of slide width)`);
     }
+    if (info.type === "content" && info.areaPct !== null && info.areaPct < 30) {
+      flags.push(`small-for-space (content bounding box covers only ${info.areaPct}% of the slide canvas — text may read as too small even if nothing overflows)`);
+    }
 
     if (flags.length) {
       issues.push({ ...info, flags });
       if (screensDir) {
-        await page.goto(`${url}#${info.index}`);
-        await page.waitForTimeout(200);
-        await page.screenshot({ path: path.join(screensDir, `${path.basename(path.dirname(filePath))}-issue-${info.index}.png`) });
+        // deck.js only reads location.hash inside its DOMContentLoaded handler
+        // (init()), so navigating the SAME already-loaded page to `${url}#N`
+        // is a fragment-only same-document navigation in Chromium -- it never
+        // re-fires DOMContentLoaded, so the deck's displayed slide doesn't
+        // change and this would silently screenshot whatever slide/scroll
+        // state the main measurement loop happened to leave behind. A fresh
+        // page forces a real initial load, so the hash is actually honored.
+        const shotPage = await browser.newPage({ viewport: { width: 1600, height: 900 } });
+        await shotPage.goto(`${url}#${info.index}`);
+        await shotPage.waitForTimeout(400);
+        await shotPage.evaluate((idx) => {
+          const slide = document.querySelectorAll(".slide")[idx - 1];
+          slide.querySelectorAll("[data-step]").forEach((n) => n.classList.add("is-revealed"));
+        }, info.index);
+        // .is-revealed drives an opacity transition (deck.css) -- give it a
+        // beat to finish, or the screenshot catches fragments mid-fade.
+        await shotPage.waitForTimeout(400);
+        await shotPage.screenshot({ path: path.join(screensDir, `${path.basename(path.dirname(filePath))}-issue-${info.index}.png`) });
+        await shotPage.close();
       }
     }
   }

@@ -15,7 +15,7 @@ the JS and guessing wastes a turn; screenshotting slides one at a time and eyeba
 them doesn't scale past a handful and still misses geometry issues that are obvious
 to a script (a few px of overflow) but easy to miss by eye. Use the bundled script.
 
-This has already caught two real bugs in this project, worth knowing about because
+This has already caught real bugs in this project, worth knowing about because
 they'll likely recur:
 
 1. **`max-width` in `ch` units on a container, sized for its children's font.**
@@ -33,6 +33,17 @@ they'll likely recur:
    slide and report a false "empty right side" on slides that are actually fine.
    `scripts/check.js` searches the whole slide for this reason — don't narrow that
    scope without re-adding `.slide-visual` explicitly.
+3. **`--screens` navigating by hash on the already-loaded page is a no-op.**
+   `deck.js` only reads `location.hash` inside its `DOMContentLoaded` handler —
+   once the page has loaded, `page.goto(`${url}#${info.index}`)` on the *same*
+   Playwright page is a same-document fragment navigation in Chromium, which
+   never re-fires `DOMContentLoaded`. The deck's displayed slide silently doesn't
+   change, so every "flagged slide" screenshot was actually capturing whatever
+   slide/scroll state the main measurement loop had left behind — not the slide
+   named in the filename. Fixed by opening a **fresh page** per screenshot (a
+   real initial load honors the hash). If you ever add another codepath that
+   deep-links by hash, open a new page for it rather than reusing one that's
+   already loaded the deck.
 
 ## Running it
 
@@ -60,7 +71,7 @@ Each slide is put into its **fully-revealed** state before measuring (`.is-activ
 actually reaches by the end of clicking through the slide, and the one that has to
 fit. Checking only the first-fragment state would miss most real overflow bugs.
 
-## The three checks, and what "failing" means
+## The four checks, and what "failing" means
 
 - **Overflow** (`slide.scrollHeight - slide.clientHeight > 4px`): the slide has
   `overflow-y: auto`, so a real overflow doesn't error or visibly break anything —
@@ -75,6 +86,25 @@ fit. Checking only the first-fragment state would miss most real overflow bugs.
   measures the rightmost edge of `.body-stack`, `.columns`, and `.slide-visual`
   against the 1600px viewport. Below 65% means there's a large dead column on the
   right that a viewer's eye reads as "unfinished" or "broken", not "minimalist."
+- **Small-for-space** (content-type slides only): measures the bounding box of
+  everything on the slide (`.eyebrow, .headline, .kicker, .body-stack, .columns,
+  .slide-visual`) as a % of the full 1600×900 canvas. This catches a different
+  failure than sparse fill: a slide can reach 100% of the width and still render
+  its one sentence at normal body size, floating in a mostly-empty canvas — fine
+  horizontally, but the text itself reads as small because nothing scales up when
+  there's less content. Threshold (30%) was picked empirically: dumped the
+  `areaPct` for every content slide in lesson 1, sorted ascending, and found a
+  real gap — most slides cluster 30–70%, with a distinct low band at 19–28% that
+  turned out to be exactly the slides made of a single `ask` or `plaque` block, or
+  1–2 bare sentences. **This check has a real blind spot, found while calibrating
+  it**: below ~30%, low area% stops reliably meaning "text is too small" and often
+  just means "this slide is short by design, vertically centered, with a big
+  margin above/below" — several slides flagged at 26–28% (a dense `image-sequence`
+  slide, a two-column comparison) turned out on a full-reveal screenshot to be
+  completely fine: legible, well-proportioned, just not owning the whole canvas.
+  Treat anything still flagged after check 1 below (the type-scale bumps) as a
+  **candidate list to eyeball, not an auto-fail** — screenshot it fully revealed
+  (see the next section) before deciding it needs a fix.
 
 ## Fixing what it finds
 
@@ -106,6 +136,21 @@ what to actually check:
    deliberate pause, not an accident. Vertically centering non-visual content
    slides (already the default in `deck.css`) does most of this work; a
    consistently short slide doesn't need to be padded out.
+
+**Small-for-space**: never fix this by adding content (same anti-filler principle
+as sparse fill). The real fix is making the text that's already there bigger,
+since the whole point of the complaint this check encodes is "the text is too
+small to read even though there's room" — not "there isn't enough text." This
+deck's `deck.css` has scoped rules for exactly this: `.body-stack > .ask:only-child
+p`, `.body-stack > .plaque:only-child .year`/`.plaque-text`, and
+`.body-stack:not(:has(> :not(p))) p` all bump the font size specifically when that
+block type is the *entire* content of the slide (using `:only-child` / `:has()` so
+slides that mix an ask/plaque with other blocks keep the normal, smaller size —
+those aren't short-for-space, they're just one part of a fuller slide). If a new
+flagged slide doesn't match one of these existing patterns, extend the pattern
+(a new `:only-child`/`:has()` rule) rather than bumping a block type's base size
+globally — a global bump risks pushing an already-dense multi-block slide (a
+4-plaque timeline, say) into overflow.
 
 ## Always re-verify after fixing
 

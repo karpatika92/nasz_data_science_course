@@ -195,5 +195,38 @@ window.SLIDES = [
     ],
   },
 
-  { type: "divider", index: "→", eyebrow: "A mai óra vége", title: "Házi feladat", kicker: "Lásd: homework.md" },
+  { type: "divider", index: "→", eyebrow: "A mai óra vége", title: "Házi feladat", kicker: "Két rész — mindkettő kötelező, beadás a következő óra előtt." },
+  {
+    type: "content",
+    eyebrow: "Házi feladat 1/2",
+    title: "Videók + reflexió",
+    blocks: [
+      { kind: "text", html: "8 ellenőrzött videólink a mai témákhoz (3Blue1Brown + StatQuest) — a pontos címek és URL-ek a <code>homework.md</code>-ben." },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Válassz ki <strong>3 videót</strong> a 8 közül",
+          "Mindegyikhez írj 2-3 mondatot: mi <strong>lepett meg</strong>?",
+          "Hogyan kapcsolódik a mai <strong>Titanic-példához</strong>?",
+        ],
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Házi feladat 2/2",
+    title: "Hiperparaméter-vadászat",
+    blocks: [
+      { kind: "text", html: "A Titanic-összehasonlítás alapértelmezett hiperparaméterekkel futott — próbáld megverni ezt." },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Válassz <strong>2 modellt</strong> a hatból, próbálj <strong>3-3 hiperparaméter-beállítást</strong>",
+          "Nézd <strong>külön</strong> a tanuló és a teszt pontosságot — a rés = overfitting jele",
+          "Írj 4-6 mondatot: melyik nyert, és <strong>miért</strong>?",
+        ],
+      },
+      { kind: "text", step: 2, html: "<strong>Bónusz (nem kötelező):</strong> próbáld ki K-legközelebbi-szomszéd modellel is — mi köze a dimenzió-átokhoz?" },
+    ],
+  },
 ];

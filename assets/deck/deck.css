@@ -181,6 +181,13 @@ h2.headline {
   color: var(--ink);
 }
 
+/* Amikor a dia teljes tartalma csak sima bekezés(ek) -- nincs lista/ask/plaque/
+   tension/columns, ami a helyet strukturálná --, nagyobb betűmérettel adjuk a
+   szöveget, mert szó szerint ez az egész dia mondanivalója. */
+.body-stack:not(:has(> :not(p))) p {
+  font-size: clamp(24px, 2.7vw, 34px);
+}
+
 .body-stack ul {
   margin: 0;
   padding-left: 1.1em;
@@ -221,6 +228,12 @@ h2.headline {
   margin: 0;
 }
 
+/* Amikor az ask az EGYETLEN blokk a dián (nincs mivel megosztania a helyet),
+   nagyobb súlyt kaphat -- ez a dia teljes mondanivalója, nem egy elem sok közül. */
+.body-stack > .ask:only-child p {
+  font-size: clamp(28px, 3.6vw, 44px);
+}
+
 /* ---------- historical "plaque" ---------- */
 
 .plaque {
@@ -233,15 +246,24 @@ h2.headline {
 
 .plaque .year {
   font-family: var(--font-mono);
-  font-size: clamp(20px, 2.4vw, 28px);
+  font-size: clamp(22px, 2.6vw, 30px);
   color: var(--accent);
   white-space: nowrap;
 }
 
 .plaque .plaque-text {
-  font-size: clamp(17px, 1.9vw, 21px);
+  font-size: clamp(19px, 2.1vw, 23px);
   line-height: 1.5;
   color: var(--ink-dim);
+}
+
+/* Amikor a plaque az EGYETLEN blokk a dián -- ugyanaz a logika, mint az ask-nál. */
+.body-stack > .plaque:only-child .year {
+  font-size: clamp(26px, 3.2vw, 36px);
+}
+
+.body-stack > .plaque:only-child .plaque-text {
+  font-size: clamp(22px, 2.5vw, 30px);
 }
 
 .plaque .plaque-text strong {
@@ -299,7 +321,7 @@ h2.headline {
 
 .column p,
 .column li {
-  font-size: clamp(19px, 2.2vw, 25px);
+  font-size: clamp(21px, 2.4vw, 27px);
   line-height: 1.55;
 }
 

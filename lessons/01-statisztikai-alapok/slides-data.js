@@ -656,6 +656,39 @@ window.SLIDES = [
     index: "→",
     eyebrow: "A mai óra vége",
     title: "Házi feladat",
-    kicker: "Lásd: homework.md",
+    kicker: "Két rész — mindkettő kötelező, beadás a következő óra előtt.",
+  },
+  {
+    type: "content",
+    eyebrow: "Házi feladat 1/2",
+    title: "Videók + reflexió",
+    blocks: [
+      { kind: "text", html: "A mai témák közül <strong>8-hoz</strong> van ellenőrzött videólink — a pontos címek és URL-ek a <code>homework.md</code>-ben." },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Válassz ki <strong>3 videót</strong> a 8 közül",
+          "Mindegyikhez írj 2-3 mondatot: mi <strong>lepett meg</strong>?",
+          "Van rá <strong>saját, hétköznapi példád</strong> (nem a videóból)?",
+        ],
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Házi feladat 2/2",
+    title: "GitHub + AI kódoló ügynök",
+    blocks: [
+      { kind: "text", html: "Ezt a kurzus egészéhez fogjuk használni — a projektmunkát is git repóban adjátok majd le." },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Regisztrálj egy <strong>GitHub</strong> fiókot (ha még nincs)",
+          "Hozz létre egy <strong>saját, publikus repót</strong>",
+          "Kapcsolj be egy <strong>AI kódoló ügynököt</strong> (Copilot, Claude Code, Cursor, …)",
+          "Commitolj vele egy <strong>README.md</strong>-t, és <strong>küldd el a repó linkjét</strong>",
+        ],
+      },
+    ],
   },
 ];
