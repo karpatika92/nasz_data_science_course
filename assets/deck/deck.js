@@ -1,0 +1,217 @@
+/* ============================================================
+   Deck engine — betölt egy globális SLIDES tömböt (lásd
+   slides-data.js egy adott órában), és renderel + navigál.
+   Nincs külső könyvtár — kevés mozgó rész, könnyebb stílusban
+   tartani végig a féléven.
+   ============================================================ */
+
+(function () {
+  "use strict";
+
+  const LESSON_LABEL = window.LESSON_LABEL || "";
+  const slides = window.SLIDES || [];
+
+  function el(tag, className, html) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (html !== undefined) node.innerHTML = html;
+    return node;
+  }
+
+  function renderBlock(block) {
+    const wrap = el("div");
+    if (block.step) wrap.dataset.step = String(block.step);
+
+    switch (block.kind) {
+      case "text": {
+        const p = el("p", "", block.html);
+        if (block.step) p.dataset.step = String(block.step);
+        return p;
+      }
+
+      case "list": {
+        const ul = el("ul");
+        if (block.step) ul.dataset.step = String(block.step);
+        block.items.forEach((item) => ul.appendChild(el("li", "", item)));
+        return ul;
+      }
+
+      case "ask": {
+        const box = el("div", "ask");
+        if (block.step) box.dataset.step = String(block.step);
+        box.appendChild(el("p", "ask-label", block.label || "KÉRDÉS"));
+        box.appendChild(el("p", "", block.html));
+        return box;
+      }
+
+      case "plaque": {
+        const box = el("div", "plaque");
+        if (block.step) box.dataset.step = String(block.step);
+        box.appendChild(el("div", "year", block.year));
+        box.appendChild(el("div", "plaque-text", block.html));
+        return box;
+      }
+
+      case "tension": {
+        const box = el("div", "tension");
+        if (block.step) box.dataset.step = String(block.step);
+        box.appendChild(el("p", "tension-label", block.label || "VITATOTT PONT"));
+        box.appendChild(el("div", "", block.html));
+        return box;
+      }
+
+      case "columns": {
+        const box = el("div", "columns");
+        if (block.step) box.dataset.step = String(block.step);
+        block.columns.forEach((col) => {
+          const c = el("div", "column");
+          c.appendChild(el("h3", "", col.heading));
+          c.appendChild(el("div", "", col.html));
+          box.appendChild(c);
+        });
+        return box;
+      }
+
+      case "figure": {
+        const fig = el("figure", "figure");
+        if (block.step) fig.dataset.step = String(block.step);
+        const img = el("img");
+        img.src = block.src;
+        img.alt = block.alt || "";
+        fig.appendChild(img);
+        if (block.caption) fig.appendChild(el("figcaption", "", block.caption));
+        return fig;
+      }
+
+      default:
+        return el("div", "", "");
+    }
+  }
+
+  function buildSlide(data, index, total) {
+    const slide = el("section", "slide slide--" + data.type);
+    slide.dataset.index = String(index);
+
+    const meta = el("div", "meta-bar");
+    meta.appendChild(el("span", "", `<strong>${LESSON_LABEL}</strong>`));
+    meta.appendChild(el("span", "", `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`));
+    slide.appendChild(meta);
+
+    if (data.type === "divider" && data.index) {
+      slide.appendChild(el("div", "slide-number-huge", data.index));
+    }
+
+    if (data.eyebrow) slide.appendChild(el("p", "eyebrow", data.eyebrow));
+
+    if (data.title) {
+      const tag = data.type === "content" ? "h2" : "h1";
+      slide.appendChild(el(tag, "headline", data.title));
+    }
+
+    if (data.kicker) slide.appendChild(el("p", "kicker", data.kicker));
+
+    if (data.blocks && data.blocks.length) {
+      const stack = el("div", "body-stack");
+      data.blocks.forEach((block) => stack.appendChild(renderBlock(block)));
+      slide.appendChild(stack);
+    }
+
+    if (data.note) {
+      slide.appendChild(el("div", "note", data.note));
+    }
+
+    return slide;
+  }
+
+  function maxStep(slideEl) {
+    let max = 0;
+    slideEl.querySelectorAll("[data-step]").forEach((n) => {
+      max = Math.max(max, Number(n.dataset.step));
+    });
+    return max;
+  }
+
+  function init() {
+    const deck = document.getElementById("deck");
+    const total = slides.length;
+
+    slides.forEach((data, i) => deck.appendChild(buildSlide(data, i, total)));
+
+    const slideEls = Array.from(deck.querySelectorAll(".slide"));
+    const progressFill = document.getElementById("progress-fill");
+
+    let current = 0;
+    let step = 0;
+
+    function fromHash() {
+      const n = parseInt(location.hash.replace("#", ""), 10);
+      return Number.isInteger(n) && n >= 1 && n <= total ? n - 1 : 0;
+    }
+
+    function revealSteps(slideEl, upTo) {
+      slideEl.querySelectorAll("[data-step]").forEach((n) => {
+        n.classList.toggle("is-revealed", Number(n.dataset.step) <= upTo);
+      });
+    }
+
+    function render() {
+      slideEls.forEach((s, i) => s.classList.toggle("is-active", i === current));
+      const activeEl = slideEls[current];
+      revealSteps(activeEl, step);
+      progressFill.style.width = `${((current + 1) / total) * 100}%`;
+      history.replaceState(null, "", `#${current + 1}`);
+    }
+
+    function next() {
+      const activeEl = slideEls[current];
+      const top = maxStep(activeEl);
+      if (step < top) {
+        step += 1;
+      } else if (current < total - 1) {
+        current += 1;
+        step = 0;
+      }
+      render();
+    }
+
+    function prev() {
+      if (step > 0) {
+        step -= 1;
+      } else if (current > 0) {
+        current -= 1;
+        step = maxStep(slideEls[current]);
+      }
+      render();
+    }
+
+    function goTo(index) {
+      current = Math.max(0, Math.min(total - 1, index));
+      step = 0;
+      render();
+    }
+
+    document.getElementById("nav-next").addEventListener("click", next);
+    document.getElementById("nav-prev").addEventListener("click", prev);
+    document.querySelector(".nav-zone--next").addEventListener("click", next);
+    document.querySelector(".nav-zone--prev").addEventListener("click", prev);
+
+    window.addEventListener("keydown", (e) => {
+      if (["ArrowRight", " ", "PageDown"].includes(e.key)) {
+        e.preventDefault();
+        next();
+      } else if (["ArrowLeft", "PageUp"].includes(e.key)) {
+        e.preventDefault();
+        prev();
+      } else if (e.key === "Home") {
+        goTo(0);
+      } else if (e.key === "End") {
+        goTo(total - 1);
+      }
+    });
+
+    current = fromHash();
+    render();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();

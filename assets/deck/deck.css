@@ -1,0 +1,443 @@
+/* ============================================================
+   Deck engine — shared visual identity, minden órán ugyanez.
+   Irány: "felfedező kártyaasztal" — sötét zöld posztó + fakult
+   sárgaréz, mert az óra tudománytörténeti dátumokkal (mint egy
+   régi plakett) és véletlen-játékokkal (kártya, érme, kocka) van
+   tele. Egyetlen, tudatosan sötét világ — nincs light theme.
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+
+:root {
+  --bg: #0d2a20;
+  --bg-raised: #123626;
+  --bg-divider: #16442f;
+  --ink: #e9e4d2;
+  --ink-dim: #b9c2b3;
+  --line: rgba(233, 228, 210, 0.16);
+  --accent: #d1a13a;
+  --accent-soft: rgba(209, 161, 58, 0.16);
+  --tension: #c1543a;
+  --tension-soft: rgba(193, 84, 58, 0.14);
+
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  color-scheme: dark;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------- deck shell ---------- */
+
+.deck {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(24px, 6vw, 96px) clamp(20px, 8vw, 140px);
+  background: var(--bg);
+}
+
+.slide.is-active {
+  display: flex;
+}
+
+.slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 55% at 85% -10%, var(--accent-soft), transparent 60%);
+  opacity: 0.9;
+}
+
+/* ---------- meta bar ---------- */
+
+.meta-bar {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top, 0px));
+  left: clamp(20px, 8vw, 140px);
+  right: clamp(20px, 8vw, 140px);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  z-index: 5;
+}
+
+.meta-bar strong {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* ---------- content blocks ---------- */
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.4vw, 15px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+
+h1.headline,
+h2.headline {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-optical-sizing: auto;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  margin: 0 0 0.4em;
+  max-width: 22ch;
+}
+
+h1.headline {
+  font-size: clamp(34px, 5.4vw, 72px);
+}
+
+h2.headline {
+  font-size: clamp(26px, 3.6vw, 46px);
+}
+
+.kicker {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: clamp(16px, 1.8vw, 22px);
+  color: var(--ink-dim);
+  max-width: 52ch;
+  margin: 0 0 28px;
+}
+
+.body-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 62ch;
+}
+
+.body-stack p {
+  font-size: clamp(16px, 1.7vw, 21px);
+  line-height: 1.5;
+  margin: 0;
+  color: var(--ink);
+}
+
+.body-stack ul {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: clamp(15px, 1.6vw, 20px);
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.body-stack li::marker {
+  color: var(--accent);
+}
+
+/* ---------- "ASK" discussion callout ---------- */
+
+.ask {
+  border-left: 3px solid var(--accent);
+  background: var(--bg-raised);
+  padding: 18px 24px;
+  border-radius: 2px;
+}
+
+.ask .ask-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+
+.ask p {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 2.2vw, 27px);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0;
+}
+
+/* ---------- historical "plaque" ---------- */
+
+.plaque {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.plaque .year {
+  font-family: var(--font-mono);
+  font-size: clamp(20px, 2.4vw, 28px);
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.plaque .plaque-text {
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
+
+.plaque .plaque-text strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- tension callout (kényes / vitatott pont) ---------- */
+
+.tension {
+  border-left: 3px solid var(--tension);
+  background: var(--tension-soft);
+  padding: 16px 22px;
+  border-radius: 2px;
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.55;
+}
+
+.tension .tension-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tension);
+  margin: 0 0 8px;
+}
+
+/* ---------- two-column layout ---------- */
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(20px, 4vw, 56px);
+  max-width: 78ch;
+}
+
+@media (max-width: 760px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column h3 {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+
+.column p,
+.column li {
+  font-size: clamp(14px, 1.5vw, 17px);
+  line-height: 1.55;
+}
+
+/* ---------- figure / gif block ---------- */
+
+.figure {
+  max-width: 720px;
+}
+
+.figure img {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  display: block;
+}
+
+.figure figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+}
+
+/* ---------- fragments ---------- */
+
+[data-step] {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+[data-step].is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- title / divider slide types ---------- */
+
+.slide--title,
+.slide--divider {
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.slide--divider {
+  background: var(--bg-divider);
+}
+
+.slide--divider::before {
+  background: radial-gradient(ellipse 60% 50% at 10% 110%, var(--accent-soft), transparent 65%);
+}
+
+.slide-number-huge {
+  font-family: var(--font-mono);
+  font-size: clamp(60px, 11vw, 160px);
+  color: var(--accent-soft);
+  line-height: 1;
+  margin: 0 0 8px;
+  -webkit-text-stroke: 1px var(--accent);
+  color: transparent;
+}
+
+.slide--title .kicker,
+.slide--divider .kicker {
+  max-width: 46ch;
+}
+
+/* ---------- footer note ---------- */
+
+.note {
+  position: absolute;
+  bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  left: clamp(20px, 8vw, 140px);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-dim);
+}
+
+.note strong {
+  color: var(--accent);
+}
+
+/* ---------- chrome: progress + nav ---------- */
+
+.progress-track {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--line);
+  z-index: 10;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 14%;
+  z-index: 4;
+  cursor: pointer;
+}
+
+.nav-zone--prev {
+  left: 0;
+}
+
+.nav-zone--next {
+  right: 0;
+}
+
+.nav-btn {
+  position: absolute;
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  z-index: 8;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--bg-raised);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-btn--prev {
+  right: 96px;
+}
+
+.nav-btn--next {
+  right: 44px;
+}
+
+@media (max-width: 640px) {
+  .meta-bar {
+    font-size: 10px;
+  }
+  .nav-btn {
+    width: 34px;
+    height: 34px;
+  }
+  .nav-btn--prev {
+    right: 80px;
+  }
+  .nav-btn--next {
+    right: 34px;
+  }
+}
