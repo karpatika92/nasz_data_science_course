@@ -68,6 +68,7 @@ window.SLIDES = [
           "<strong>evidence</strong> — P(B): mennyire valószínű B, A-tól függetlenül (minden esetben)",
         ],
       },
+      { kind: "tension", step: 3, label: "A lecke lényege", html: "A statisztika (legalábbis ez az ága) arról szól, hogy <strong>bizonyíték hatására frissítjük a hitünket</strong> — prior → evidencia → posterior. Erre még visszatérünk a hipotézisvizsgálatnál." },
     ],
   },
   {
@@ -116,7 +117,14 @@ window.SLIDES = [
       { kind: "tension", step: 2, label: "Gambler's fallacy", html: "Az érmének nincs memóriája — a valószínűség 50% marad. A múltbeli kilengés egyre kisebb súlyú lesz egy egyre hosszabb sorozatban, de nem „kompenzál”." },
       { kind: "text", step: 3, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>x̄ₙ → μ, ha n → ∞</span><br><span style='color:var(--ink-dim)'>A tétel maga: a mintaátlag (x̄ₙ) a valódi várható értékhez (μ) tart, ahogy a megfigyelések száma (n) végtelenhez tart.</span>" },
     ],
-    visual: { kind: "image", step: 3, src: "assets/lln_running_mean.png", alt: "Futó átlag konvergenciája", caption: "→ demo.ipynb — 2000 érmedobás futó átlaga" },
+    visual: {
+      kind: "image-sequence",
+      items: [
+        { step: 0, src: "assets/coin_flip_1.png", alt: "BioShock Infinite — érmefeldobás, a tábla szinte csak fejeket mutat", caption: "BioShock Infinite (2013) — a fej eddig mindig nyert" },
+        { step: 1, src: "assets/coin_flip_2.png", alt: "BioShock Infinite — a tábla hátulról, csupa fej tally-jel", caption: "…és ez így megy tovább, feltűnés nélkül" },
+        { step: 3, src: "assets/lln_running_mean.png", alt: "Futó átlag konvergenciája", caption: "→ demo.ipynb — egy valódi érme: 2000 dobás futó átlaga" },
+      ],
+    },
   },
   {
     type: "content",
@@ -180,21 +188,17 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Hipotézisvizsgálat",
-    title: "A permutációs teszt — lépésről lépésre",
-    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Permutációs teszt eredménye", caption: "→ demo.ipynb — szürke: 10 000 kevert különbség; piros: a megfigyelt +1.9pp" },
+    title: "A z-próba — lépésről lépésre",
+    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Z-próba eredménye", caption: "→ demo.ipynb — szürke: H0 alatti eloszlás; piros: a megfigyeltnél extrémebb tartomány" },
     blocks: [
-      { kind: "text", html: "Ha H0 igaz (nincs valódi különbség), az A/B címke csak egy véletlen cédula a 2000 látogatón — <strong>felcserélhető</strong>." },
+      { kind: "text", html: "H0 alatt (nincs valódi különbség) a legjobb becslés a <strong>közös (pooled)</strong> arány — ebből számoljuk a különbség szórását (varianciáját)." },
       {
-        kind: "list", step: 1,
-        items: [
-          "Keverd össze véletlenül a 2000 címkét (1000 „A”, 1000 „B”)",
-          "Számold ki az új „B” − „A” különbséget",
-          "Ismételd 10 000-szer",
-        ],
+        kind: "text", step: 1,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p̂ = (84+103) / (1000+1000) = 9.35%<br>Var = p̂(1−p̂)(1/n_A + 1/n_B) = 0.00017<br>SE = √Var = 1.30 pp</span>",
       },
       {
         kind: "text", step: 2,
-        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p = (hányszor |kevert különbség| ≥ 1.9pp) / 10 000 = <strong>0.170</strong></span>",
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>z = különbség / SE = 1.9 / 1.30 = 1.46<br>p = 2·(1 − Φ(|z|)) = <strong>0.144</strong></span>",
       },
     ],
   },
@@ -205,7 +209,18 @@ window.SLIDES = [
     blocks: [
       { kind: "tension", label: "Leggyakoribb tévhit", html: "❌ „Annak a valószínűsége, hogy a nullhipotézis igaz.”" },
       { kind: "text", step: 1, html: "✅ „Milyen valószínű, hogy <em>legalább ilyen extrém</em> adatot látnék, HA a nullhipotézis igaz volna.”" },
-      { kind: "text", step: 2, html: "A checkers.com adatán ez pontosan <strong>17%</strong> — nem elég ritka ahhoz, hogy kizárjuk a véletlent. <em>Nem</em> mondanánk, hogy az új oldal szignifikánsan jobb." },
+      { kind: "text", step: 2, html: "A checkers.com adatán ez pontosan <strong>14.4%</strong> — nem elég ritka ahhoz, hogy kizárjuk a véletlent. <em>Nem</em> mondanánk, hogy az új oldal szignifikánsan jobb." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Hipotézisvizsgálat",
+    title: "Két iskola: frekventista vs. bayesi",
+    blocks: [
+      { kind: "text", html: "Emlékezzünk a Bayes-tételnél mondottakra: a statisztika arról szól, hogy <strong>bizonyíték hatására frissítjük a hitünket</strong>." },
+      { kind: "tension", step: 1, label: "Amit ma csináltunk, más", html: "A p-érték/z-próba <strong>frekventista</strong> keret: egyetlen, fix döntést hoz („szignifikáns” / „nem szignifikáns”) — és gyakran úgy tálaljuk, mintha ez volna a végső igazság." },
+      { kind: "text", step: 2, html: "A <strong>bayesi</strong> megközelítés helyette egy valószínűségi hitet (posterior) frissítene fokozatosan, evidenciáról evidenciára — nem egy bináris igen/nem választ ad." },
+      { kind: "text", step: 3, html: "<strong>Mindkét nézet érvényes</strong> — két különböző iskola, nem egy „helyes” és egy „helytelen” módszer." },
     ],
   },
   {
@@ -371,10 +386,20 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Lineáris regresszió",
-    title: "Miért a négyzet, és mi az R²?",
+    title: "Miért a négyzet?",
     blocks: [
       { kind: "ask", html: "Miért a hiba <em>négyzetét</em> minimalizáljuk, nem az abszolút értékét?" },
-      { kind: "text", step: 1, html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
+      { kind: "text", step: 1, html: "<strong>Zárt alakú megoldás:</strong> a négyzetes hiba mindenhol differenciálható (az abszolút érték 0-nál nem az), így létezik egy egyenes algebrai képlet a legjobb β-ra. Az abszolút hiba minimalizálása csak iteratív úton oldható meg." },
+      { kind: "text", step: 2, html: "<strong>Statisztikai indoklás:</strong> ha a hibák normális eloszlásúak, a négyzetes hiba minimalizálása pontosan a maximum likelihood becslést adja." },
+      { kind: "tension", step: 3, label: "Az ára: érzékenység a kiugró értékekre", html: "Egy 10-szer akkora hiba <strong>100-szoros</strong> büntetést kap (nem 10-szereset) — egyetlen extrém pont (outlier) elviheti az egész illesztést. Az abszolút hiba (vagy robusztus regresszió) ennek jóval kevésbé van kitéve." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "Mi az R²?",
+    blocks: [
+      { kind: "text", html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
     ],
   },
   {
@@ -393,11 +418,27 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Lineáris regresszió",
-    title: "Két név, két történet",
+    title: "Két külön sztori",
+    blocks: [
+      { kind: "text", html: "Fontos: ez <strong>két külön sztori</strong>, amiknek semmi közük egymáshoz — csak véletlenül futnak össze. A Ceresnek <em>semmi</em> köze a „regresszió a középhez” jelenséghez." },
+      { kind: "text", step: 1, html: "Galtonnak kellett egy módszer, amivel <strong>egyenest illeszthet</strong> az apák/fiak magasság-adataira, hogy megmutassa a jelenséget. Erre a legkisebb négyzetek módszerét használta — amit Gauss és Legendre <strong>évtizedekkel korábban, egy teljesen más problémára</strong> dolgozott ki." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "1. sztori — a módszer eredete",
     blocks: [
       { kind: "tension", label: "Elsőbbségi vita", html: "Gauss szerint már 1795 óta használja a legkisebb négyzetek módszerét — Legendre publikálja először, 1805-ben." },
-      { kind: "plaque", step: 1, year: "1801", html: "Gauss a módszerrel <strong>helyesen megjósolja</strong>, hol tűnik fel újra a „elveszett” Ceres törpebolygó." },
-      { kind: "plaque", step: 2, year: "1886", html: "Galton publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
+      { kind: "plaque", step: 1, year: "1801", html: "Gauss a módszerrel <strong>helyesen megjósolja</strong>, hol tűnik fel újra a „elveszett” Ceres törpebolygó — ez a módszer első látványos igazolása, <em>égi mechanika</em>, semmi köze emberi magassághoz." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "2. sztori — a névadás",
+    blocks: [
+      { kind: "plaque", year: "1886", html: "Galton <strong>ezt a már létező módszert kölcsönvéve</strong> illeszt egyenest a magasság-adatra, és publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
     ],
   },
 
@@ -447,7 +488,7 @@ window.SLIDES = [
           "<strong>e^β₁</strong> (odds ratio): mennyivel <em>szorzódik</em> az esély (odds), ha x eggyel nő",
         ],
       },
-      { kind: "text", step: 3, html: "<span style='color:var(--ink-dim)'>Konkrétan a lemorzsolódás-modellünkön (→ demo.ipynb): β₁ = −0.83, e^β₁ = 0.435 — minden plusz heti használati óra <strong>0.435-szörösére</strong> viszi a lemorzsolódás esélyét (odds).</span>" },
+      { kind: "text", step: 3, html: "<span style='color:var(--ink-dim)'>Konkrétan a lemorzsolódás-modellünkön (→ demo.ipynb): β₁ = −0.95, e^β₁ = 0.39 — minden plusz heti használati óra <strong>0.39-szeresére</strong> viszi a lemorzsolódás esélyét (odds).</span>" },
     ],
   },
   {

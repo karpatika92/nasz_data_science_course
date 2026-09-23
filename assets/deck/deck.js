@@ -151,6 +151,22 @@
       return wrap;
     }
 
+    if (visual.kind === "image-sequence") {
+      const group = el("div", "image-sequence");
+      visual.items.forEach((item) => {
+        const fig = el("figure", "figure figure--visual image-sequence-item");
+        fig.dataset.step = String(item.step || 0);
+        const img = el("img");
+        img.src = item.src;
+        img.alt = item.alt || "";
+        fig.appendChild(img);
+        if (item.caption) fig.appendChild(el("figcaption", "", item.caption));
+        group.appendChild(fig);
+      });
+      wrap.appendChild(group);
+      return wrap;
+    }
+
     return wrap;
   }
 
@@ -225,6 +241,20 @@
     function revealSteps(slideEl, upTo) {
       slideEl.querySelectorAll("[data-step]").forEach((n) => {
         n.classList.toggle("is-revealed", Number(n.dataset.step) <= upTo);
+      });
+
+      // image-sequence: nem egymásra halmozódik, hanem FELVÁLTJA egymást --
+      // csak a legutóbb feloldott kép látszik, a korábbiak eltűnnek.
+      slideEl.querySelectorAll(".image-sequence").forEach((group) => {
+        const items = Array.from(group.querySelectorAll(".image-sequence-item"));
+        let latest = null;
+        items.forEach((item) => {
+          const step = Number(item.dataset.step);
+          if (step <= upTo && (latest === null || step > Number(latest.dataset.step))) {
+            latest = item;
+          }
+        });
+        items.forEach((item) => item.classList.toggle("is-current", item === latest));
       });
     }
 

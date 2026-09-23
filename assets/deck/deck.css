@@ -270,8 +270,12 @@ h2.headline {
 .columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(20px, 4vw, 56px);
+  gap: clamp(28px, 5vw, 72px);
   max-width: 78ch;
+}
+
+.slide--content:not(.has-visual) .columns {
+  max-width: 100ch;
 }
 
 @media (max-width: 760px) {
@@ -282,16 +286,16 @@ h2.headline {
 
 .column h3 {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--accent);
-  margin: 0 0 10px;
+  margin: 0 0 12px;
 }
 
 .column p,
 .column li {
-  font-size: clamp(17px, 1.9vw, 21px);
+  font-size: clamp(19px, 2.2vw, 25px);
   line-height: 1.55;
 }
 
@@ -306,6 +310,23 @@ h2.headline {
 
 .figure--visual {
   max-width: 100%;
+}
+
+/* image-sequence: lépésenként FELVÁLTJA egymást a kép (nem egymásra halmozódik) */
+.image-sequence {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.image-sequence-item {
+  display: none;
+}
+
+.image-sequence-item.is-current {
+  display: flex;
+  opacity: 1;
+  transform: none;
 }
 
 .figure img {
