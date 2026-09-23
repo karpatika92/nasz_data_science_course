@@ -1,0 +1,358 @@
+# 1. óra — Statisztikai alapok (90 perc)
+
+Oktatói jegyzet: időzítés, szókratészi kérdések, várható válaszok, tudománytörténeti
+anyag. A `slides.md` a vetített anyag, ez a fájl a "mit mondj / mit kérdezz" script.
+
+**Csoport:** 10 fő, megosztva — kb. 5 fő közgazdász/statisztikus háttérrel (jelölés
+alább: 🎓), kb. 5 fő kevesebb módszertani előképzettséggel (jelölés: 🌱). A kérdéseknél
+mindkét szintre van variáns; hívj fel tudatosan vegyesen.
+
+**A pedagógiai íve az órának:** minden témát *előbb* rossz/naiv intuícióval, egy
+konkrét kérdéssel vagy játékkal nyitunk, és csak *utána* jön a formalizmus. A cél nem
+az, hogy ők mondják ki a képletet elsőre — hanem hogy lássák, miért van szükség rá,
+mert az intuíciójuk (vagy a híres tudósoké) tévedett.
+
+---
+
+## Időzítés (realisztikus, nem 90 percre jön ki — lásd a vágási pontokat!)
+
+| # | Téma | Perc | Kumulált |
+|---|------|------|----------|
+| 1 | Monty Hall (nyitójáték) | 15 | 15 |
+| 2 | Bayes-tétel | 10 | 25 |
+| 3 | Nagy számok törvénye | 8 | 33 |
+| 4 | Centrális határeloszlás-tétel | 12 | 45 |
+| 5 | Hipotézisvizsgálat alapjai | 12 | 57 |
+| 6 | Korreláció vs. kauzalitás | 8 | 65 |
+| 7 | Simpson-paradoxon | 8 | 73 |
+| 8 | Dimenzió-átok | 6 | 79 |
+| 9 | Lineáris regresszió | 8 | 87 |
+| 10 | Logisztikus regresszió (LPM-ből) | 10 | 97 |
+
+**Ez 97 perc, nem 90.** Reális Szókratész-tempóban ez mindig túlfut — ha az órán ez
+történik, ebben a sorrendben vágj:
+1. **Dimenzió-átok (8. pont)** → 3 percre húzható: mondd ki a lényeget, ne nyisd meg
+   vitának, csak linkeld előre a 2. órához (overfitting sok feature esetén).
+2. **Simpson-paradoxon (7. pont)** → a Berkeley-sztori bemutatása maradjon, de a
+   nyílt vita ("ti mit gondoltok, miért?") rövidüljön 3 percesre.
+3. **Hipotézisvizsgálat Neyman–Pearson-történeti kitérője** → kihagyható, csak Fisher
+   marad.
+Ha ezek után is csúszik: a logisztikus regressziót (10. pont) át lehet vinni a 2. óra
+elejére recap gyanánt — nem ideális, de nem tragédia, mert a 2. óra úgyis kezd egy
+lineáris/logisztikus reggel-el.
+
+---
+
+## 1. Monty Hall — nyitójáték (0–15 perc)
+
+**Ne mondj el semmit előre.** Rajzolj 3 ajtót a táblára (vagy 3 kártyát/poharat fizikailag,
+ha van kellék). Játsszatok le 4-5 kört úgy, hogy te vagy a műsorvezető (tudod, hol a kecske),
+egy-egy önkéntes választ ajtót, te felfeded az egyik rossz ajtót a maradék kettőből, és a
+játékos dönt: vált vagy marad. **Írd fel a táblára az eredményeket** (váltott/nyert,
+maradt/nyert), hogy legyen empirikus adat, mire a formalizmushoz érünk.
+
+**Kérdezd meg a teljes csoportot szavazással, MIELŐTT bármit levezetnétek:**
+„Ha te lennél a játékos — váltanál ajtót, vagy maradnál? Kezet fel."
+
+Várd meg, hogy megosztott legyen a szavazat (általában az). Ez a lényeg: az intuíció
+itt szinte mindenkit cserben hagy.
+
+- 🌱-nak segítő kérdés: „Mennyi az esélye, hogy elsőre jól választottál 3 ajtóból? Ez
+  változik-e attól, hogy a műsorvezető kinyit egy rossz ajtót, amiről *ő* előre tudta,
+  hogy rossz?"
+- 🎓-nak mélyítő kérdés: „Mi változna, ha a műsorvezető véletlenszerűen nyitna ajtót
+  (és néha véletlenül a nyereményt fedné fel)? Ugyanaz-e a válasz?" (Nem — ez a kulcs,
+  hogy a műsorvezető *tudása* viszi be az extra információt.)
+
+**Tudománytörténet:** 1990-ben Marilyn vos Savant (a Guinness szerint akkoriban a
+legmagasabb mért IQ-jú ember) leírta a helyes választ (válts ajtót!) a *Parade*
+magazin rovatában. Kb. **10 000 olvasó** írt neki válaszlevelet, hogy téved — közülük
+kb. **1000-en doktori fokozattal** rendelkeztek, néhányan matematikából. Paul Erdőst,
+a XX. század egyik legtermékenyebb matematikusát is csak egy számítógépes szimuláció
+győzte meg. **Ez a lesson 1 központi üzenete: az intuíció itt szisztematikusan
+téved, ezért kellenek formális eszközök — ez az egész óra ürügye.**
+
+**Híd a következő témához:** „Amit most csináltatok — új infó hatására megváltoztattátok
+(vagy nem) a hitünket egy esemény valószínűségéről — pontosan ezt formalizálja a
+Bayes-tétel."
+
+---
+
+## 2. Bayes-tétel (15–25 perc)
+
+Ne a képlettel indíts. Vezesd le velük **alulról-fölfelé** a Monty Hall-on:
+„Mi volt P(nyeremény az 1-es ajtó mögött)? Mi lett ez, miután megnyílt a 3-as ajtó?
+Mi változott — az esemény, vagy a *tudásunk* róla?" Csak ezután írd fel formálisan:
+P(A|B) = P(B|A)·P(A) / P(B).
+
+**Fő diszkussziós példa (klasszikus, direktbe kötődik a 2. órához):** ritka betegség,
+prevalencia 1%, a teszt 99%-ban helyesen jelez pozitívat beteg esetén (szenzitivitás)
+és 99%-ban helyesen jelez negatívat egészséges esetén (specificitás). Valaki pozitív
+lesz — mekkora eséllyel *tényleg* beteg?
+
+- Hagyd, hogy előbb **tippeljenek** (a legtöbben ~99%-ot mondanak — ez a "base rate
+  fallacy").
+- Vezesd le táblán: 10 000 emberből 100 beteg, abból 99 pozitív lesz; 9900 egészséges,
+  abból ~99 hamis pozitív lesz. Tehát a pozitívak fele sem beteg valójában (~50%,
+  pontosan 99/198).
+- 🎓-nak: „Mi történne ezzel a számmal, ha a prevalencia 1‰ lenne?" (Még rosszabb —
+  jó bevezetés, miért kritikus a "base rate" minden osztályozó kiértékelésénél, ezt a
+  2. órán a klasszifikációs modellek kiértékelésénél élesben visszahozzuk.)
+- 🌱-nak: „Mi a különbség aközött, hogy 'a teszt megbízható' és 'ha pozitív lettem,
+  tényleg beteg vagyok'?" — a két állítás összemosása a leggyakoribb hiba, ezt hangosan
+  nevezzétek meg.
+
+**Tudománytörténet:** Thomas Bayes tiszteletes (1701–1761) sosem publikálta életében a
+tételt — a barátja, Richard Price találta meg a jegyzetei közt és adta ki posztumusz,
+1763-ban. Pierre-Simon Laplace néhány évtizeddel később **egymástól függetlenül újra
+felfedezte**, és jóval általánosabb formában alkalmazta (pl. Párizs férfi/nő
+születési arányának becslésére). A II. világháborúban Alan Turing és Jack Good
+bayesi statisztikai módszerekkel ("Banburismus") törték fel a német Enigma-kódot
+Bletchley Parkban — az egyik legkorábbi nagy horderejű, gyakorlati bayesi
+alkalmazás.
+
+---
+
+## 3. Nagy számok törvénye (25–33 perc)
+
+**Nyitókérdés (gambler's fallacy csapda):** „Feldobok egy szabályos érmét, és 8-szor
+egymás után fej jön ki. Mennyi az esélye, hogy a 9. dobás írás?" Várd, hogy valaki
+mondja: „nagyobb, mint 50%, mert 'esedékes' az írás." Ez a hiba — vitassátok meg,
+miért 50% marad mindig (az érmének nincs memóriája).
+
+**A tétel maga:** ha elég sokszor ismétled a kísérletet, a mintaátlag konvergál a
+valódi várható értékhez — de ez **nem** azt jelenti, hogy a jövőbeli dobások
+"kompenzálnak" a múltbeliekért, hanem hogy a múltbeli kilengés egyre kisebb súlyú
+lesz egy egyre hosszabb sorozatban.
+
+- 🌱-nak: „Ha 10 dobásból 8 fej jön ki, az azt jelenti, hogy csalás az érme?" (Nem
+  feltétlenül — kis mintán a kilengés normális; ez már a hipotézisvizsgálat felé
+  mutat.)
+- 🎓-nak: „Miért *gyenge* törvény a nagy számok gyenge törvénye — mi különbözteti meg
+  az erős változattól?" (konvergencia típusa: valószínűségben vs. majdnem biztosan —
+  ha van idő, csak említsd meg, ne vezesd le.)
+
+**Tudománytörténet:** Jakob Bernoulli bő 20 évig dolgozott a bizonyításon, és sosem
+látta kiadva — az *Ars Conjectandi* (A sejtés művészete) című munkáját unokaöccse,
+Nicolaus Bernoulli adta ki posztumusz, 1713-ban. Ez volt az első szigorú matematikai
+bizonyítéka egy addig csak "minden szerencsejátékos által ösztönösen tudott" ténynek.
+
+---
+
+## 4. Centrális határeloszlás-tétel (33–45 perc)
+
+**Nyitókérdés:** „Ha bármilyen — akár nagyon ferde, akár teljesen szabálytalan —
+eloszlásból sokszor mintát veszek, és mindig kiszámolom a mintaátlagot, milyen alakú
+lesz *ezeknek az átlagoknak* az eloszlása?" Hagyd, hogy tippeljenek, mielőtt
+megmutatod a notebookot.
+
+**Élő demó (`demo.ipynb`, CLT szekció):** vetítsd ki, ahogy egy erősen ferde
+(exponenciális) eloszlásból vett minták átlagainak hisztogramja n növelésével egyre
+inkább normális alakot vesz fel. Ez a lecke vizuális csúcspontja — hagyj rá időt.
+
+- 🌱-nak: „Mi a gyakorlati jelentősége ennek? Miért jó hír, hogy a mintaátlagok
+  normális eloszlásúak, ha maguk az adatok nem azok?"
+- 🎓-nak: „Milyen feltétele van a CLT-nek? Mikor sérülhet (pl. végtelen szórás,
+  erős autokorreláció)?"
+
+**Híd a hipotézisvizsgáláshoz:** „Ez az oka annak, hogy a legtöbb hipotézisvizsgálat
+működik: NEM az egyedi adatpontok eloszlásától függnek, hanem a mintaátlagok
+kiszámítható (normális) viselkedésétől."
+
+**Tudománytörténet:** Abraham de Moivre 1733-ban közelítette először a binomiális
+eloszlást normálissal. Laplace általánosította. A szigorú, általános bizonyítást
+Alekszandr Ljapunov adta 1901-ben — közel 170 évvel az első megsejtés után. Francis
+Galton 1889-ben megépítette a "bean machine"-t (Galton-deszka) — egy fizikai
+eszközt, ami golyók leejtésével *vizuálisan* demonstrálja a CLT-t; ma is kapható
+játékként. Ha van rá mód, érdemes egy videót vetíteni róla (l. homework linkek).
+
+---
+
+## 5. Hipotézisvizsgálat alapjai (45–57 perc)
+
+**Nyitókérdés:** „Lefuttattok egy A/B tesztet, és B jobban teljesít, mint A. Mikor
+hiszitek el, hogy ez valódi különbség, és mikor gondoljátok, hogy csak zaj?"
+
+Vezesd le: nullhipotézis (nincs különbség), alternatív hipotézis, p-érték.
+**Explicit debunkolandó tévhit** (mondd ki hangosan, mert szinte mindenki rosszul
+tanulja meg): a p-érték **NEM** "annak a valószínűsége, hogy a nullhipotézis igaz."
+A p-érték: "milyen valószínű, hogy *legalább ilyen extrém* adatot látnék, HA a
+nullhipotézis igaz volna." Ez a leggyakoribb hiba a szakirodalomban is.
+
+- 🌱-nak: „Mi a különbség aközött, hogy 'statisztikailag szignifikáns' és
+  'gyakorlatilag fontos'?" (nagy mintán apró, lényegtelen hatás is szignifikáns
+  lehet.)
+- 🎓-nak: „Mi az I. és II. típusú hiba, és milyen üzleti/etikai döntés van a
+  szignifikanciaszint (α) megválasztása mögött?" (pl. gyógyszertesztnél máshogy
+  súlyozzuk a hibákat, mint egy A/B tesztnél a weboldalon.)
+
+**Tudománytörténet — "Lady Tasting Tea":** Ronald Fisher a Rothamsted kutatóállomáson
+az 1920-as években egy kollégájával, Muriel Bristollal vitatkozott, aki állította,
+hogy meg tudja mondani ízlelés alapján, a teát vagy a tejet töltötték-e előbb a
+csészébe. Fisher erre tervezett egy randomizált kísérletet — ebből született meg a
+modern szignifikanciavizsgálat kerete (*The Design of Experiments*, 1935).
+**Csavart is érdemes megemlíteni:** Fisher kerete és a Jerzy Neyman + Egon Pearson
+által (1933-ban) kidolgozott keret (alternatív hipotézis, I./II. típusú hiba) **nem
+ugyanaz**, és a szerzőik évtizedekig vitatkoztak arról, mit is jelent valójában egy
+szignifikanciateszt. A ma tanított "p < 0.05, elvetjük H0-t" recept valójában a két,
+egymással vitázó iskola hibrid keveréke. (Jó Szókratész-pont: ha még a mezőt
+megalapozó tudósok sem értettek egyet, nem szégyen kritikusan gondolkodni a
+"p < 0.05" szabályról, nem kell vakon követni.)
+
+---
+
+## 6. Korreláció vs. kauzalitás (57–65 perc)
+
+Mutass 1-2 "spurious correlation" példát (Tyler Vigen oldala/könyve, pl. Nicolas
+Cage-filmek száma és a medencébe fulladások korrelációja, vagy sajtfogyasztás és
+ágyneműbe gabalyodva bekövetkezett halálesetek). Nevettessetek egyet, aztán:
+
+**Kérdés:** „Mi kellene ahhoz, hogy A okozza B-t, szemben azzal, hogy B okozza A-t,
+vagy hogy egy harmadik C okozza mindkettőt?" — vezessétek be közösen a
+konfounder/reverse causation fogalmát egy-egy általuk hozott példán.
+
+- 🌱-nak: konkrét, hétköznapi példa kérése tőlük (pl. "fagylaltfogyasztás és
+  vízbefulladás nyáron együtt nő" — a közös ok a meleg időjárás).
+- 🎓-nak: „Milyen kísérleti vagy kvázi-kísérleti módszer különböztetné meg a
+  korrelációt a kauzalitástól itt?" (RCT, instrumentális változó, diff-in-diff — csak
+  említés szintjén, nem levezetés.)
+
+**Tudománytörténet (fontos, mert árnyalt):** az 1950-es években dúlt a vita a
+dohányzás és a tüdőrák kapcsolatáról. Ronald Fisher — akit épp az előbb mint a modern
+statisztika atyját mutattunk be — **a dohányipar fizetett tanácsadójaként**
+komolyan amellett érvelt, hogy egy meg nem figyelt genetikai konfounder
+magyarázhatja mind a dohányzási hajlamot, mind a rákkockázatot, tehát a korreláció
+nem bizonyít kauzalitást. **Ez szándékosan kényes példa: még a legnagyobb
+statisztikusok is tévedhetnek (vagy elfogultak lehetnek), a tudomány nem tekintélyi
+alapon dől el.** A kérdést végül Austin Bradford Hill 1965-ös kauzalitási
+kritériumrendszere segített lezárni — több, egymástól független bizonyítékvonal
+együttes mérlegelésével.
+
+---
+
+## 7. Simpson-paradoxon (65–73 perc)
+
+**Mutasd meg ELŐSZÖR csak az összesített adatot, vita nélkül fedd fel a bontást:**
+UC Berkeley, 1973 — az egyetem ellen nemi diszkriminációs pert indítottak, mert az
+összesített felvételi arány férfiaknál magasabb volt, mint nőknél. Kérdezd meg:
+„Ez bizonyítja a diszkriminációt?" Hagyd, hogy vitatkozzanak.
+
+Utána mutasd meg a **tanszékenkénti** bontást: a legtöbb tanszéken a nők felvételi
+aránya *egyenlő vagy magasabb* volt, mint a férfiaké — az összesített különbséget az
+okozta, hogy a nők aránytalanul sok jelentkezést adtak be a legversenyzőbb (alacsony
+felvételi arányú) tanszékekre.
+
+- 🌱-nak: „Hogyan lehet, hogy minden alcsoportban jobb (vagy egyenlő) az arány, mégis
+  összesítve rosszabbnak tűnik?" — rajzoljátok fel közösen egy 2×2-es toy példával.
+- 🎓-nak: „Milyen adatgyűjtési/aggregálási döntés vezet ide, és hogyan védekeznél
+  ellene elemzőként?" (mindig nézz szegmentált bontást is, ne csak összesítést.)
+
+**Tudománytörténet:** a jelenséget már Karl Pearson (1899) és Udny Yule (1903) is
+leírta — a hivatalos nevet mégis Edward H. Simpson 1951-es cikke után kapta, majd
+Colin Blyth nevezte el "Simpson-paradoxonnak" 1972-ben. Vagyis a "Simpson-paradoxon"
+igazából korábban ismert volt, mint Simpson cikke — jó apropó arra, hogy a
+tudománytörténetben a névadás gyakran esetleges.
+
+---
+
+## 8. Dimenzió-átok (73–79 perc, *vágható 3 percre, ld. fent*)
+
+Tartsd rövidre és fogalmi szinten: ahogy nő a dimenziók (feature-ök) száma, az adat
+egyre "ritkábbá" válik a térben, és a távolságmértékek (pl. legközelebbi szomszéd)
+egyre kevésbé informatívak, mert minden pont kb. egyformán távol kerül mindenki
+mástól.
+
+**Egyetlen kérdés, ha kevés az idő:** „Ha mindenki kb. ugyanolyan távol van tőled,
+van-e még értelme annak, hogy 'legközelebbi szomszéd'?"
+
+**Tudománytörténet:** a kifejezést Richard Bellman alkotta meg **1957-ben**, a
+*Dynamic Programming* című könyvében — eredetileg **nem** statisztikai vagy
+geometriai kontextusban, hanem azért, mert a dinamikus programozásban az
+állapottér mérete exponenciálisan nő a dimenziók számával. A statisztika/gépi
+tanulás csak később, a ritkás nagy-dimenziós terek problémájára vette át a
+kifejezést. **Előremutatás a 2. órára:** ez az oka annak, hogy sok feature-rel
+könnyű overfittelni.
+
+---
+
+## 9. Lineáris regresszió (79–87 perc)
+
+Gyors, mert várhatóan a fele csoport már látta. Vezesd le a legkisebb négyzetek
+elvét: keressük azt az egyenest, ami minimalizálja a hibák **négyzetösszegét**.
+
+**Kérdés (jó szintkülönböztető):** „Miért a hiba *négyzetét* minimalizáljuk, nem az
+abszolút értékét?"
+- 🌱 szintű válasz: a nagy hibákat aránytalanul jobban bünteti, és mindig pozitív.
+- 🎓 szintű válasz: differenciálható mindenhol (szemben az abszolút értékkel),
+  zárt alakú megoldás létezik, és MLE-ként adódik normális eloszlású hibák
+  feltevése mellett.
+
+**Tudománytörténet:** magát a "regresszió" szót Francis Galton adta a
+jelenségnek 1886-ban, amikor észrevette, hogy a magas szülők gyerekei átlagosan
+alacsonyabbak a szülőknél, az alacsony szülők gyerekei pedig magasabbak — "regresszió
+a középszerűséghez" (ma: "regresszió az átlaghoz"). Magát a legkisebb négyzetek
+módszerét Adrien-Marie Legendre publikálta először (1805), de Carl Friedrich Gauss
+azt állította, ő már 1795 óta használta — az elsőbbségi vita mindmáig lezáratlan.
+Gauss híres demonstrációja: 1801-ben a legkisebb négyzetek módszerével **helyesen
+megjósolta**, hol fog újra feltűnni az égen a Ceres törpebolygó, miután Giuseppe
+Piazzi felfedezése után az égitest a Nap mögé került és "elveszett" — ez volt a
+módszer első nagy, látványos gyakorlati igazolása.
+
+---
+
+## 10. Logisztikus regresszió — a lineáris valószínűségi modellből (87–97 perc)
+
+**Ne a logisztikus regresszióval indíts.** Kérdezd meg: „Bináris kimenetet
+(igen/nem) szeretnétek megjósolni — mondjuk, hogy egy felhasználó lemorzsolódik-e.
+Miért ne futtatnátok le rajta egyszerűen a most tanult lineáris regressziót?"
+Hagyd, hogy megpróbálják — ez a **lineáris valószínűségi modell (LPM)**.
+
+**Notebook demó:** vetítsd ki, hogy az LPM predikciói **0 alá és 1 fölé** mennek —
+ilyenkor mit jelent egy "-12%-os" vagy "140%-os" esélyt? Ez konkrétan, vizuálisan
+mutatja meg a problémát, nem csak elméletben.
+
+**Kérdés:** „Milyen függvény tudná a lineáris predikciónkat mindig [0,1] közé
+szorítani, bármi is legyen a bemenet?" Hagyd, hogy javasoljanak (pl. levágás,
+normalizálás) — majd mutasd meg, miért jobb egy sima, S-alakú (szigmoid) függvény.
+
+- 🌱-nak: intuíció szinten elég, hogy "van egy görbénk, ami sosem megy 0 alá vagy 1
+  fölé."
+- 🎓-nak: „Mi történik ilyenkor a hibatag varianciájával az LPM-ben, és miért sérti
+  ez a lineáris regresszió alapfeltevéseit (homoszkedaszticitás)?"
+
+**Tudománytörténet:** maga a **logisztikus függvény** száz évvel a regressziós
+alkalmazása előtt született: Pierre François Verhulst belga matematikus vezette be
+az 1830-40-es években, hogy a **korlátozott** népességnövekedést modellezze (szemben
+Malthus korlátlan, exponenciális modelljével) — innen a "logisztikus" név. A
+logisztikus *regressziót* statisztikai módszerként David Cox dolgozta ki 1958-as
+cikkében ("The Regression Analysis of Binary Sequences").
+
+**Zárás (utolsó ~3 perc):** „Ma egy lineáris modellt egy nem-lineáris
+transzformációval bővítettetek ki — jövő héten innen indulunk, és rendesen
+nem-lineárissá válunk."
+
+---
+
+## Házi feladat
+
+Lásd: `homework.md`.
+
+---
+
+## Ötletek a következő órákhoz (NEM ennek az órának a része — csak jelzés)
+
+Ezeket **nem** vettem fel az órai anyagba, mert szétfeszítenék a 90 percet, de
+érdemes lehet egy fél oldalas "0. dia" jellegű összefoglalóban vagy a házi
+kiegészítéseként megemlíteni, mert a 2. és 3. óra rájuk épít:
+
+- **Várható érték és szórás** — kell a 2. óra bias-variance tradeoffjához és a
+  3. óra CLTV-számításához (annuitás/perpetuitás jelenértéke várható értékek
+  összege).
+- **Populáció vs. minta** megkülönböztetése — implicit már ott van a nagy
+  számok törvényénél és a CLT-nél, de explicit kimondása segítene.
+- **Standard hiba / mintavételi eloszlás** — a CLT és a hipotézisvizsgálat közti
+  hidat erősítené, ha külön kimondanátok, hogy a hipotézisvizsgálat pontosan a
+  mintaátlag mintavételi eloszlására épül.
+- **Alapvető eloszlások szótára** (Bernoulli, binomiális, normális) — egységes
+  szókincs, ami a logisztikus regressziónál (Bernoulli-kimenet) és a 3. óra
+  konverziós/churn-görbéinél is előjön.
