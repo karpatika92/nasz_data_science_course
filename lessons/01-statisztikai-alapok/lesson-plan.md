@@ -192,6 +192,14 @@ inkább normális alakot vesz fel. Ez a lecke vizuális csúcspontja — hagyj r
 működik: NEM az egyedi adatpontok eloszlásától függnek, hanem a mintaátlagok
 kiszámítható (normális) viselkedésétől."
 
+**„A tömeg bölcsessége" (`slides.html`, külön dia):** Galton 1907-es
+ökörsúly-becslő története (787 tipp, medián 1207 font, valós súly 1198 font,
+0.8% hiba) — ugyanaz a mechanizmus, mint a nagy számok törvénye: sok
+független becslés átlaga/mediánja stabilabb, mint bármelyik egyedi tipp.
+**Előremutatás a 2. órára:** ez pontosan az, amiért a random forest működik
+(sok, decorrelált fa átlaga) — ha van rá mód, kösd vissza akkor erre a
+sztorira.
+
 **Tudománytörténet:** Abraham de Moivre 1733-ban közelítette először a binomiális
 eloszlást normálissal. Laplace általánosította. A szigorú, általános bizonyítást
 Alekszandr Ljapunov adta 1901-ben — közel 170 évvel az első megsejtés után. Francis

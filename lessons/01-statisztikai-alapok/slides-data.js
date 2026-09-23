@@ -153,6 +153,17 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "CLT",
+    title: "A tömeg bölcsessége",
+    blocks: [
+      { kind: "text", html: "1907, Plymouth — egy állatkiállításon <strong>787 ember</strong> tippeli meg egy leölt, kikészített ökör súlyát, fejenként hat pennyért." },
+      { kind: "text", step: 1, html: "Galton összegyűjti a cédulákat, és statisztikai kíváncsiságból kiszámolja a <strong>tippek mediánját</strong>: 1207 font." },
+      { kind: "tension", step: 2, label: "A valódi súly: 1198 font", html: "A tömeg „közös” becslése mindössze <strong>9 fonttal (0.8%-kal)</strong> tévedett — jóval pontosabban, mint szinte bármelyik egyéni tippelő. Galton ezt „Vox Populi” címmel közölte a Nature-ben." },
+      { kind: "text", step: 3, html: "Ez pontosan a mai óra üzenete: <strong>sok, egymástól független becslés átlaga (vagy mediánja) stabilabb</strong>, mint bármelyik egyedi becslés — ugyanaz a mechanizmus, mint a nagy számok törvényénél." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "CLT",
     title: "170 év a szigorú bizonyításig",
     visual: { kind: "image", step: 1, src: "assets/galton_board.png", alt: "Galton-deszka (quincunx), Galton 1889-es diagramja", caption: "Francis Galton, 1889 — a quincunx eredeti diagramja" },
     blocks: [
