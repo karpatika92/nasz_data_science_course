@@ -67,7 +67,7 @@ body {
   display: none;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(24px, 6vw, 96px) clamp(20px, 8vw, 140px);
+  padding: clamp(20px, 4vw, 64px) clamp(20px, 8vw, 140px);
   overflow-y: auto;
   background: var(--bg);
 }
@@ -129,35 +129,49 @@ h2.headline {
   letter-spacing: -0.01em;
   text-wrap: balance;
   margin: 0 0 0.4em;
-  max-width: 22ch;
+  max-width: 26ch;
 }
 
 h1.headline {
-  font-size: clamp(34px, 5.4vw, 72px);
+  font-size: clamp(38px, 6.2vw, 80px);
 }
 
 h2.headline {
-  font-size: clamp(26px, 3.6vw, 46px);
+  font-size: clamp(32px, 4.6vw, 58px);
 }
 
 .kicker {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: clamp(16px, 1.8vw, 22px);
+  font-size: clamp(19px, 2.2vw, 26px);
   color: var(--ink-dim);
-  max-width: 52ch;
+  max-width: 60ch;
   margin: 0 0 28px;
 }
 
 .body-stack {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 24px;
   max-width: 62ch;
 }
 
+/* Vizuál (kép/ajtók/diagram) nélküli diákon nincs mivel osztozni a helyen --
+   ott a szöveg húzódhat szélesebbre és nagyobbra, hogy kitöltse a diát. */
+.slide--content:not(.has-visual) .body-stack {
+  max-width: 88ch;
+}
+
+.slide--content:not(.has-visual) h2.headline {
+  max-width: 34ch;
+}
+
+.slide--content:not(.has-visual) .kicker {
+  max-width: 75ch;
+}
+
 .body-stack p {
-  font-size: clamp(16px, 1.7vw, 21px);
+  font-size: clamp(19px, 2.1vw, 26px);
   line-height: 1.5;
   margin: 0;
   color: var(--ink);
@@ -166,11 +180,11 @@ h2.headline {
 .body-stack ul {
   margin: 0;
   padding-left: 1.1em;
-  font-size: clamp(15px, 1.6vw, 20px);
+  font-size: clamp(18px, 2vw, 25px);
   line-height: 1.6;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .body-stack li::marker {
@@ -197,7 +211,7 @@ h2.headline {
 
 .ask p {
   font-family: var(--font-display);
-  font-size: clamp(19px, 2.2vw, 27px);
+  font-size: clamp(22px, 2.6vw, 32px);
   font-weight: 500;
   line-height: 1.3;
   margin: 0;
@@ -221,7 +235,7 @@ h2.headline {
 }
 
 .plaque .plaque-text {
-  font-size: clamp(14px, 1.5vw, 17px);
+  font-size: clamp(17px, 1.9vw, 21px);
   line-height: 1.5;
   color: var(--ink-dim);
 }
@@ -238,7 +252,7 @@ h2.headline {
   background: var(--tension-soft);
   padding: 16px 22px;
   border-radius: 2px;
-  font-size: clamp(14px, 1.5vw, 17px);
+  font-size: clamp(17px, 1.9vw, 21px);
   line-height: 1.55;
 }
 
@@ -277,7 +291,7 @@ h2.headline {
 
 .column p,
 .column li {
-  font-size: clamp(14px, 1.5vw, 17px);
+  font-size: clamp(17px, 1.9vw, 21px);
   line-height: 1.55;
 }
 
@@ -320,6 +334,29 @@ h2.headline {
   flex-direction: row;
   align-items: center;
   gap: clamp(28px, 5vw, 72px);
+}
+
+/* Sűrű, több-paneles ábráknak (pl. Simpson-paradoxon, dimenzió-átok) a
+   szokásos ~50/50 osztott elrendezés túl kicsire szorítja a képet — ezek
+   inkább egy rövid szöveg ALATT, majdnem teljes szélességben kapják a helyet. */
+.slide.has-visual.has-visual--stack {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.slide.has-visual--stack .content-col {
+  flex: none;
+}
+
+.slide.has-visual--stack .slide-visual {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.slide.has-visual--stack .figure img {
+  max-height: 40vh;
 }
 
 .slide.has-visual .content-col {
@@ -497,7 +534,7 @@ h2.headline {
 
 .slide--content {
   justify-content: flex-start;
-  padding-top: clamp(72px, 14vh, 120px);
+  padding-top: clamp(56px, 9vh, 84px);
 }
 
 .slide--divider {

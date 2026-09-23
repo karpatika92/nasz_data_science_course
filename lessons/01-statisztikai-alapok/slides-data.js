@@ -137,7 +137,7 @@ window.SLIDES = [
     blocks: [
       { kind: "text", html: "Ha <strong>bármilyen</strong> — akár nagyon ferde — eloszlásból sokszor mintát veszünk, és mindig kiszámoljuk a mintaátlagot —" },
       { kind: "ask", step: 1, html: "milyen alakú lesz maguknak az átlagoknak az eloszlása?" },
-      { kind: "text", step: 2, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>X̄ₙ ≈ Normal(μ, σ²/n), ha n elég nagy</span><br><span style='color:var(--ink-dim)'>Figyelem, <strong>mire</strong> vonatkozik ez: nem az egyedi megfigyelésekre — a <strong>mintaátlagra (X̄ₙ)</strong>. Az eredeti adat maradhat tetszőlegesen ferde, <em>a mintaátlagok eloszlása</em> tart normálishoz, ahogy n nő.</span>" },
+      { kind: "text", step: 2, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>X̄ₙ ≈ Normal(μ, σ²/n), ha n elég nagy</span><br><span style='color:var(--ink-dim)'>Ez a <strong>mintaátlagra (X̄ₙ)</strong> vonatkozik, nem az egyedi megfigyelésekre — az eredeti adat maradhat tetszőlegesen ferde.</span>" },
     ],
     visual: { kind: "image", step: 2, src: "assets/normal_distribution.png", alt: "A mintaátlag (X̄ₙ) mintavételi eloszlása, nem az egyedi adatok eloszlása", caption: "Ez X̄ₙ eloszlása — nem az eredeti adaté" },
     note: "→ demo.ipynb: exponenciális eloszlás → mintaátlagok",
@@ -146,11 +146,11 @@ window.SLIDES = [
     type: "content",
     eyebrow: "CLT",
     title: "170 év a szigorú bizonyításig",
-    visual: { kind: "image", step: 2, src: "assets/galton_board.png", alt: "Galton-deszka (quincunx), Galton 1889-es diagramja", caption: "Francis Galton, 1889 — a quincunx eredeti diagramja" },
+    visual: { kind: "image", step: 1, src: "assets/galton_board.png", alt: "Galton-deszka (quincunx), Galton 1889-es diagramja", caption: "Francis Galton, 1889 — a quincunx eredeti diagramja" },
     blocks: [
       { kind: "plaque", year: "1733", html: "de Moivre közelíti a binomiálist normálissal." },
-      { kind: "plaque", step: 1, year: "1901", html: "Ljapunov adja az <strong>általános, szigorú</strong> bizonyítást." },
-      { kind: "plaque", step: 2, year: "1889", html: "Galton megépíti a „bean machine”-t — fizikai CLT-demonstrátor, ma is kapható játékként." },
+      { kind: "plaque", step: 1, year: "1889", html: "Galton megépíti a „bean machine”-t — fizikai CLT-demonstrátor, ma is kapható játékként." },
+      { kind: "plaque", step: 2, year: "1901", html: "Ljapunov adja az <strong>általános, szigorú</strong> bizonyítást." },
       { kind: "text", step: 3, html: "<strong>Ezért működik szinte minden hipotézisvizsgálat</strong> — nem az egyedi adatpontoktól, hanem a mintaátlagok kiszámítható viselkedésétől." },
     ],
   },
@@ -180,12 +180,32 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Hipotézisvizsgálat",
+    title: "A permutációs teszt — lépésről lépésre",
+    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Permutációs teszt eredménye", caption: "→ demo.ipynb — szürke: 10 000 kevert különbség; piros: a megfigyelt +1.9pp" },
+    blocks: [
+      { kind: "text", html: "Ha H0 igaz (nincs valódi különbség), az A/B címke csak egy véletlen cédula a 2000 látogatón — <strong>felcserélhető</strong>." },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Keverd össze véletlenül a 2000 címkét (1000 „A”, 1000 „B”)",
+          "Számold ki az új „B” − „A” különbséget",
+          "Ismételd 10 000-szer",
+        ],
+      },
+      {
+        kind: "text", step: 2,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p = (hányszor |kevert különbség| ≥ 1.9pp) / 10 000 = <strong>0.170</strong></span>",
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Hipotézisvizsgálat",
     title: "Amit a p-érték NEM jelent",
-    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Permutációs teszt eredménye", caption: "→ demo.ipynb — checkers.com A/B teszt, permutációs eloszlás" },
     blocks: [
       { kind: "tension", label: "Leggyakoribb tévhit", html: "❌ „Annak a valószínűsége, hogy a nullhipotézis igaz.”" },
       { kind: "text", step: 1, html: "✅ „Milyen valószínű, hogy <em>legalább ilyen extrém</em> adatot látnék, HA a nullhipotézis igaz volna.”" },
-      { kind: "text", step: 2, html: "A checkers.com adatán: <strong>p = 0.17</strong> — a megfigyelt +1.9 százalékpontos különbség simán előfordulhat puszta véletlenből is. <em>Nem</em> mondanánk, hogy az új oldal szignifikánsan jobb." },
+      { kind: "text", step: 2, html: "A checkers.com adatán ez pontosan <strong>17%</strong> — nem elég ritka ahhoz, hogy kizárjuk a véletlent. <em>Nem</em> mondanánk, hogy az új oldal szignifikánsan jobb." },
     ],
   },
   {
@@ -210,8 +230,9 @@ window.SLIDES = [
     eyebrow: "Hipotézisvizsgálat",
     title: "Még a founderek is vitáztak",
     blocks: [
-      { kind: "plaque", year: "1935", html: "Fisher közzéteszi a módszert az <em>The Design of Experiments</em>-ben — ebből születik a modern szignifikanciavizsgálat." },
-      { kind: "tension", step: 1, label: "Még a founderek is vitáztak", html: "Fisher és a Neyman–Pearson páros (1933) évtizedekig vitatkozott azon, mit is jelent egy szignifikanciateszt. A ma tanított „p < 0.05” recept a két, egymással vitázó iskola hibridje." },
+      { kind: "plaque", year: "1933", html: "Neyman és Pearson kidolgozza saját keretét (alternatív hipotézis, I./II. típusú hiba)." },
+      { kind: "tension", step: 1, label: "Még a founderek is vitáztak", html: "Fisher és a Neyman–Pearson páros évtizedekig vitatkozott azon, mit is jelent egy szignifikanciateszt. A ma tanított „p < 0.05” recept a két, egymással vitázó iskola hibridje." },
+      { kind: "plaque", step: 2, year: "1935", html: "Fisher közzéteszi saját módszerét az <em>The Design of Experiments</em>-ben — ebből születik a modern szignifikanciavizsgálat." },
     ],
   },
 
@@ -265,19 +286,27 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Simpson-paradoxon",
     title: "Tanszékenkénti bontás",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/simpsons_paradox.png", alt: "Simpson-paradoxon: összesített vs. tanszékenkénti felvételi arány", caption: "→ demo.ipynb — toy admissions adat" },
     blocks: [
       { kind: "text", html: "Minden tanszéken a nők felvételi aránya <strong>magasabb</strong> volt." },
       { kind: "ask", step: 1, html: "Hogyan lehet minden alcsoportban jobb az arány, mégis összesítve rosszabb?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Simpson-paradoxon",
+    title: "A számítás",
+    blocks: [
       {
-        kind: "list", step: 2,
+        kind: "list",
         items: [
           "A tanszék (könnyű, 60-65%): 800 férfi, 200 nő jelentkezik",
           "B tanszék (nehéz, 30-35%): 200 férfi, 800 nő jelentkezik",
         ],
       },
       {
-        kind: "text", step: 3,
+        kind: "text", step: 1,
         html: "<span style='font-family:var(--font-mono); font-size:1.05em; color:var(--accent)'>férfi összesített = (800×60% + 200×30%) / 1000 = 54%<br>nő összesített&nbsp;&nbsp;&nbsp;&nbsp;= (200×65% + 800×35%) / 1000 = 41%</span><br><span style='color:var(--ink-dim)'>A súlyozás — nem a diszkrimináció — húzza le a nők összesített számát.</span>",
       },
     ],
@@ -297,18 +326,26 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Dimenzió-átok",
     title: "Mindenki egyformán távol",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/curse_of_dimensionality.png", alt: "Dimenzió-átok: távolságarány, gömb/kocka térfogatarány, véletlen vektorok szöge", caption: "→ demo.ipynb — három nézet ugyanarra a jelenségre" },
     blocks: [
       { kind: "text", html: "Ahogy nő a feature-ök száma, minden pont egyre „egyformábban” távol kerül minden más ponttól." },
       { kind: "ask", step: 1, html: "Ha mindenki kb. ugyanolyan távol van tőled — van-e még értelme a „legközelebbi szomszédnak”?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Dimenzió-átok",
+    title: "Két meglepő következmény",
+    blocks: [
       {
-        kind: "list", step: 2,
+        kind: "list",
         items: [
           "Egy egységgömb térfogata <strong>eltűnik</strong> a körülírt kockájához képest, ahogy nő a dimenzió",
           "Két <strong>véletlen</strong> vektor szöge nagy dimenzióban ~90°-hoz tart — majdnem mindig merőlegesek",
         ],
       },
-      { kind: "plaque", step: 3, year: "1957", html: "Richard Bellman alkotja meg a kifejezést — eredetileg <strong>nem</strong> statisztikában, hanem a dinamikus programozás exponenciálisan növekvő állapotterére." },
+      { kind: "plaque", step: 1, year: "1957", html: "Richard Bellman alkotja meg a kifejezést — eredetileg <strong>nem</strong> statisztikában, hanem a dinamikus programozás exponenciálisan növekvő állapotterére." },
     ],
   },
 
@@ -318,7 +355,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Lineáris regresszió",
     title: "Legkisebb négyzetek",
-    visual: { kind: "image", step: 2, src: "assets/linear_regression.png", alt: "Lineáris regresszió: illesztett egyenes és reziduumok", caption: "→ demo.ipynb — y = ŷ + ε, R² kiszámolva" },
+    visual: { kind: "image", step: 1, src: "assets/linear_regression.png", alt: "Lineáris regresszió: illesztett egyenes és reziduumok", caption: "→ demo.ipynb — y = ŷ + ε, R² kiszámolva" },
     blocks: [
       { kind: "text", html: "<span style='font-family:var(--font-mono); font-size:1.2em; color:var(--accent)'>y = β₀ + β₁x + ε</span>" },
       {
@@ -329,8 +366,15 @@ window.SLIDES = [
           "<strong>ε</strong> (hiba/reziduum): amit a modell <em>nem</em> magyaráz meg",
         ],
       },
-      { kind: "ask", step: 2, html: "Miért a hiba <em>négyzetét</em> minimalizáljuk, nem az abszolút értékét?" },
-      { kind: "text", step: 3, html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "Miért a négyzet, és mi az R²?",
+    blocks: [
+      { kind: "ask", html: "Miért a hiba <em>négyzetét</em> minimalizáljuk, nem az abszolút értékét?" },
+      { kind: "text", step: 1, html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
     ],
   },
   {
@@ -351,9 +395,9 @@ window.SLIDES = [
     eyebrow: "Lineáris regresszió",
     title: "Két név, két történet",
     blocks: [
-      { kind: "plaque", year: "1886", html: "Galton publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
-      { kind: "tension", step: 1, label: "Elsőbbségi vita", html: "Legendre publikálja először a legkisebb négyzetek módszerét (1805) — Gauss szerint ő már 1795 óta használta." },
-      { kind: "plaque", step: 2, year: "1801", html: "Gauss a módszerrel <strong>helyesen megjósolja</strong>, hol tűnik fel újra a „elveszett” Ceres törpebolygó." },
+      { kind: "tension", label: "Elsőbbségi vita", html: "Gauss szerint már 1795 óta használja a legkisebb négyzetek módszerét — Legendre publikálja először, 1805-ben." },
+      { kind: "plaque", step: 1, year: "1801", html: "Gauss a módszerrel <strong>helyesen megjósolja</strong>, hol tűnik fel újra a „elveszett” Ceres törpebolygó." },
+      { kind: "plaque", step: 2, year: "1886", html: "Galton publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
     ],
   },
 

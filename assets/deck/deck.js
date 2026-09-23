@@ -155,7 +155,8 @@
   }
 
   function buildSlide(data, index, total) {
-    const slide = el("section", "slide slide--" + data.type + (data.visual ? " has-visual" : ""));
+    const visualClass = data.visual ? " has-visual" + (data.visualLayout === "stack" ? " has-visual--stack" : "") : "";
+    const slide = el("section", "slide slide--" + data.type + visualClass);
     slide.dataset.index = String(index);
 
     const meta = el("div", "meta-bar");
