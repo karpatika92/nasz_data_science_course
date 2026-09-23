@@ -188,7 +188,7 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Hipotézisvizsgálat",
-    title: "A z-próba (1/2): variancia",
+    title: "A z-próba (1/3): variancia",
     blocks: [
       { kind: "text", html: "H0 alatt (nincs valódi különbség) a legjobb becslés a <strong>közös (pooled)</strong> arány." },
       {
@@ -204,19 +204,30 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Hipotézisvizsgálat",
-    title: "A z-próba (2/2): standard error és p",
-    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Z-próba eredménye", caption: "→ demo.ipynb — szürke: H0 alatti eloszlás; piros: a megfigyeltnél extrémebb (jobb irányú) tartomány" },
+    title: "A z-próba (2/3): standard error",
     blocks: [
       {
         kind: "text",
         html: "<span style='font-family:var(--font-mono); color:var(--accent)'>SE = √Var = 1.30 pp</span><br><span style='color:var(--ink-dim)'><strong>Standard error:</strong> a variancia négyzetgyöke — ugyanabban a mértékegységben (százalékpont), mint maga a különbség, így közvetlenül összevethető vele.</span>",
       },
       {
-        kind: "text", step: 1,
+        kind: "tension", step: 1, label: "SE ≠ szórás (SD)",
+        html: "Az <strong>SD</strong> azt méri, mennyire szórnak az <em>egyedi</em> megfigyelések. Az <strong>SE</strong> azt, mennyire szórna maga a <em>becslés</em> (itt: a különbség) ismételt mintavétel esetén — és nagyobb n-nel az SE <strong>csökken</strong>, az SD nem feltétlenül.",
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Hipotézisvizsgálat",
+    title: "A z-próba (3/3): z és p",
+    visual: { kind: "image", step: 1, src: "assets/checkers_ab_test.png", alt: "Z-próba eredménye", caption: "→ demo.ipynb — szürke: H0 alatti eloszlás; piros: a megfigyeltnél extrémebb tartomány; szaggatott: 5%-os küszöb" },
+    blocks: [
+      {
+        kind: "text",
         html: "<span style='font-family:var(--font-mono); color:var(--accent)'>z = különbség / SE = 1.9 / 1.30 = 1.46</span>",
       },
       {
-        kind: "text", step: 2,
+        kind: "text", step: 1,
         html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p = 1 − Φ(z) = <strong>0.072</strong></span><br><span style='color:var(--ink-dim)'>Egyoldali teszt, mert a kérdés „jobb-e B”, nem „különbözik-e B” — csak a jobb irányú extremitás számít.</span>",
       },
     ],
@@ -431,7 +442,21 @@ window.SLIDES = [
     blocks: [
       { kind: "text", html: "II. világháború: a szövetségesek a zsákmányolt német tankok <strong>sorozatszámaiból</strong> próbálják megbecsülni a teljes gyártott mennyiséget." },
       { kind: "text", step: 1, html: "Az <strong>MLE itt a megfigyelt legnagyobb sorozatszám</strong> — ennél kisebb N lehetetlen (ellentmondana az adatnak), nagyobb N pedig hígítja a valószínűséget. De ez <strong>mindig alábecsül</strong>: szinte sosem fogod el pont a legmagasabb sorszámú tankot." },
-      { kind: "tension", step: 2, label: "A valóban torzítatlan becslés más", html: "N̂ = max + (max/k − 1), ahol k a megfigyelt tankok száma — ez korrigál a várható „résre” a legnagyobb látott szám fölött." },
+      { kind: "ask", step: 2, html: "Van torzítatlan becslés is — nézzük meg, honnan jön." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "A korrekció levezetése",
+    blocks: [
+      { kind: "text", html: "A k megfigyelt sorszám a {1, ..., N} tartományt <strong>k+1 „résre”</strong> osztja (a legkisebb elé, az egymás közöttiek, és a legnagyobb (m) fölé eső rész)." },
+      { kind: "text", step: 1, html: "<strong>Szimmetria miatt</strong> minden résbe átlagosan ugyanannyi <em>meg nem figyelt</em> szám esik: (N−k)/(k+1) darab." },
+      { kind: "text", step: 2, html: "Az m <em>fölötti</em> rés mérete pontosan N−m — tehát ennek várható értéke is (N−k)/(k+1):<br><span style='font-family:var(--font-mono); color:var(--accent)'>E[N−m] = (N−k)/(k+1)</span>" },
+      {
+        kind: "text", step: 3,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>m(k+1) = k(N+1)</span><br><span style='color:var(--ink-dim)'>Átrendezve N-re (m-mel becsülve a várható értéket):</span><br><span style='font-family:var(--font-mono); color:var(--accent)'>N̂ = m(k+1)/k − 1 = <strong>m + m/k − 1</strong></span>",
+      },
     ],
   },
   {
@@ -457,6 +482,17 @@ window.SLIDES = [
     title: "Mi az R²?",
     blocks: [
       { kind: "text", html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
+      { kind: "ask", step: 1, html: "Mi történik R²-tel, ha hozzáadsz egy teljesen <em>véletlen</em>, semmivel nem korreláló feature-t a modellhez?" },
+      { kind: "tension", step: 2, label: "R² sosem csökken", html: "Akkor sem, ha a feature <strong>tiszta zaj</strong> — több paraméterrel a modell mindig <em>legalább annyira</em> jól illeszkedik a tanító adatra. Az R² önmagában ezért <strong>nem</strong> alkalmas modellek összehasonlítására, ha eltérő a feature-számuk." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "Javított (adjusted) R²",
+    blocks: [
+      { kind: "text", html: "<span style='font-family:var(--font-mono); font-size:1.1em; color:var(--accent)'>R²_adj = 1 − (1−R²) · (n−1)/(n−p−1)</span><br><span style='color:var(--ink-dim)'>n = megfigyelések száma, p = feature-ök száma — a képlet <strong>bünteti</strong> a felesleges feature-öket.</span>" },
+      { kind: "tension", step: 1, label: "Ez modellválasztási kritérium, nem pontosságmérő", html: "A javított R² célja <strong>nem</strong> azt megmondani, mennyire „jó” egy modell önmagában — arra való, hogy <strong>eldöntsd, megéri-e</strong> egy új feature-t hozzáadni. Ha a javított R² nő, a feature valószínűleg valódi jelet hordoz; ha csökken, valószínűleg csak zajt." },
     ],
   },
   {

@@ -129,7 +129,7 @@ h2.headline {
   letter-spacing: -0.01em;
   text-wrap: balance;
   margin: 0 0 0.4em;
-  max-width: 26ch;
+  max-width: 640px;
 }
 
 h1.headline {
@@ -145,7 +145,7 @@ h2.headline {
   font-weight: 400;
   font-size: clamp(19px, 2.2vw, 26px);
   color: var(--ink-dim);
-  max-width: 60ch;
+  max-width: 680px;
   margin: 0 0 28px;
 }
 
@@ -153,21 +153,25 @@ h2.headline {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 62ch;
+  max-width: 760px;
 }
 
 /* Vizuál (kép/ajtók/diagram) nélküli diákon nincs mivel osztozni a helyen --
-   ott a szöveg húzódhat szélesebbre és nagyobbra, hogy kitöltse a diát. */
+   ott a szöveg húzódhat szélesebbre és nagyobbra, hogy kitöltse a diát.
+   FONTOS: px-ben, nem ch-ban -- a ch egység a DEKLARÁLÓ elem (itt: body-stack)
+   saját (kicsi, öröklött) betűméretéhez képest számol, nem a benne lévő
+   nagyobb betűs p/ul elemekéhez, ezért egy "88ch" itt jóval kevesebb pixelt
+   ad, mint amire ránézésre számítanál -- ez okozta az üres jobb oldalt. */
 .slide--content:not(.has-visual) .body-stack {
-  max-width: 88ch;
+  max-width: 1320px;
 }
 
 .slide--content:not(.has-visual) h2.headline {
-  max-width: 34ch;
+  max-width: 900px;
 }
 
 .slide--content:not(.has-visual) .kicker {
-  max-width: 75ch;
+  max-width: 1100px;
 }
 
 .body-stack p {
@@ -271,11 +275,11 @@ h2.headline {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(28px, 5vw, 72px);
-  max-width: 78ch;
+  max-width: 860px;
 }
 
 .slide--content:not(.has-visual) .columns {
-  max-width: 100ch;
+  max-width: 1320px;
 }
 
 @media (max-width: 760px) {

@@ -1,0 +1,8 @@
+{
+  "name": "slide-check-scripts",
+  "private": true,
+  "description": "Node deps for the slide_check skill's headless-Chrome geometry diagnostics. Kept local to the skill folder so it doesn't touch the repo's uv/Python setup.",
+  "dependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

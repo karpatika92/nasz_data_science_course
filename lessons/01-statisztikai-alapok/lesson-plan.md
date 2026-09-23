@@ -35,9 +35,12 @@ nagy számok törvényének és a CLT-nek a formális kimondása, a checkers.com
 egyoldali z-próbája (variancia/SE/z/p mind kimondva), a frekventista-vs-bayesi
 keret, a Lady Tasting Tea kísérlet számszerű levezetése (C(8,4)=70), a
 három-oksági-magyarázat diagram, egy MLE-példa (érmefeldobás) + a német tank
-probléma kontraszt-esettanulmánya (MLE torzított lehet!), a Ceres-történet
-(least squares mint módszer, elhatárolva a "regresszió a középhez" jelenségtől),
-és a regresszió-a-középhez jelenség rendes levezetése. **Ez most már inkább egy
+probléma kontraszt-esettanulmánya, **most már a torzítatlan becslés tényleges
+levezetésével is** (a k+1 rés szimmetria-érve), a Ceres-történet (least squares
+mint módszer, elhatárolva a "regresszió a középhez" jelenségtől), a
+regresszió-a-középhez jelenség rendes levezetése, az SD-vs-SE megkülönböztetés,
+a szignifikancia-küszöb berajzolva a z-próba ábrájára, és a javított
+(adjusted) R² mint modellválasztási kritérium. **Ez most már inkább egy
 "menü", amiből válogass, mint egy percre pontos script** — a fenti táblázat
 sorrendje és aránya nagyjából stimmel, de minden szakasz jóval hosszabb lett, és
 a lineáris regresszió blokk (9. pont) önmagában simán elvisz 20+ percet a
