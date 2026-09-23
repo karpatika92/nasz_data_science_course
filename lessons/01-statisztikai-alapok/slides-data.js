@@ -188,17 +188,36 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Hipotézisvizsgálat",
-    title: "A z-próba — lépésről lépésre",
-    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Z-próba eredménye", caption: "→ demo.ipynb — szürke: H0 alatti eloszlás; piros: a megfigyeltnél extrémebb tartomány" },
+    title: "A z-próba (1/2): variancia",
     blocks: [
-      { kind: "text", html: "H0 alatt (nincs valódi különbség) a legjobb becslés a <strong>közös (pooled)</strong> arány — ebből számoljuk a különbség szórását (varianciáját)." },
+      { kind: "text", html: "H0 alatt (nincs valódi különbség) a legjobb becslés a <strong>közös (pooled)</strong> arány." },
       {
         kind: "text", step: 1,
-        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p̂ = (84+103) / (1000+1000) = 9.35%<br>Var = p̂(1−p̂)(1/n_A + 1/n_B) = 0.00017<br>SE = √Var = 1.30 pp</span>",
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p̂ = (84+103) / (1000+1000) = 9.35%</span>",
       },
       {
         kind: "text", step: 2,
-        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>z = különbség / SE = 1.9 / 1.30 = 1.46<br>p = 2·(1 − Φ(|z|)) = <strong>0.144</strong></span>",
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>Var = p̂(1−p̂)(1/n_A + 1/n_B) = 0.00017</span><br><span style='color:var(--ink-dim)'><strong>Variancia:</strong> mennyire ingadozna a B−A különbség, ha sokszor megismételnénk a kísérletet, miközben H0 igaz — ez a „véletlen ingadozás” számszerűsítve.</span>",
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Hipotézisvizsgálat",
+    title: "A z-próba (2/2): standard error és p",
+    visual: { kind: "image", step: 2, src: "assets/checkers_ab_test.png", alt: "Z-próba eredménye", caption: "→ demo.ipynb — szürke: H0 alatti eloszlás; piros: a megfigyeltnél extrémebb (jobb irányú) tartomány" },
+    blocks: [
+      {
+        kind: "text",
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>SE = √Var = 1.30 pp</span><br><span style='color:var(--ink-dim)'><strong>Standard error:</strong> a variancia négyzetgyöke — ugyanabban a mértékegységben (százalékpont), mint maga a különbség, így közvetlenül összevethető vele.</span>",
+      },
+      {
+        kind: "text", step: 1,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>z = különbség / SE = 1.9 / 1.30 = 1.46</span>",
+      },
+      {
+        kind: "text", step: 2,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p = 1 − Φ(z) = <strong>0.072</strong></span><br><span style='color:var(--ink-dim)'>Egyoldali teszt, mert a kérdés „jobb-e B”, nem „különbözik-e B” — csak a jobb irányú extremitás számít.</span>",
       },
     ],
   },
@@ -208,8 +227,8 @@ window.SLIDES = [
     title: "Amit a p-érték NEM jelent",
     blocks: [
       { kind: "tension", label: "Leggyakoribb tévhit", html: "❌ „Annak a valószínűsége, hogy a nullhipotézis igaz.”" },
-      { kind: "text", step: 1, html: "✅ „Milyen valószínű, hogy <em>legalább ilyen extrém</em> adatot látnék, HA a nullhipotézis igaz volna.”" },
-      { kind: "text", step: 2, html: "A checkers.com adatán ez pontosan <strong>14.4%</strong> — nem elég ritka ahhoz, hogy kizárjuk a véletlent. <em>Nem</em> mondanánk, hogy az új oldal szignifikánsan jobb." },
+      { kind: "text", step: 1, html: "✅ „Milyen valószínű, hogy <em>legalább ilyen extrém</em> (vagy extrémebb) adatot látnék, HA a nullhipotézis igaz volna.”" },
+      { kind: "text", step: 2, html: "A checkers.com adatán ez pontosan <strong>7.2%</strong> — a szokásos 5%-os küszöbön <em>épphogy nem</em> szignifikáns. Közel, de nem mondanánk ki, hogy az új oldal jobb." },
     ],
   },
   {
@@ -397,6 +416,44 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Lineáris regresszió",
+    title: "MLE — egy konkrét példa",
+    blocks: [
+      { kind: "text", html: "Feldobsz egy érmét <strong>10-szer</strong>, és <strong>7 fejet</strong> kapsz. Mi a legjobb becslés a fej valószínűségére (p)?" },
+      { kind: "text", step: 1, html: "<span style='font-family:var(--font-mono); color:var(--accent)'>L(p) = C(10,7) · p⁷ · (1−p)³</span><br><span style='color:var(--ink-dim)'>Ez annak a valószínűsége, hogy <em>pontosan ezt</em> az adatot látnánk, adott p mellett.</span>" },
+      { kind: "text", step: 2, html: "A <strong>maximum likelihood</strong> becslés: az a p, amelyik ezt a valószínűséget maximalizálja. Itt ez pontosan <strong>p̂ = 7/10</strong> — a megfigyelt gyakoriság." },
+      { kind: "text", step: 3, html: "Ugyanez a logika — alkalmazva Gauss-eloszlású hibákra — <em>pontosan</em> a négyzetes hiba minimalizálását adja. Ez a kapocs MLE és a lineáris regresszió közt." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "Kontraszt: a német tank probléma",
+    blocks: [
+      { kind: "text", html: "II. világháború: a szövetségesek a zsákmányolt német tankok <strong>sorozatszámaiból</strong> próbálják megbecsülni a teljes gyártott mennyiséget." },
+      { kind: "text", step: 1, html: "Az <strong>MLE itt a megfigyelt legnagyobb sorozatszám</strong> — ennél kisebb N lehetetlen (ellentmondana az adatnak), nagyobb N pedig hígítja a valószínűséget. De ez <strong>mindig alábecsül</strong>: szinte sosem fogod el pont a legmagasabb sorszámú tankot." },
+      { kind: "tension", step: 2, label: "A valóban torzítatlan becslés más", html: "N̂ = max + (max/k − 1), ahol k a megfigyelt tankok száma — ez korrigál a várható „résre” a legnagyobb látott szám fölött." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
+    title: "Melyik volt közelebb a valósághoz?",
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "1940 jún.: hírszerzés 1000, statisztikai becslés 169, valós (német adat) 122",
+          "1941 jún.: hírszerzés 1550, statisztikai becslés 244, valós 271",
+          "1942 aug.: hírszerzés 1550, statisztikai becslés 327, valós 342",
+        ],
+      },
+      { kind: "text", step: 1, html: "A kémjelentéseken alapuló hírszerzési becslés <strong>5-6-szor túlbecsülte</strong> a gyártást — a torzítatlan statisztikai becslés a valós adatokhoz nagyon közel volt." },
+      { kind: "tension", step: 2, label: "A tanulság", html: "Az MLE nagyszerű alapértelmezett választás, de <strong>„a legnagyobb likelihood” nem ugyanaz, mint „torzítatlan”</strong>. Pont mint a négyzetes vs. abszolút hibánál: más-más kritérium más-más „legjobb” választ ad." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Lineáris regresszió",
     title: "Mi az R²?",
     blocks: [
       { kind: "text", html: "<strong>R²</strong>: a kimenet varianciájának hányad része magyarázható a modellel — 0 és 1 között, minél nagyobb, annál jobban illeszkedik." },
@@ -418,27 +475,20 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Lineáris regresszió",
-    title: "Két külön sztori",
+    title: "Hogyan találták meg újra a Ceres-t?",
     blocks: [
-      { kind: "text", html: "Fontos: ez <strong>két külön sztori</strong>, amiknek semmi közük egymáshoz — csak véletlenül futnak össze. A Ceresnek <em>semmi</em> köze a „regresszió a középhez” jelenséghez." },
-      { kind: "text", step: 1, html: "Galtonnak kellett egy módszer, amivel <strong>egyenest illeszthet</strong> az apák/fiak magasság-adataira, hogy megmutassa a jelenséget. Erre a legkisebb négyzetek módszerét használta — amit Gauss és Legendre <strong>évtizedekkel korábban, egy teljesen más problémára</strong> dolgozott ki." },
+      { kind: "text", html: "1801: Piazzi felfedezi a Ceres törpebolygót — de csak ~40 napig tudja követni, mielőtt a Nap fénye mögé kerül és „elvész”." },
+      { kind: "text", step: 1, html: "Kevés, <strong>zajos</strong> megfigyelésből kellene megbecsülni a pálya paramétereit, hogy tudják, hova nézzenek, amikor újra előbukkan." },
+      { kind: "text", step: 2, html: "Gauss a legkisebb négyzetek módszerével azt a pályát keresi, amelyik <strong>minimalizálja</strong> a megfigyelt és a modellezett pozíciók közti eltérés-négyzetösszeget — pontosan az a logika, mint amikor egyenest illesztünk zajos pontokra." },
+      { kind: "tension", step: 3, label: "Eredmény", html: "Ceres pontosan ott bukkant fel újra, ahol Gauss számítása jelezte. <strong>Fontos:</strong> ez a „regresszió” mint <em>módszer</em> (paraméterbecslés zajos adatból) — nem ugyanaz, mint a „regresszió a középhez” jelenség, amit Galton fedezett fel 80 évvel később. Csak a nevük közös." },
     ],
   },
   {
     type: "content",
     eyebrow: "Lineáris regresszió",
-    title: "1. sztori — a módszer eredete",
+    title: "Honnan a név?",
     blocks: [
-      { kind: "tension", label: "Elsőbbségi vita", html: "Gauss szerint már 1795 óta használja a legkisebb négyzetek módszerét — Legendre publikálja először, 1805-ben." },
-      { kind: "plaque", step: 1, year: "1801", html: "Gauss a módszerrel <strong>helyesen megjósolja</strong>, hol tűnik fel újra a „elveszett” Ceres törpebolygó — ez a módszer első látványos igazolása, <em>égi mechanika</em>, semmi köze emberi magassághoz." },
-    ],
-  },
-  {
-    type: "content",
-    eyebrow: "Lineáris regresszió",
-    title: "2. sztori — a névadás",
-    blocks: [
-      { kind: "plaque", year: "1886", html: "Galton <strong>ezt a már létező módszert kölcsönvéve</strong> illeszt egyenest a magasság-adatra, és publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
+      { kind: "plaque", year: "1886", html: "Galton ugyanezt a (már létező) legkisebb négyzetek módszert kölcsönvéve illeszt egyenest az apák/fiak magasság-adatára, és publikálja a jelenséget — innen a „regresszió” szó a statisztikában." },
     ],
   },
 

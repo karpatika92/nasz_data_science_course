@@ -558,6 +558,15 @@ h2.headline {
   padding-top: clamp(56px, 9vh, 84px);
 }
 
+/* Vizuál (kép/ajtók/diagram) NÉLKÜLI diákon a tartalom gyakran rövid --
+   ahelyett, hogy a tetejéhez tapadva üresen hagyná az alsó felét, inkább
+   függőlegesen középre kerül, mint a has-visual diáknál (align-items:center
+   a sorban) már eddig is történt. */
+.slide--content:not(.has-visual) {
+  justify-content: center;
+  padding-top: 0;
+}
+
 .slide--divider {
   background: var(--bg-divider);
 }

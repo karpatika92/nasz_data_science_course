@@ -31,19 +31,27 @@ mert az intuíciójuk (vagy a híres tudósoké) tévedett.
 
 **Ez 97 perc volt eredetileg — és azóta tovább nőtt.** Utólag bekerült: a Monty
 Hall Bayes-tételes levezetése, a prior/likelihood/evidence/posterior szótár, a
-nagy számok törvényének és a CLT-nek a formális kimondása, a checkers.com konkrét
-A/B teszt + valódi p-érték, a Lady Tasting Tea kísérlet számszerű levezetése
-(C(8,4)=70), a három-oksági-magyarázat diagram, és a regresszió-a-középhez
-jelenség rendes levezetése. **Ez most már inkább egy "menü", amiből válogass, mint
-egy percre pontos script** — a fenti táblázat sorrendje és aránya nagyjából
-stimmel, de minden szakasz kb. 20-30%-kal hosszabb lett. Reális Szókratész-tempóban
-ez mindig túlfut — ha az órán ez történik, ebben a sorrendben vágj:
+nagy számok törvényének és a CLT-nek a formális kimondása, a checkers.com
+egyoldali z-próbája (variancia/SE/z/p mind kimondva), a frekventista-vs-bayesi
+keret, a Lady Tasting Tea kísérlet számszerű levezetése (C(8,4)=70), a
+három-oksági-magyarázat diagram, egy MLE-példa (érmefeldobás) + a német tank
+probléma kontraszt-esettanulmánya (MLE torzított lehet!), a Ceres-történet
+(least squares mint módszer, elhatárolva a "regresszió a középhez" jelenségtől),
+és a regresszió-a-középhez jelenség rendes levezetése. **Ez most már inkább egy
+"menü", amiből válogass, mint egy percre pontos script** — a fenti táblázat
+sorrendje és aránya nagyjából stimmel, de minden szakasz jóval hosszabb lett, és
+a lineáris regresszió blokk (9. pont) önmagában simán elvisz 20+ percet a
+MLE/tank kitérővel együtt. Reális Szókratész-tempóban ez mindig túlfut — ha az
+órán ez történik, ebben a sorrendben vágj:
 1. **Dimenzió-átok (8. pont)** → 3 percre húzható: mondd ki a lényeget, ne nyisd meg
    vitának, csak linkeld előre a 2. órához (overfitting sok feature esetén).
 2. **Simpson-paradoxon (7. pont)** → a Berkeley-sztori bemutatása maradjon, de a
    nyílt vita ("ti mit gondoltok, miért?") rövidüljön 3 percesre.
 3. **Hipotézisvizsgálat Neyman–Pearson-történeti kitérője** → kihagyható, csak Fisher
    marad.
+4. **A német tank probléma (9. pont)** → az egész MLE-kontraszt kitérő (érme-példa +
+   tank-probléma + a 3 hónapos táblázat) kihagyható vagy házi olvasmányként kiadható,
+   ha az idő szorít — önmagában is megáll, nem épül rá semmi később.
 Ha ezek után is csúszik: a logisztikus regressziót (10. pont) át lehet vinni a 2. óra
 elejére recap gyanánt — nem ideális, de nem tragédia, mert a 2. óra úgyis kezd egy
 lineáris/logisztikus reggel-el.
@@ -207,9 +215,17 @@ tanulja meg): a p-érték **NEM** "annak a valószínűsége, hogy a nullhipoté
 A p-érték: "milyen valószínű, hogy *legalább ilyen extrém* adatot látnék, HA a
 nullhipotézis igaz volna." Ez a leggyakoribb hiba a szakirodalomban is.
 
-**A checkers.com adatán (`demo.ipynb`, permutációs teszt): p = 0.170.** Ez
-**nem** szignifikáns a szokásos 5%-os küszöbön — a megfigyelt +1.9 százalékpontos
-különbség simán előfordulhat puszta véletlenből. Szándékosan nem "szép,
+**A checkers.com adatán (`demo.ipynb`, kétmintás arány z-próba): p = 0.072.**
+Vezesd le a táblán is a teljes utat: a közös (pooled) arányból számolt
+**variancia** → **standard error** → **z-érték** → **p-érték**. Mondd ki
+explicit, mit jelent a variancia (mennyire ingadozna a különbség H0 alatt) és
+az SE (a variancia négyzetgyöke, ugyanolyan mértékegységben, mint maga a
+különbség — ezért lehet közvetlenül összevetni vele). **Egyoldali a teszt**,
+mert a kérdés "jobb-e B", nem "különbözik-e B" — csak a jobb irányú
+extremitás számít, ezért p = 1 − Φ(z), nem 2·(1 − Φ(|z|)).
+
+Ez **nem** szignifikáns a szokásos 5%-os küszöbön, de **közel van hozzá** — jó
+alkalom megbeszélni, mennyire önkényes a "0.05" határ. Szándékosan nem "szép,
 egyértelmű" eredményt választottam: ez a valósághű tanulság — a legtöbb A/B teszt
 NEM hoz egyértelmű győztest, és pont ez a p-érték lényege.
 
