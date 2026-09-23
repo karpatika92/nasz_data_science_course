@@ -292,6 +292,12 @@ felvételi arányú) tanszékekre.
 - 🎓-nak: „Milyen adatgyűjtési/aggregálási döntés vezet ide, és hogyan védekeznél
   ellene elemzőként?" (mindig nézz szegmentált bontást is, ne csak összesítést.)
 
+**A `slides.html`-en most már a konkrét számok is szerepelnek** (800 férfi/200 nő
+az A, könnyű tanszéken; 200 férfi/800 nő a B, nehéz tanszéken; 60/65% ill. 30/35%
+felvételi arány) — vezesd le a súlyozott átlagot a táblán is (54% vs. 41%
+összesítve), ez teszi kézzelfoghatóvá, hogy a "paradoxon" pusztán számolási
+súlyozás, nem rejtett diszkrimináció.
+
 **Tudománytörténet:** a jelenséget már Karl Pearson (1899) és Udny Yule (1903) is
 leírta — a hivatalos nevet mégis Edward H. Simpson 1951-es cikke után kapta, majd
 Colin Blyth nevezte el "Simpson-paradoxonnak" 1972-ben. Vagyis a "Simpson-paradoxon"

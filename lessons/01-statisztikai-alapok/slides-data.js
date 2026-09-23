@@ -137,9 +137,9 @@ window.SLIDES = [
     blocks: [
       { kind: "text", html: "Ha <strong>bármilyen</strong> — akár nagyon ferde — eloszlásból sokszor mintát veszünk, és mindig kiszámoljuk a mintaátlagot —" },
       { kind: "ask", step: 1, html: "milyen alakú lesz maguknak az átlagoknak az eloszlása?" },
-      { kind: "text", step: 2, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>X̄ₙ ≈ Normal(μ, σ²/n), ha n elég nagy</span><br><span style='color:var(--ink-dim)'>A tétel maga: a mintaátlagok eloszlása — <em>függetlenül</em> az eredeti eloszlás alakjától — normális eloszláshoz tart, ahogy n nő.</span>" },
+      { kind: "text", step: 2, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>X̄ₙ ≈ Normal(μ, σ²/n), ha n elég nagy</span><br><span style='color:var(--ink-dim)'>Figyelem, <strong>mire</strong> vonatkozik ez: nem az egyedi megfigyelésekre — a <strong>mintaátlagra (X̄ₙ)</strong>. Az eredeti adat maradhat tetszőlegesen ferde, <em>a mintaátlagok eloszlása</em> tart normálishoz, ahogy n nő.</span>" },
     ],
-    visual: { kind: "image", step: 2, src: "assets/normal_distribution.png", alt: "Normális eloszlás haranggörbéje", caption: "Normal(μ, σ²) — a haranggörbe" },
+    visual: { kind: "image", step: 2, src: "assets/normal_distribution.png", alt: "A mintaátlag (X̄ₙ) mintavételi eloszlása, nem az egyedi adatok eloszlása", caption: "Ez X̄ₙ eloszlása — nem az eredeti adaté" },
     note: "→ demo.ipynb: exponenciális eloszlás → mintaátlagok",
   },
   {
@@ -170,7 +170,11 @@ window.SLIDES = [
           "Új verzió (B): 1000 látogatóból <strong>103</strong> regisztrált (10.3%)",
         ],
       },
-      { kind: "ask", step: 2, html: "Tényleg jobb az új oldal, vagy ez csak véletlen ingadozás?" },
+      {
+        kind: "text", step: 2,
+        html: "<span style='font-family:var(--font-mono); color:var(--accent)'>p̂_A = 84/1000 = 8.4%<br>p̂_B = 103/1000 = 10.3%<br>p̂_B − p̂_A = 10.3% − 8.4% = <strong>+1.9 százalékpont</strong></span>",
+      },
+      { kind: "ask", step: 3, html: "Tényleg jobb az új oldal ezzel a +1.9 pontos különbséggel, vagy ez csak véletlen ingadozás?" },
     ],
   },
   {
@@ -199,8 +203,15 @@ window.SLIDES = [
         html: "<span style='font-family:var(--font-mono); font-size:1.2em; color:var(--accent)'>C(8,4) = 70</span><br><span style='color:var(--ink-dim)'>Ennyiféleképp választhat ki 4 csészét a 8-ból — ha csak <em>tippel</em>, 1/70 eséllyel (≈1.4%) találja el mind a 8-at helyesen.</span>",
       },
       { kind: "ask", step: 3, html: "(A kísérlet végén: Bristol mind a 8 csészét helyesen azonosította.)" },
-      { kind: "plaque", step: 4, year: "1935", html: "Fisher közzéteszi a módszert az <em>The Design of Experiments</em>-ben — ebből születik a modern szignifikanciavizsgálat." },
-      { kind: "tension", step: 5, label: "Még a founderek is vitáztak", html: "Fisher és a Neyman–Pearson páros (1933) évtizedekig vitatkozott azon, mit is jelent egy szignifikanciateszt. A ma tanított „p < 0.05” recept a két, egymással vitázó iskola hibridje." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Hipotézisvizsgálat",
+    title: "Még a founderek is vitáztak",
+    blocks: [
+      { kind: "plaque", year: "1935", html: "Fisher közzéteszi a módszert az <em>The Design of Experiments</em>-ben — ebből születik a modern szignifikanciavizsgálat." },
+      { kind: "tension", step: 1, label: "Még a founderek is vitáztak", html: "Fisher és a Neyman–Pearson páros (1933) évtizedekig vitatkozott azon, mit is jelent egy szignifikanciateszt. A ma tanított „p < 0.05” recept a két, egymással vitázó iskola hibridje." },
     ],
   },
 
@@ -256,9 +267,27 @@ window.SLIDES = [
     title: "Tanszékenkénti bontás",
     visual: { kind: "image", src: "assets/simpsons_paradox.png", alt: "Simpson-paradoxon: összesített vs. tanszékenkénti felvételi arány", caption: "→ demo.ipynb — toy admissions adat" },
     blocks: [
-      { kind: "text", html: "A legtöbb tanszéken a nők felvételi aránya <strong>egyenlő vagy magasabb</strong> volt — mert aránytalanul sok jelentkezést adtak be a legversenyzőbb tanszékekre." },
+      { kind: "text", html: "Minden tanszéken a nők felvételi aránya <strong>magasabb</strong> volt." },
       { kind: "ask", step: 1, html: "Hogyan lehet minden alcsoportban jobb az arány, mégis összesítve rosszabb?" },
-      { kind: "plaque", step: 2, year: "1951 / 1972", html: "Pearson (1899) és Yule (1903) már leírta — a nevét mégis Edward Simpson 1951-es cikke után kapta, Colin Blyth elnevezésében (1972)." },
+      {
+        kind: "list", step: 2,
+        items: [
+          "A tanszék (könnyű, 60-65%): 800 férfi, 200 nő jelentkezik",
+          "B tanszék (nehéz, 30-35%): 200 férfi, 800 nő jelentkezik",
+        ],
+      },
+      {
+        kind: "text", step: 3,
+        html: "<span style='font-family:var(--font-mono); font-size:1.05em; color:var(--accent)'>férfi összesített = (800×60% + 200×30%) / 1000 = 54%<br>nő összesített&nbsp;&nbsp;&nbsp;&nbsp;= (200×65% + 800×35%) / 1000 = 41%</span><br><span style='color:var(--ink-dim)'>A súlyozás — nem a diszkrimináció — húzza le a nők összesített számát.</span>",
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Simpson-paradoxon",
+    title: "Régebbi, mint a neve",
+    blocks: [
+      { kind: "plaque", year: "1951 / 1972", html: "Pearson (1899) és Yule (1903) már leírta — a nevét mégis Edward Simpson 1951-es cikke után kapta, Colin Blyth elnevezésében (1972)." },
     ],
   },
 
@@ -348,6 +377,79 @@ window.SLIDES = [
     blocks: [
       { kind: "text", html: "Az LPM predikciói <strong>0 alá és 1 fölé</strong> mennek. Mit jelent egy „-12%-os esély”?" },
       { kind: "ask", step: 1, html: "Milyen függvény szorítaná a predikciót mindig [0,1] közé, bármi is legyen a bemenet?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Logisztikus regresszió",
+    title: "A szigmoid függvény",
+    blocks: [
+      { kind: "text", html: "Ez a függvény szorítja a predikciót mindig [0,1] közé:" },
+      { kind: "text", step: 1, html: "<span style='font-family:var(--font-mono); font-size:1.3em; color:var(--accent)'>σ(z) = 1 / (1 + e⁻ᶻ)</span><br><span style='color:var(--ink-dim)'>ahol z = β₀ + β₁x — ugyanaz a lineáris predikció, mint eddig, csak ezen a függvényen átengedve.</span>" },
+      { kind: "text", step: 2, html: "Bármekkora is z (−∞-től +∞-ig), σ(z) mindig (0,1) közé esik — sosem megy 0 alá vagy 1 fölé." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Logisztikus regresszió",
+    title: "Log-odds és együtthatók",
+    blocks: [
+      { kind: "text", html: "A szigmoid <strong>inverze</strong> a logit (log-odds) függvény — ez a valódi „lineáris” rész:" },
+      { kind: "text", step: 1, html: "<span style='font-family:var(--font-mono); font-size:1.2em; color:var(--accent)'>logit(p) = ln(p / (1−p)) = β₀ + β₁x</span>" },
+      {
+        kind: "list", step: 2,
+        items: [
+          "<strong>β₁</strong>: mennyivel változik a <em>log-odds</em>, ha x eggyel nő",
+          "<strong>e^β₁</strong> (odds ratio): mennyivel <em>szorzódik</em> az esély (odds), ha x eggyel nő",
+        ],
+      },
+      { kind: "text", step: 3, html: "<span style='color:var(--ink-dim)'>Konkrétan a lemorzsolódás-modellünkön (→ demo.ipynb): β₁ = −0.83, e^β₁ = 0.435 — minden plusz heti használati óra <strong>0.435-szörösére</strong> viszi a lemorzsolódás esélyét (odds).</span>" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Gyakorlat",
+    title: "Standardizált együtthatók",
+    blocks: [
+      { kind: "ask", label: "Gondolkodjatok el rajta", html: "Ha standardizáljuk a bemeneti változót (x), mit jelent a standardizált együttható lineáris regresszióban — és mit logisztikus regresszióban? Ugyanazt jelenti-e a kettő?" },
+    ],
+    note: "→ a válasz a következő dián",
+  },
+  {
+    type: "content",
+    eyebrow: "Gyakorlat — válasz",
+    title: "Nem ugyanazt jelenti",
+    blocks: [
+      {
+        kind: "columns",
+        columns: [
+          { heading: "Lineáris regresszió", html: "y <em>is</em> folytonos, standardizálható. A standardizált β: „hány szórásnyit változik y, ha x egy szórásnyit nő” — tiszta, egyenes jelentés." },
+          { heading: "Logisztikus regresszió", html: "y bináris — nincs „szórása” ugyanabban az értelemben. Csak x-et standardizáljuk: β „hány log-odds egységgel változik logit(p), ha x egy szórásnyit nő”." },
+        ],
+      },
+      { kind: "text", step: 1, html: "Mindkettő jó arra, hogy <strong>egymáshoz viszonyítva</strong> rangsoroljuk a prediktorok fontosságát — de a logisztikus esetben nincs „y szórása”, amihez az eredményt visszakötnéd." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Gyakorlat",
+    title: "Melyik javulás jobb?",
+    blocks: [
+      { kind: "ask", label: "A kérdés", html: "Mi a helyes módja egy „5%-os konverziós javulás” értelmezésének? Melyik jobb: +5 százalékpont egy 20%-os alapesélyen, vagy +1 százalékpont egy 95%-os alapesélyen?" },
+    ],
+    note: "→ a válasz a következő dián",
+  },
+  {
+    type: "content",
+    eyebrow: "Gyakorlat — válasz",
+    title: "Attól függ, mit mérsz",
+    blocks: [
+      {
+        kind: "text",
+        html: "<span style='font-family:var(--font-mono); font-size:0.95em; color:var(--ink-dim)'>20%→25%: odds 0.25→0.333 (OR=1.33, +33%) · siker +25% · hiba −6.25%<br>95%→96%: odds 19→24 (OR=1.26, +26%) · siker +1.05% · hiba −20%</span>",
+      },
+      { kind: "text", step: 1, html: "<strong>Nincs egyetlen helyes válasz</strong> — attól függ, mit optimalizálsz: a nyert konverziók számát (akkor a 20%-os alap nyer), vagy az elmaradt esetek arányának csökkentését (akkor a 95%-os alap nyer)." },
+      { kind: "tension", step: 2, label: "Ezért dolgozik odds-skálán a logisztikus regresszió", html: "A nyers százalékpont félrevezető, mert a jelentése a bázisaránytól függ. Az odds/log-odds egy <strong>szimmetrikus, konzisztens</strong> keret — ez nem esztétikai választás, hanem pont ezt a problémát oldja meg." },
     ],
   },
   {
