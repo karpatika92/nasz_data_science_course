@@ -29,6 +29,26 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    modellösszehasonlítás a Titanic-adatsoron
 3. *(tervben: analitika — adatvizualizáció, EDA, ügyfélérték-számítás)*
 
+## Előadások (`lectures/`)
+
+A `lessons/` mellett egy külön, top-level `lectures/` ág **más formátumú**
+anyagokat tartalmaz: nem féléves, kiscsoportos szókratészi workshop, hanem
+egyszeri, frontális előadás nagyobb (30-40 fős) hallgatóságnak. Ugyanazt a
+deck-motort (`assets/deck/`) és fájlszerkezetet használja, de session-enként
+külön `slides.html`/`slides-data.js` párral (mivel egy előadás több
+alkalomra bomlik).
+
+1. `01-uzleti-analitika-es-cegertekeles` (2×90 perc) — adattudomány
+   alapjai, üzleti analitika piramis, majd három összefüggő esettanulmány egy
+   fiktív ("checkers.com") előfizetéses cégen: CLTV (annuitás → perpetuitás →
+   churn → resubscription), DAU-előrejelzés Markov-modellel (szezonalitás,
+   forgatókönyv-tervezés, egyensúlyi növekedési ráta), és egy kohorsz-alapú
+   előfizetőszám-előrejelzés — végül vissza a nyitó kérdéshez: mennyit ér a
+   cég? Minden esettanulmányhoz tartozik egy notebook és egy (jelenleg
+   `_PLACEHOLDER` jelzésű, szintetikus, BigQuery-jóváhagyásra váró) adatsor a
+   `data/` almappában — lásd az adott lecke `lesson-plan.md`-jét a
+   részletekért.
+
 ## Fejlesztői környezet
 
 ```bash

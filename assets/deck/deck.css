@@ -291,6 +291,17 @@ h2.headline {
   margin: 0 0 8px;
 }
 
+/* Amikor a tension az EGYETLEN blokk a dián -- ugyanaz a logika, mint az
+   ask/plaque-nál: ez a dia teljes mondanivalója, nem egy elem sok közül. */
+.body-stack > .tension:only-child {
+  font-size: clamp(22px, 2.6vw, 30px);
+  padding: 24px 32px;
+}
+
+.body-stack > .tension:only-child .tension-label {
+  font-size: 13px;
+}
+
 /* ---------- two-column layout ---------- */
 
 .columns {
