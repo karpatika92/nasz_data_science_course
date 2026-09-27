@@ -442,6 +442,16 @@ h2.headline {
   max-height: 66vh;
 }
 
+/* "wide": a kep aspect ratio-ja miatt szelesseg-korlatos az 50/50 oszlopban
+   -- ilyenkor a szoveg-oszlop rovasara tobb szelesseget adunk a kepnek. */
+.slide.has-visual--wide .content-col {
+  flex: 1 1 38%;
+}
+
+.slide.has-visual--wide .slide-visual {
+  flex: 1 1 62%;
+}
+
 .slide.has-visual .content-col {
   flex: 1 1 50%;
   min-width: 0;

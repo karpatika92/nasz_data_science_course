@@ -52,8 +52,8 @@ for x, title, sub in boxes:
         linewidth=1.6,
     )
     ax.add_patch(box)
-    ax.text(x, y + 0.28, title, ha="center", va="center", fontsize=13, fontweight="bold", color=INK, family="monospace")
-    ax.text(x, y - 0.35, sub, ha="center", va="center", fontsize=9.5, color=INK_DIM)
+    ax.text(x, y + 0.28, title, ha="center", va="center", fontsize=15, fontweight="bold", color=INK, family="monospace")
+    ax.text(x, y - 0.35, sub, ha="center", va="center", fontsize=11, color=INK_DIM)
 
 # ---------- rovid-tavu, szomszedos-zona nyilak (a churn/losing lanc) ----------
 # Ezek mind a "kovetkezo szomszedos zonaba csuszas" iranyat kovetik -- ez az
@@ -78,7 +78,7 @@ for x0, x1, rad, label, pos, color in short_specs:
     ax.add_patch(arrow)
     mid_x = (x0 + x1) / 2
     y_off = 1.05 if pos == "below" else -1.05
-    ax.text(mid_x, y + y_off, label, ha="center", va="center", fontsize=9.5, color=color, family="monospace")
+    ax.text(mid_x, y + y_off, label, ha="center", va="center", fontsize=11, color=color, family="monospace")
 
 # ---------- hosszu-tavu "atugro" nyilak: a visszateres MINDIG kozvetlenul ----------
 # az Aktiv ma allapotba lep, akarhany zonat kell at hozza atugrania -- SOSEM
@@ -112,7 +112,7 @@ for p0, ctrl, p1, label in long_specs:
     )
     ax.add_patch(arrow)
     lx, ly = bezier_point(p0, ctrl, p1, 0.5)
-    ax.text(lx, ly + 0.32, label, ha="center", va="center", fontsize=10.5, color=ACCENT, family="monospace", fontweight="bold")
+    ax.text(lx, ly + 0.32, label, ha="center", va="center", fontsize=12, color=ACCENT, family="monospace", fontweight="bold")
 
 ax.annotate(
     "",
@@ -120,7 +120,7 @@ ax.annotate(
     xytext=(10.2, y + box_h / 2 + 0.9),
     arrowprops=dict(arrowstyle="-|>", color=INK, lw=1.8),
 )
-ax.text(10.2, y + box_h / 2 + 1.05, "új regisztráció", ha="center", fontsize=10, color=INK, family="monospace")
+ax.text(10.2, y + box_h / 2 + 1.05, "új regisztráció", ha="center", fontsize=11.5, color=INK, family="monospace")
 
 ax.set_xlim(-0.5, 12.2)
 ax.set_ylim(-1.9, 3.2)

@@ -187,7 +187,13 @@
   function buildSlide(data, index, total) {
     const hasSide = Boolean(data.visual || data.legend);
     const layoutClass =
-      data.visualLayout === "stack" ? " has-visual--stack" : data.visualLayout === "full" ? " has-visual--full" : "";
+      data.visualLayout === "stack"
+        ? " has-visual--stack"
+        : data.visualLayout === "full"
+          ? " has-visual--full"
+          : data.visualLayout === "wide"
+            ? " has-visual--wide"
+            : "";
     const visualClass = hasSide ? " has-visual" + layoutClass : "";
     const slide = el("section", "slide slide--" + data.type + visualClass);
     slide.dataset.index = String(index);

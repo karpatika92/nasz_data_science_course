@@ -71,6 +71,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Állapottér",
     title: "Négy 'zóna', amiben egy felhasználó lehet",
+    visualLayout: "wide",
     visual: {
       kind: "image",
       src: "../assets/markov_states_diagram.png",
