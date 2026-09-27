@@ -214,8 +214,9 @@ window.SLIDES = [
     legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Annak valószínűsége, hogy valaki még a <em>t</em>-edik hónapban is aktív: <strong>ρᵗ</strong> (geometriai eloszlás)." },
-      { kind: "text", step: 1, html: "A várható aktív hónapok száma: <strong>E[hossz] = Σ ρᵗ = 1/(1−ρ) = 1/c</strong>." },
-      { kind: "tension", step: 2, label: "Gyors ellenőrzés", html: "5%-os havi churn → várható aktív hossz = 1/0.05 = <strong>20 hónap</strong>. Ez NEM azt jelenti, hogy mindenki pontosan 20 hónapig marad — sokan hamarabb, néhányan sokkal tovább." },
+      { kind: "text", step: 1, html: "A várható hossz felírható úgy, mint annak összege, hogy hány hónapig van esély aktívnak maradni: <strong>E[hossz] = P(aktív a 0. hónapban) + P(aktív az 1. hónapban) + P(aktív a 2. hónapban) + … = ρ⁰ + ρ¹ + ρ² + …</strong> — ugyanaz a trükk, mint a perpetuitásnál: egy végtelen mértani sor." },
+      { kind: "text", step: 2, html: "Zárt alakban, ugyanazzal a mértani sor összegképlettel, mint az imént: <strong>Σ ρᵗ = 1/(1−ρ) = 1/c</strong> (hiszen ρ = 1 − c)." },
+      { kind: "tension", step: 3, label: "Gyors ellenőrzés", html: "5%-os havi churn → várható aktív hossz = 1/0.05 = <strong>20 hónap</strong>. Ez NEM azt jelenti, hogy mindenki pontosan 20 hónapig marad — sokan hamarabb, néhányan sokkal tovább." },
     ],
   },
   {
@@ -231,13 +232,13 @@ window.SLIDES = [
   },
   {
     type: "content",
-    eyebrow: "Az annuitás perpetuitássá válik",
-    title: "Miért lesz ebből (majdnem) perpetuitás-formula?",
+    eyebrow: "Vissza az annuitáshoz",
+    title: "Miért kezelhetjük ezt (majdnem) annuitásként?",
     legend: CLTV_LEGEND,
     blocks: [
-      { kind: "text", html: "A jelenérték most: <strong>V = Σ P·ρᵗ / (1+r)ᵗ</strong> (t = 0, 1, 2, …, a hónap elején fizetve) — ez ismét egy mértani sor, csak a hányados most <strong>ρ/(1+r)</strong>." },
-      { kind: "text", step: 1, html: "Nincs fix felső határ (n) — a sor a végtelenig fut, mert bármelyik hónapban <em>lehetne</em> még aktív, csak egyre csökkenő valószínűséggel. Ezért lesz a végeredmény szerkezetileg egy perpetuitás." },
-      { kind: "text", step: 2, html: "Zárt alak: <strong>V = P · (1+r) / (r + c)</strong>" },
+      { kind: "text", html: "Tudjuk már: a várható aktív hossz <strong>n = 1/c</strong> hónap. Egyszerűsítsünk: tegyük fel, MINDENKI pontosan ennyi ideig marad — a cash flow ekkor egy sima <strong>n hosszú, C = P annuitás</strong>." },
+      { kind: "text", step: 1, html: "Az imént levezetett annuitás-képlettel: <strong>V ≈ P · [1 − (1+r)⁻ⁿ] / r</strong>, ahol n = 1/c." },
+      { kind: "tension", step: 2, label: "Ez egy közelítés", html: "Nem mindenki marad pontosan n hónapig. Az átlaggal helyettesíteni a teljes eloszlást torzít (a diszkontálás konvexitása miatt): mindig <strong>felülbecsül</strong> — kb. 1-2%-kal magas (15%) churn-nél, de akár 10-15%-kal is alacsony (2%) churn-nél." },
     ],
   },
   {
@@ -250,7 +251,7 @@ window.SLIDES = [
         kind: "columns",
         columns: [
           { heading: "Ár (P) és WACC (r)", html: "V lineáris P-ben. r-ben monoton csökkenő — magasabb elvárt hozam, alacsonyabb jelenérték." },
-          { heading: "Churn (c) — a legérdekesebb", html: "∂V/∂c = −P(1+r)/(r+c)² — minél <em>alacsonyabb</em> már a churn, annál <strong>nagyobb</strong> az abszolút hatása egy további csökkentésnek." },
+          { heading: "Churn (c) — a legérdekesebb", html: "Minél <em>alacsonyabb</em> már a churn (azaz minél hosszabb az átlagos n = 1/c), annál <strong>nagyobb</strong> az abszolút hatása egy további csökkentésnek — ugyanaz az 1 százalékpont sokkal többet ér, ha a churn már amúgy is alacsony." },
         ],
       },
       { kind: "ask", step: 1, html: "Mit jelent ez üzletileg? Melyik terméknél éri meg jobban 1 százalékpontot faragni a churn-ön: egy magas (15%) vagy egy alacsony (2%) churn-nel rendelkező terméknél?" },
@@ -275,18 +276,18 @@ window.SLIDES = [
     title: "Amit már tudunk, azt újra felhasználjuk",
     legend: CLTV_LEGEND,
     blocks: [
-      { kind: "text", html: "Ha már előfizető vagy, a jelenértéked <strong>V</strong> — ezt már kiszámoltuk (a resub nélküli zárt alak)." },
-      { kind: "text", step: 1, html: "Egy „epizód” (aktív szakasz + az utána következő lemorzsolódott szakasz) átlagos hossza: az előfizetés átlagosan <strong>1/c</strong> ideig tart (ezt már láttuk!), utána átlagosan <strong>1/π</strong> ideig tart, míg valaki visszatér." },
+      { kind: "text", html: "Ha már előfizető vagy, a jelenértéked <strong>V</strong> — ezt már kiszámoltuk, mint egy <strong>n = 1/c</strong> hosszú annuitást." },
+      { kind: "text", step: 1, html: "Egy „epizód” átlagos hossza: az előfizetés átlagosan <strong>1/c</strong> ideig tart (ezt már láttuk!), utána átlagosan <strong>1/π</strong> ideig tart, míg valaki visszatér." },
       { kind: "text", step: 2, html: "Amikor visszatér, <strong>újra megkapja ugyanazt a V értéket</strong> — csak diszkontálva, mert a jövőben történik." },
     ],
   },
   {
     type: "content",
     eyebrow: "Megint egy mértani sor",
-    title: "Perpetuitás perpetuitásokból",
+    title: "Perpetuitás annuitásokból",
     legend: CLTV_LEGEND,
     blocks: [
-      { kind: "text", html: "Ez a ciklus (átlagosan g = 1/c + 1/π hónap egy teljes epizód) elvileg végtelen sokszor megismétlődhet — ismét egy mértani sor, csak most az „epizódok” szintjén:" },
+      { kind: "text", html: "Minden „epizód” maga egy annuitás (V), és ez a ciklus (átlagosan g = 1/c + 1/π hónap egy teljes epizód) elvileg végtelen sokszor megismétlődhet — ismét egy mértani sor, csak most az „epizódok” szintjén:" },
       { kind: "text", step: 1, html: "<strong>Teljes érték = V · (1 + δᵍ + δ²ᵍ + …) = V / (1 − δᵍ)</strong>, ahol δ = 1/(1+r) és g = 1/c + 1/π." },
       { kind: "tension", step: 2, label: "Ez egy közelítés", html: "Az „átlagosan g hónap” kezelése egyszerűsítés — a pontos várható érték egy véletlen hosszú időszakra technikailag kicsit magasabb lenne (a diszkontálás konvex). A notebookban egy Monte Carlo szimulációval ellenőrizzük, mekkora ez az eltérés — 3-13% körüli, mindig ugyanabba az irányba." },
     ],

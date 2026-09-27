@@ -71,28 +71,33 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Állapottér",
     title: "Négy 'zóna', amiben egy felhasználó lehet",
-    visualLayout: "stack",
     visual: {
       kind: "image",
       src: "../assets/markov_states_diagram.png",
       alt: "Négy allapot: Inaktiv, Veszelyeztetett hosszu tav, Veszelyeztetett rovid tav, Aktiv ma -- nyilakkal az atmeneti valoszinusegek",
     },
     blocks: [
-      { kind: "text", html: "Minden nyílhoz tartozik egy <strong>átmeneti valószínűség</strong> ('XURR'-ráta): pl. <code>curr</code> = current user retention, <code>reactivation_rate</code> = veszélyeztetett→visszatért. Mindegyik (0, 1) között — soha nem 100% fölött." },
+      { kind: "text", html: "Minden nyílhoz egy <strong>átmeneti valószínűség</strong> tartozik ('XURR'-ráta): pl. <code>curr</code> = current user retention. Mindegyik (0, 1) között — soha nem 100% fölött." },
+      { kind: "text", step: 1, html: "A nyilak iránya fontos: a <strong>lemorzsolódás</strong> zónáról zónára halad, DE a <strong>visszatérés</strong> MINDIG közvetlenül Aktívba ugrik — sosem a szomszédos zónába." },
     ],
   },
   {
     type: "content",
-    eyebrow: "Fontos",
+    eyebrow: "A teljes modell",
     title: "'Aktív ma' maga is négy alcsoport",
+    visualLayout: "full",
+    visual: {
+      kind: "image",
+      src: "../assets/markov_full_state_diagram.png",
+      alt: "A teljes 7-allapotu modell: Inaktiv, Veszelyeztetett hosszu tav, Veszelyeztetett rovid tav, es az Aktiv ma 4 alcsoportja (Uj, Jelenlegi, Reaktivalt, Feltamasztott) sajat dobozokkal es nyilakkal",
+    },
+  },
+  {
+    type: "content",
+    eyebrow: "Fontos",
+    title: "Miért külön kezelni őket?",
     blocks: [
-      { kind: "list", items: [
-        "<strong>Új</strong> — ma regisztrált",
-        "<strong>Jelenlegi</strong> — tegnap is, ma is aktív",
-        "<strong>Reaktivált</strong> — a hosszú távon veszélyeztetett zónából tért vissza",
-        "<strong>Feltámasztott</strong> — az inaktív zónából tért vissza",
-      ]},
-      { kind: "ask", step: 1, html: "Miért éri meg külön kezelni a 'reaktivált' és 'feltámasztott' felhasználót a sima 'jelenlegitől'? Mi különbözhet a viselkedésükben?" },
+      { kind: "ask", html: "Miért éri meg külön kezelni a 'reaktivált' és 'feltámasztott' felhasználót a sima 'jelenlegitől'? Mi különbözhet a viselkedésükben?" },
     ],
   },
   {

@@ -417,6 +417,31 @@ h2.headline {
   max-height: 40vh;
 }
 
+/* "full": egy diagramnak NINCS versengő szövegblokkja (csak eyebrow+title) --
+   ilyenkor a kép a stack-nél is nagyobb, majdnem a teljes magasságot kaphatja. */
+.slide.has-visual.has-visual--full {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.slide.has-visual--full .content-col {
+  flex: none;
+  align-items: center;
+  text-align: center;
+}
+
+.slide.has-visual--full .slide-visual {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.slide.has-visual--full .figure img {
+  max-height: 66vh;
+}
+
 .slide.has-visual .content-col {
   flex: 1 1 50%;
   min-width: 0;
