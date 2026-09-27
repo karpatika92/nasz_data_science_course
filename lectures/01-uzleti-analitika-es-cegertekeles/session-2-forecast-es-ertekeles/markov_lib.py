@@ -1,10 +1,11 @@
 """checkers.com DAU/WAU Markov-modell -- TISZTAN SZINTETIKUS adatokon.
 
-Ez a modul UGYANAZT a modellezesi logikat koveti, mint a valos chess.com
-"XURR" Markov-modell (allapotter, atmeneti rataneves szezonalitas-dekompozicio
-+ visszahelyezes, forgatokonyv-tervezes), de a szamok innentol kezdve kezzel
-epitett, seedelt szintetikus sorok -- SOHA nem valos chess.com adat vagy
-meret. Ezt szandekosan igy csinaljuk: egy tobb eves trend/szezonalitas ALAKJA
+Ez a modul egy valos, nagy novekedesu social/mobile termeknel hasznalt,
+publikusan is dokumentalt DAU-modellezesi gyakorlatot koevet (allapotter,
+atmeneti rataneves szezonalitas-dekompozicio + visszahelyezes,
+forgatokonyv-tervezes), de a szamok innentol kezdve kezzel
+epitett, seedelt szintetikus sorok -- SOHA nem valos adat vagy meret.
+Ezt szandekosan igy csinaljuk: egy tobb eves trend/szezonalitas ALAKJA
 onmagaban is erzekeny vallalati info, amit egyedi sorok zajositasaval nem
 lehet eltuntetni anelkul, hogy a tanitott mintazatot is eltuntetnenk.
 
@@ -63,7 +64,7 @@ def clip01(x, lo=0.002, hi=0.998):
 
 def get_next_state(state: pd.Series, rates: pd.Series, tam: float | None = None) -> pd.Series:
     """Egy nap elorelepese az allapotteren -- ugyanaz a szerkezet, mint a
-    valos chess.com pipeline-ban (dau_model/markov_model.py), csak itt
+    valos DAU-modellezesi pipeline-ban, csak itt
     'rates' mar tartalmazza a mai new_users-t is.
 
     tam: ha nem None, egy veges piacmeret-korlat (Total Addressable Market).
@@ -179,7 +180,7 @@ def build_synthetic_rate_trajectory(
         [1.05, 0.95, 0.95, 1.0, 1.0, 1.05, 1.15, 1.15, 0.85, 0.95, 1.0, 1.1]
     )[month - 1]
 
-    # Alap novekedesi trend (nem valos chess.com meret vagy alak -- kitalalt
+    # Alap novekedesi trend (nem valos meret vagy alak -- kitalalt
     # logisztikus-szeru felfutas egy kis kepzeletbeli cegre szabva).
     trend = new_users_base * (1 + new_users_annual_growth) ** (t / 365.0)
     new_users_raw = trend * dow_new_users_factor * month_new_users_factor
@@ -228,7 +229,7 @@ def run_forecast(trajectory: pd.DataFrame, starting_state: pd.Series, tam: float
 
 
 def decompose_seasonality(dates: pd.Series, values: pd.Series, multiplicative: bool = False) -> pd.DataFrame:
-    """A valos chess.com pipeline (dau_model/etl.py) modszeret koveti:
+    """A valos DAU-modellezesi pipeline modszeret koveti:
     1) nap-a-heten faktor: eltero minden nap sajat ISO-heti atlagatol,
        heti napok szerinti MEDIAN, ujra-kozepre igazitva (osszeg=0, ill.
        szorzatos esetben atlag=1);
@@ -289,8 +290,8 @@ def reapply_seasonality(deseasoned_forecast: pd.Series, dates: pd.Series, dow_fa
 
 
 def default_starting_state(total: float = 120_000.0) -> pd.Series:
-    """Kis, illusztracios kezdo allapot -- NEM valos chess.com meretarany,
-    szandekosan egy sokkal kisebb kepzeletbeli ceg nagysagrendjeben."""
+    """Kis, illusztracios kezdo allapot -- szandekosan egy sokkal kisebb,
+    kepzeletbeli ceg nagysagrendjeben (nem egy nagy, valos platform merete)."""
     return pd.Series(
         {
             "new_users": total * 0.006,
@@ -303,3 +304,37 @@ def default_starting_state(total: float = 120_000.0) -> pd.Series:
             "total": total,
         }
     )
+
+
+def simple_two_state_equilibrium_ratio(reactivation_rate: float, churn_rate: float) -> float:
+    """A legegyszerubb (Aktiv/Inaktiv + allando top-of-funnel) Markov-modell
+    egyensulyi Aktiv/Teljes aranya: pi/(pi+c). Levezetes: a 2x2-es atmeneti
+    matrix egyik sajaterteke mindig 1 (a rendszer nem 'vesz el' embereket),
+    a masik sajatertek (pi-c... helyesebben rho-pi, lasd levezetes) lecseng;
+    a fennmarado (nem-lecsengo) iranyt a sajatvektor rho:c = pi:c aranya adja,
+    ami eppen a folyam-egyensuly (flow balance) feltetele: c*Aktiv = pi*Inaktiv.
+    """
+    return reactivation_rate / (reactivation_rate + churn_rate)
+
+
+def simple_two_state_forecast(
+    n_days: int,
+    daily_registrations: float,
+    churn_rate: float,
+    reactivation_rate: float,
+    start_active: float = 1_000.0,
+    start_inactive: float = 9_000.0,
+) -> pd.DataFrame:
+    """A legegyszerubb lehetseges Markov-modell: csak Aktiv/Inaktiv allapot,
+    plusz allando napi uj regisztracio (R), ami kozvetlenul az Aktiv
+    allapotba lep be. Nincs szezonalitas, nincs tobbi alallapot -- csak azert
+    van, hogy megmutassa: MAR EZ a modell is egyensulyhoz vezet."""
+    active, inactive = start_active, start_inactive
+    rows = []
+    for day in range(n_days):
+        next_active = active * (1 - churn_rate) + inactive * reactivation_rate + daily_registrations
+        next_inactive = active * churn_rate + inactive * (1 - reactivation_rate)
+        active, inactive = next_active, next_inactive
+        total = active + inactive
+        rows.append({"day": day, "active": active, "inactive": inactive, "total": total, "active_share": active / total})
+    return pd.DataFrame(rows)

@@ -3,8 +3,8 @@ window.LESSON_LABEL = "Üzleti analitika · 1/2";
 window.SLIDES = [
   {
     type: "title",
-    eyebrow: "Üzleti analitika és cégértékelés",
-    title: "Mennyit ér egy cég?",
+    eyebrow: "Analitika és vállalatértékelés",
+    title: "Analitika és vállalatértékelés",
     kicker: "Adattudomány, üzleti analitika és egy előfizetéses cég értékelése — a checkers.com példáján",
     note: "Kárpáti András · 1. rész / 2",
   },
@@ -43,9 +43,9 @@ window.SLIDES = [
     title: "Hol él az adattudomány?",
     visual: {
       kind: "image",
-      src: "../assets/venn_data_science.png",
-      alt: "Drew Conway adattudomány Venn-diagramja: Hacking Skills, Math & Stats Knowledge, Substantive Expertise metszetében a Data Science",
-      caption: "Drew Conway (2010) — az adattudomány a három kör metszetében él",
+      src: "../assets/venn_adattudomany.png",
+      alt: "Adattudomany Venn-diagramja: Hacking Skills, Matek & Statisztika, Terulet-specifikus tudas metszeteben az Adattudomany",
+      caption: "Drew Conway (2010) nyomán — az adattudomány a három kör metszetében él",
     },
     blocks: [
       { kind: "text", html: "<strong>Hacking skills</strong>: meg tudod szerezni és formázni az adatot. <strong>Matek/statisztika</strong>: helyesen tudsz belőle következtetni. <strong>Terület-specifikus tudás</strong>: tudod, mi számít a checkers.com üzletében." },
@@ -73,19 +73,45 @@ window.SLIDES = [
     eyebrow: "checkers.com példákkal",
     title: "A négy szint a gyakorlatban",
     blocks: [
-      {
-        kind: "columns",
-        columns: [
-          { heading: "Leíró + diagnosztikai", html: "'Hány napi aktív felhasználónk (DAU) volt tegnap?' — 'Miért esett vissza a konverziós rátánk múlt héten?'" },
-          { heading: "Prediktív + preskriptív", html: "'Hány előfizetőnk lesz jövő negyedévben?' — 'Melyik árazási stratégia maximalizálja a bevételt?'" },
-        ],
-      },
-      { kind: "ask", step: 1, html: "A checkers.com melyik szinten áll ma, egy konkrét döntésnél, amit ismertek egy hasonló cégtől?" },
+      { kind: "plaque", year: "Leíró", html: "„Hány napi aktív felhasználónk (DAU) volt tegnap?”" },
+      { kind: "plaque", year: "Diagnosztikai", html: "„Miért esett vissza a konverziós rátánk múlt héten?”" },
+      { kind: "plaque", year: "Prediktív", html: "„Hány előfizetőnk lesz jövő negyedévben?”" },
+      { kind: "plaque", year: "Preskriptív", html: "„Melyik árazási stratégia maximalizálja a bevételt?”" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Diagnosztikai analitika — élő példa",
+    title: "Egy konkrét eset",
+    blocks: [
+      { kind: "ask", label: "Kérdés a teremnek", html: "A checkers.com decemberi első heti churn-je 3-szor magasabb, mint az azt megelőző héten. Mi okozhatja ezt?" },
+    ],
+  },
+
+  // ============ NETFLIX — MIÉRT SZÁMÍT EZ ANNYIRA? ============
+  { type: "divider", index: "03", eyebrow: "Mielőtt belevágnánk", title: "Miért mozog ennyit egy részvényárfolyam?" },
+  {
+    type: "content",
+    eyebrow: "Valós adat — Netflix (NFLX)",
+    title: "A cégérték nagy része a jövőben van",
+    visual: { kind: "image", src: "../assets/nflx_price_chart.png", alt: "Netflix reszvenyarfolyam 2016-2026, split-adjusztalt, valos adat, a 2022-es elofizeto-vesztes es a kesobbi felfutas felannotalva" },
+    blocks: [
+      { kind: "text", html: "2022 elején a Netflix bejelentette az <strong>első előfizető-vesztését egy évtizedben</strong> — a piac egyetlen hét alatt kb. 37%-kal árazta le a céget." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "A tanulság",
+    title: "Várakozások mozgatják az árat, nem a mai bevétel",
+    blocks: [
+      { kind: "ask", html: "A Netflix aznapi bevétele gyakorlatilag nem változott — mégis eltűnt a piaci érték harmada. Miért?" },
+      { kind: "text", step: 1, html: "Mert egy előfizetéses cég értékének <strong>túlnyomó része a JÖVŐBELI cash flow-kban van</strong> — és az a jövő a churn-re és a növekedésre vonatkozó VÁRAKOZÁSOKON alapul. Ha ezek a várakozások megváltoznak, az árfolyam drasztikusan mozoghat." },
+      { kind: "tension", step: 2, label: "Ezért számít ez nekünk", html: "A ma hátralévő részben pontosan ezeket a feltevéseket (churn, növekedés, piacméret) fogjuk megbecsülni a checkers.com-ra — ezek nem akadémiai finomítás, hanem valós dollármilliárdokat mozgató paraméterek." },
     ],
   },
 
   // ============ A CÉG BEMUTATÁSA ============
-  { type: "divider", index: "03", eyebrow: "A mai eset", title: "checkers.com" },
+  { type: "divider", index: "04", eyebrow: "A mai eset", title: "checkers.com" },
   {
     type: "content",
     eyebrow: "A cég",
@@ -94,7 +120,7 @@ window.SLIDES = [
       {
         kind: "list",
         items: [
-          "Online sakkoktatás és -platform — nem triviális belépni, de legutóbb virálissá vált a közösségi médiában",
+          "Online dámaoktatás és -platform — nem triviális belépni, de legutóbb virálissá vált a közösségi médiában",
           "Egyetlen bevételi forrás: <strong>előfizetés</strong>. Nincs hirdetés.",
           "Havi (csak havi!) díjfizetés, <strong>2 árszint</strong>: Alap és Prémium",
           "Most keres befektetőket egy tőkebevonási körhöz",
@@ -113,6 +139,15 @@ window.SLIDES = [
   },
   {
     type: "content",
+    eyebrow: "Miért 3 külön modell?",
+    title: "Miért nem elég egy trendvonal?",
+    blocks: [
+      { kind: "text", html: "A leggyorsabb út: vegyük a múltbeli bevételt, illesszünk rá egy trendvonalat, extrapoláljunk. Ez gyors — de <strong>törékeny</strong>: bármilyen történelmi anomália vagy trend-illesztési döntés közvetlenül beépül az értékelésbe, kereszt-ellenőrzés nélkül." },
+      { kind: "tension", step: 1, label: "Ehelyett: 3 független becslés, ami összeadva robusztusabb", html: "A CLTV (unit economics), a DAU-előrejelzés (viselkedési modell) és az előfizetőszám (kohorsz-modell) egymástól FÜGGETLENÜL készül — más adatból, más módszertannal. A hibáik nem korrelálnak tökéletesen, ezért a kombinált becslés részben kiátlagolja őket, és minden darabja külön-külön megvédhető egy befektető előtt." },
+    ],
+  },
+  {
+    type: "content",
     eyebrow: "Építőkocka #1",
     title: "Kezdjük az elsővel: mennyit ér egy előfizető?",
     blocks: [
@@ -121,7 +156,7 @@ window.SLIDES = [
   },
 
   // ============ CLTV — ANNUITÁS/PERPETUITÁS FELFRISSÍTŐ ============
-  { type: "divider", index: "04", eyebrow: "Esettanulmány 1", title: "Customer Lifetime Value" },
+  { type: "divider", index: "05", eyebrow: "Esettanulmány 1", title: "Customer Lifetime Value" },
   {
     type: "content",
     eyebrow: "Felfrissítő",
@@ -165,6 +200,16 @@ window.SLIDES = [
   },
   {
     type: "content",
+    eyebrow: "Egy fontos árnyalat",
+    title: "A churn valójában nem állandó",
+    visual: { kind: "image", src: "../assets/churn_curve_simple.png", alt: "Illusztracios tulelesi gorbe: a churn gyors az elso honapokban, majd lassul" },
+    blocks: [
+      { kind: "text", html: "Az imént <strong>állandó</strong> havi churn-rátát tételeztünk fel (egyszerűsítés). A valóságban a lemorzsolódás <strong>gyors az első hónapokban, majd lassul</strong> — aki túléli a kezdeti időszakot, egyre stabilabb előfizetővé válik." },
+      { kind: "ask", step: 1, html: "Milyen üzleti okok állhatnak amögött, hogy a korai hónapokban ilyen magas a lemorzsolódás?" },
+    ],
+  },
+  {
+    type: "content",
     eyebrow: "Az annuitás perpetuitássá válik",
     title: "Miért lesz ebből (majdnem) perpetuitás-formula?",
     blocks: [
@@ -190,7 +235,7 @@ window.SLIDES = [
   },
 
   // ============ CLTV — RESUBSCRIPTION ============
-  { type: "divider", index: "05", eyebrow: "Egy lépéssel tovább", title: "Mi van, ha vissza is jöhet?" },
+  { type: "divider", index: "06", eyebrow: "Egy lépéssel tovább", title: "Mi van, ha vissza is jöhet?" },
   {
     type: "content",
     eyebrow: "A valóság bonyolultabb",
@@ -202,31 +247,22 @@ window.SLIDES = [
   },
   {
     type: "content",
-    eyebrow: "Két állapot",
-    title: "Modellezzük két állapottal",
+    eyebrow: "Az egyszerű logika",
+    title: "Amit már tudunk, azt újra felhasználjuk",
     blocks: [
-      { kind: "text", html: "<strong>Aktív</strong>: fizeti a P díjat, minden hónapban ρ valószínűséggel marad, c = 1−ρ valószínűséggel <em>Lemorzsolódottá</em> válik." },
-      { kind: "text", step: 1, html: "<strong>Lemorzsolódott</strong>: nem fizet, de minden hónapban π valószínűséggel <em>visszatér</em> Aktívba (resubscription rate), különben marad Lemorzsolódott." },
+      { kind: "text", html: "Ha már előfizető vagy, a jelenértéked <strong>V</strong> — ezt már kiszámoltuk (a resub nélküli zárt alak)." },
+      { kind: "text", step: 1, html: "Egy „epizód” (aktív szakasz + az utána következő lemorzsolódott szakasz) átlagos hossza: az előfizetés átlagosan <strong>1/c</strong> ideig tart (ezt már láttuk!), utána átlagosan <strong>1/π</strong> ideig tart, míg valaki visszatér." },
+      { kind: "text", step: 2, html: "Amikor visszatér, <strong>újra megkapja ugyanazt a V értéket</strong> — csak diszkontálva, mert a jövőben történik." },
     ],
   },
   {
     type: "content",
-    eyebrow: "Érték-egyenletek",
-    title: "Két egyenlet, két ismeretlen",
+    eyebrow: "Megint egy mértani sor",
+    title: "Perpetuitás perpetuitásokból",
     blocks: [
-      { kind: "text", html: "Legyen <strong>V</strong> a teljes várható jelenérték Aktív állapotból indulva, <strong>W</strong> ugyanez Lemorzsolódott állapotból indulva. δ = 1/(1+r)." },
-      { kind: "text", step: 1, html: "<code>V = P + δ·(ρ·V + c·W)</code>  —  ma megkapod P-t, jövő hónaptól a várható folytatás" },
-      { kind: "text", step: 2, html: "<code>W = δ·(π·V + (1−π)·W)</code>  —  ma nincs fizetés, jövő hónaptól a várható folytatás" },
-    ],
-  },
-  {
-    type: "content",
-    eyebrow: "Megoldás",
-    title: "A zárt alak",
-    blocks: [
-      { kind: "text", html: "A W-egyenletből kifejezve és V-be helyettesítve:" },
-      { kind: "text", step: 1, html: "<strong>V = P·(1 − δ(1−π)) / [(1 − δρ)(1 − δ(1−π)) − δ²cπ]</strong>" },
-      { kind: "tension", step: 2, label: "Ellenőrzés π = 0-nál", html: "Ha π = 0 (sosem tér vissza), a formula pontosan visszaadja az előző, resub nélküli eredményt: <strong>V = P(1+r)/(r+c)</strong>. Ez egy jó szanity-check minden ilyen levezetésnél." },
+      { kind: "text", html: "Ez a ciklus (átlagosan g = 1/c + 1/π hónap egy teljes epizód) elvileg végtelen sokszor megismétlődhet — ismét egy mértani sor, csak most az „epizódok” szintjén:" },
+      { kind: "text", step: 1, html: "<strong>Teljes érték = V · (1 + δᵍ + δ²ᵍ + …) = V / (1 − δᵍ)</strong>, ahol δ = 1/(1+r) és g = 1/c + 1/π." },
+      { kind: "tension", step: 2, label: "Ez egy közelítés", html: "Az „átlagosan g hónap” kezelése egyszerűsítés — a pontos várható érték egy véletlen hosszú időszakra technikailag kicsit magasabb lenne (a diszkontálás konvex). A notebookban egy Monte Carlo szimulációval ellenőrizzük, mekkora ez az eltérés — 3-13% körüli, mindig ugyanabba az irányba." },
     ],
   },
   {
@@ -237,14 +273,23 @@ window.SLIDES = [
       { kind: "list", items: [
         "A CLTV nem egy szám, hanem egy <strong>formula</strong> — 4 bemenettel: ár, churn, resub-ráta, WACC",
         "Minden bemenet <strong>mérhető</strong> a saját, felhasználó-szintű adatunkból",
-        "A resub-ráta beépítése strukturálisan nem változtat a logikán — csak egy 2×2-es rendszert kell megoldani",
+        "A resub-ráta beépítése ugyanazt a mértani-sor logikát ismétli meg, egy szinttel feljebb",
       ]},
       { kind: "ask", step: 1, html: "Ha egy versenytárs csak az 'egyszerű' (resub nélküli) CLTV-t számolja, alul- vagy felülbecsüli a saját ügyfeleik értékét?" },
     ],
   },
+  {
+    type: "content",
+    eyebrow: "Egy lépéssel tovább",
+    title: "Mi van, ha nem előfizetőből indulunk?",
+    blocks: [
+      { kind: "ask", label: "Nyitott kérdés", html: "Mi van, ha nem egy már ELŐFIZETŐ állapotból indulunk, hanem egy REGISZTRÁLT, de még nem fizető állapotból? Mit kellene még megbecsülnünk a modellhez?" },
+      { kind: "text", step: 1, html: "(Ez pontosan az a bővítés — regisztrált→előfizető konverziós ráta —, amire a 2. részben, a kohorsz-modellnél visszatérünk.)" },
+    ],
+  },
 
   // ============ NOTEBOOK / WORKED EXAMPLE ============
-  { type: "divider", index: "06", eyebrow: "Számoljunk", title: "Worked example" },
+  { type: "divider", index: "07", eyebrow: "Számoljunk", title: "Worked example" },
   {
     type: "content",
     eyebrow: "demo_cltv.ipynb",
@@ -268,7 +313,7 @@ window.SLIDES = [
   },
 
   // ============ ZÁRÁS ============
-  { type: "divider", index: "07", eyebrow: "Összefoglalás", title: "Hol tartunk?" },
+  { type: "divider", index: "08", eyebrow: "Összefoglalás", title: "Hol tartunk?" },
   {
     type: "content",
     eyebrow: "Recap",

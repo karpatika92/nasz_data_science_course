@@ -107,6 +107,92 @@ def business_analytics_pyramid():
     plt.close(fig)
 
 
+def venn_adattudomany():
+    """Sajat, deck-stilusu Venn-diagram (Drew Conway, 2010 tartalommal,
+    ujrarajzolva a deck sajat szinpalettajaval, nem az eredeti szines kep)."""
+    fig, ax = plt.subplots(figsize=(9, 8), dpi=200)
+    fig.patch.set_facecolor(BG)
+    ax.set_facecolor(BG)
+
+    r = 1.25
+    centers = {
+        "hacking": (-0.62, 0.36),
+        "math": (0.62, 0.36),
+        "domain": (0.0, -0.62),
+    }
+    colors = {
+        "hacking": ACCENT,
+        "math": "#4a8f72",
+        "domain": "#c1543a",
+    }
+    labels = {
+        "hacking": "Hacking skills",
+        "math": "Matek &\nstatisztika",
+        "domain": "Terület-specifikus\ntudás",
+    }
+    label_offsets = {
+        "hacking": (-1.15, 1.05),
+        "math": (1.15, 1.05),
+        "domain": (0.0, -1.55),
+    }
+
+    for key, c in centers.items():
+        circ = patches.Circle(c, r, facecolor=colors[key], edgecolor=colors[key], alpha=0.32, linewidth=2.2)
+        ax.add_patch(circ)
+        circ_outline = patches.Circle(c, r, facecolor="none", edgecolor=colors[key], alpha=0.9, linewidth=2.2)
+        ax.add_patch(circ_outline)
+        lx, ly = label_offsets[key]
+        ax.text(lx, ly, labels[key], ha="center", va="center", fontsize=15, fontweight="bold", color=colors[key], family="monospace")
+
+    # Metszet-cimkek (kezzel pozicionalva a klasszikus 3-koros elrendezeshez)
+    ax.text(0, 0.62, "Gépi\ntanulás", ha="center", va="center", fontsize=12.5, color=INK, fontweight="bold")
+    ax.text(-0.78, -0.55, "Danger\nzone", ha="center", va="center", fontsize=12, color=INK, style="italic")
+    ax.text(0.78, -0.55, "Hagyományos\nkutatás", ha="center", va="center", fontsize=11.5, color=INK)
+    ax.text(0, -0.12, "Adat-\ntudomány", ha="center", va="center", fontsize=15, fontweight="bold", color=INK, family="monospace")
+
+    ax.set_xlim(-2.1, 2.1)
+    ax.set_ylim(-2.1, 1.9)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    fig.tight_layout()
+    fig.savefig(OUT_DIR / "venn_adattudomany.png", facecolor=BG, bbox_inches="tight")
+    plt.close(fig)
+
+
+def churn_curve_simple():
+    """Egyetlen, illusztracios tulelesi gorbe: a churn NEM linearis --
+    gyors az elejen, majd lassul (duration dependence)."""
+    import numpy as np
+
+    months = np.arange(0, 37)
+    hazard = 0.02 + 0.5 / (months + 1)
+    survival = np.concatenate([[1.0], np.cumprod(1 - hazard[1:])])
+
+    fig, ax = plt.subplots(figsize=(9, 5.5), dpi=200)
+    fig.patch.set_facecolor(BG)
+    ax.set_facecolor(BG)
+    ax.plot(months, survival * 100, color=ACCENT, lw=2.8)
+    ax.fill_between(months, survival * 100, color=ACCENT, alpha=0.12)
+
+    for spine in ["top", "right"]:
+        ax.spines[spine].set_visible(False)
+    for spine in ["left", "bottom"]:
+        ax.spines[spine].set_color(LINE)
+    ax.tick_params(colors=INK_DIM, labelsize=12)
+    ax.set_xlabel("Hónapok az előfizetés kezdete óta", color=INK_DIM, fontsize=13)
+    ax.set_ylabel("Túlélő előfizetők (%)", color=INK_DIM, fontsize=13)
+    ax.set_title("A churn NEM lineáris — gyors az elején, majd lassul", color=INK, fontsize=15, loc="left")
+    ax.grid(axis="y", color=LINE, linewidth=0.6)
+
+    fig.tight_layout()
+    fig.savefig(OUT_DIR / "churn_curve_simple.png", facecolor=BG, bbox_inches="tight")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     business_analytics_pyramid()
+    venn_adattudomany()
+    churn_curve_simple()
     print("Kesz:", OUT_DIR / "uzleti_analitika_piramis.png")
+    print("Kesz:", OUT_DIR / "venn_adattudomany.png")
+    print("Kesz:", OUT_DIR / "churn_curve_simple.png")

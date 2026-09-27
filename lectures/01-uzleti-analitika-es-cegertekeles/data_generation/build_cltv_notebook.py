@@ -92,29 +92,79 @@ print(f"CLTV -- zárt alak (állandó churn): ${V_closed_form:,.2f}")
 print(f"CLTV -- numerikus (tényleges görbe): ${V_numeric:,.2f}")""")
 
 md("""\
-## 3. Resubscription — a 2×2-es rendszer zárt alakja
+## 3. Resubscription — perpetuitás perpetuitásokból
 
-$$V = \\frac{P \\cdot (1 - \\delta(1-\\pi))}{(1 - \\delta\\rho)(1 - \\delta(1-\\pi)) - \\delta^2 c \\pi}$$
+Ha már előfizető vagy, a jelenértéked $V$ (ezt már kiszámoltuk fentebb, a
+zárt alakkal). Egy "epizód" (aktív szakasz + az azt követő lemorzsolódott
+szakasz) átlagos hossza két részből áll: az előfizetés átlagosan $1/c$ ideig
+tart (ezt már láttuk!), utána átlagosan $1/\\pi$ ideig tart, míg valaki
+visszatér. Amikor visszatér, ÚJRA megkapja ugyanazt a $V$ értéket — csak
+diszkontálva, mert a jövőben történik. Ez a ciklus elvileg végtelen sokszor
+megismétlődhet — ismét egy mértani sor, csak az "epizódok" szintjén, az
+átlagos epizódhossz ($1/c + 1/\\pi$) lépésközzel:
 
-ahol $\\delta = 1/(1+r)$, $\\rho = 1-c$. **A $\\pi$ (resub-ráta) egy FELTEVÉS**,
-nem az adatból becsült érték — a mi egyszerűsített sémánk nem tartalmaz
-resub-eseményeket.""")
+$$\\text{Teljes érték} = V \\cdot \\left(1 + \\delta^{g} + \\delta^{2g} + \\dots\\right) = \\frac{V}{1 - \\delta^{g}}, \\quad g = \\frac{1}{c} + \\frac{1}{\\pi}$$
+
+ahol $\\delta = 1/(1+r)$. **A $\\pi$ (resub-ráta) egy FELTEVÉS**, nem az
+adatból becsült érték — a mi egyszerűsített sémánk nem tartalmaz
+resub-eseményeket.
+
+**Ez egy közelítés**: az "átlagosan $g$ hónap" kezelése nem ugyanaz, mint a
+pontos várható érték egy véletlen hosszú időszakra (a diszkontálás konvex
+függvénye az időnek, úgyhogy a pontos várható érték technikailag egy kicsit
+magasabb lenne — Jensen-egyenlőtlenség). Nézzük meg Monte Carlo szimulációval,
+mekkora ez az eltérés a gyakorlatban.""")
 
 code("""\
-def cltv_with_resub(P, r, c, pi):
+def cltv_with_resub_approx(V, r, c, pi):
     delta = 1 / (1 + r)
-    rho = 1 - c
-    numerator = P * (1 - delta * (1 - pi))
-    denominator = (1 - delta * rho) * (1 - delta * (1 - pi)) - delta**2 * c * pi
-    return numerator / denominator
+    g = 1 / c + 1 / pi  # atlagos epizod-hossz: elofizetes + visszateresi varakozas
+    return V / (1 - delta ** g)
 
-# Ellenorzes: pi=0-nal vissza kell adnia a resub nelkuli erteket
-assert abs(cltv_with_resub(P, r, c_avg, pi=0.0) - V_closed_form) < 1e-6
-print("Ellenőrzés OK: π=0 esetén visszaadja a resub nélküli formulát.")
+V_base = V_closed_form  # a fentebb szamolt, resub nelkuli zart alak
 
-for pi in [0.0, 0.02, 0.05, 0.10]:
-    v = cltv_with_resub(P, r, c_avg, pi)
-    print(f"π={pi:>5.0%} -> CLTV = ${v:,.2f}")""")
+for pi in [0.02, 0.05, 0.10]:
+    v = cltv_with_resub_approx(V_base, r, c_avg, pi)
+    print(f"π={pi:>5.0%} -> közelítő CLTV (resubbal) = ${v:,.2f}  ({v / V_base:.2f}x az alap V-hez képest)")""")
+
+md("## 3b. Monte Carlo ellenőrzés — mennyire pontos a közelítés?")
+
+code("""\
+def simulate_customer_value(P, r, c, pi, rng, max_periods=2000):
+    \"\"\"Egyetlen szimulalt ugyfel teljes, tenylegesen diszkontalt erteke --
+    valodi (nem atlagolt) veletlen varakozasi idokkel.\"\"\"
+    total = 0.0
+    t = 0
+    active = True
+    while t < max_periods:
+        discount = 1 / (1 + r) ** t
+        if active:
+            total += P * discount
+            if rng.random() < c:
+                active = False
+        else:
+            if rng.random() < pi:
+                active = True
+        t += 1
+    return total
+
+rng = np.random.default_rng(7)
+N_SIM = 20_000
+
+print(f"{'π':>6s}  {'közelítő':>12s}  {'Monte Carlo':>12s}  {'eltérés':>8s}")
+for pi in [0.02, 0.05, 0.10]:
+    approx = cltv_with_resub_approx(V_base, r, c_avg, pi)
+    sim_values = [simulate_customer_value(P, r, c_avg, pi, rng) for _ in range(N_SIM)]
+    mc_estimate = np.mean(sim_values)
+    print(f"{pi:>6.0%}  ${approx:>11,.2f}  ${mc_estimate:>11,.2f}  {mc_estimate / approx - 1:>7.2%}")""")
+
+md("""\
+**A Monte Carlo eredmény értelmezése:** a szimulált (pontos, véletlen
+várakozási idővel számolt) érték minden esetben egy kicsit MAGASABB, mint a
+közelítő formula — pontosan a Jensen-egyenlőtlenség iránya szerint. Az
+eltérés általában kicsi (néhány százalék), úgyhogy a közelítés a gyakorlatban
+jól használható — de fontos tudni, hogy ez egy közelítés, és melyik irányba
+téved (alábecsli a valós CLTV-t, nem túlbecsüli).""")
 
 md("""\
 ## Ti jöttök
@@ -135,16 +185,6 @@ for tier, g in df.groupby("tier"):
     disc = 1 / (1 + r) ** surv.index.values
     v_tier = (price_tier * surv.values * disc).sum()
     print(f"{tier:10s}: ár=${price_tier:.2f}/hó, CLTV=${v_tier:,.2f}")""")
-
-md("""\
-**Miért nő ilyen gyorsan?** A nevező egyre KISEBB lesz, ahogy π nő, és 10%
-körül már csak néhány ezreleknyire van a nullától. Ez nem hiba: minél nagyobb
-a visszatérési valószínűség a churn-hez képest, annál inkább egy gyakorlatilag
-"halhatatlan" kapcsolatot írunk le -- a formula helyesen jelzi, hogy ilyenkor
-közelítünk egy matematikai szingularitáshoz. **Gyakorlati tanulság:** mielőtt
-bármilyen π-t komolyan vennétek egy valós elemzésben, ellenőrizzétek, hogy a
-nevező kényelmesen pozitív marad -- ha nem, a bemeneti feltevések (c és π
-egymáshoz képest) irreálisak.""")
 
 nb["cells"] = cells
 Path("../session-1-alapok-es-cltv").mkdir(exist_ok=True)

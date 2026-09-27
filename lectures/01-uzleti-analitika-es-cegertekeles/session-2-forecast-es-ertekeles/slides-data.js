@@ -3,7 +3,7 @@ window.LESSON_LABEL = "Üzleti analitika · 2/2";
 window.SLIDES = [
   {
     type: "title",
-    eyebrow: "Üzleti analitika és cégértékelés",
+    eyebrow: "Analitika és vállalatértékelés",
     title: "Hányan lesznek, és mennyit ér a cég?",
     kicker: "DAU-előrejelzés Markov-modellel, előfizetőszám-előrejelzés kohorszokkal — és vissza a cégértékeléshez",
     note: "Kárpáti András · 2. rész / 2",
@@ -27,8 +27,44 @@ window.SLIDES = [
     eyebrow: "A módszertan eredete",
     title: "A Duolingo növekedési modellje",
     blocks: [
-      { kind: "text", html: "A Duolingo nyilvánosan publikálta a saját DAU-előrejelző módszertanát (blog.duolingo.com/growth-model-duolingo). A checkers.com — hasonlóan a valós chess.com-hoz — ugyanezt a keretrendszert implementálta." },
+      { kind: "text", html: "A Duolingo nyilvánosan publikálta a saját DAU-előrejelző módszertanát (blog.duolingo.com/growth-model-duolingo). A checkers.com ugyanezt a keretrendszert implementálta." },
       { kind: "text", step: 1, html: "Az alapötlet: a felhasználói bázist nem egy számmal (DAU) kezeljük, hanem <strong>állapotok</strong> között mozgó emberek sokaságaként — ez egy <strong>Markov-lánc</strong>." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Kezdjük a legegyszerűbbel",
+    title: "Csak Aktív és Inaktív, plusz egy csap",
+    blocks: [
+      { kind: "text", html: "A legegyszerűbb lehetséges verzió: 2 állapot (<strong>Aktív</strong> / <strong>Inaktív</strong>), plusz egy állandó napi <strong>top-of-funnel regisztráció</strong> (R), ami közvetlenül Aktívba lép be." },
+      { kind: "text", step: 1, html: "Minden nap: az Aktívak <em>c</em> (churn) valószínűséggel Inaktívvá válnak; az Inaktívak <em>π</em> (reaktivációs ráta) valószínűséggel visszatérnek Aktívba." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Flow balance",
+    title: "Egyensúlyban a ki- és beáramlás egyenlő",
+    blocks: [
+      { kind: "text", html: "Egyensúlyban annyian churnolnak ki az Aktívból, amennyien visszatérnek az Inaktívból: <strong>c · Aktív = π · Inaktív</strong>." },
+      { kind: "text", step: 1, html: "Ebből az Aktív/Teljes arány egyensúlyi értéke zárt alakban: <strong>Aktív / Teljes = π / (π + c)</strong> — függetlenül attól, honnan indultunk." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Ez már látszik szimulációval is",
+    title: "Már ez az egyszerű modell is egyensúlyhoz vezet",
+    visual: { kind: "image", src: "../assets/simple_two_state_equilibrium.png", alt: "Szimulalt Aktiv/Teljes arany konvergal az elmeleti pi/(pi+c) egyensulyi aranyhoz" },
+    blocks: [
+      { kind: "text", html: "Az induló aránytól függetlenül, a szimuláció a <strong>π/(π+c)</strong> elméleti egyenes felé tart." },
+      { kind: "ask", step: 1, html: "Mivel a Teljes populáció minden nap R-rel nő (soha nem csökken), mit gondoltok: az Aktív FELHASZNÁLÓK SZÁMA (nem az aránya) idővel egy fix szinthez tart, vagy folyamatosan nő?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Most bonyolítsuk",
+    title: "A valóság ennél gazdagabb",
+    blocks: [
+      { kind: "text", html: "Az 'Inaktív' a valóságban nem egyetlen állapot — van, aki csak egy hete nem aktív (könnyen visszahozható), és van, aki már 90+ napja (sokkal nehezebben). A regisztráció maga sem állandó — trendje és szezonalitása van." },
     ],
   },
   {
@@ -129,7 +165,6 @@ window.SLIDES = [
     type: "content",
     eyebrow: "A módszer (a valós checkers.com pipeline-ból)",
     title: "Dekompozíció, majd visszahelyezés",
-    visualLayout: "stack",
     visual: { kind: "image", src: "../assets/seasonality_before_after.png", alt: "Nyers vs deszezonalizalt trend uj felhasznalokra es a curr ratara" },
     blocks: [
       { kind: "list", items: [
@@ -144,10 +179,9 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Forgatókönyv-tervezés",
     title: "Nem egy szám — egy sáv",
-    visualLayout: "stack",
     visual: { kind: "image", src: "../assets/scenario_comparison.png", alt: "Alapeset kontra novekedes-leall, vegtelen novekedes es megtartas-javulas forgatokonyvek" },
     blocks: [
-      { kind: "text", html: "Két forgatókönyv-típus: <strong>növekedési ráta</strong> módosítás (pl. az új felhasználók éves növekedési üteme −40% / +40%) és <strong>egyszeri elmozdulás</strong> (pl. egy adott rátánál egyetlen naptól kezdve állandó eltolás)." },
+      { kind: "text", html: "Két forgatókönyv-típus: <strong>növekedési ráta</strong> módosítás (pl. az új felhasználók éves növekedési üteme −10% / +10%) és <strong>egyszeri elmozdulás</strong> (pl. egy adott rátánál egyetlen naptól kezdve állandó eltolás)." },
     ],
   },
   {
@@ -176,7 +210,7 @@ window.SLIDES = [
     eyebrow: "Vissza az egyensúlyhoz",
     title: "Ez egy feltevés, nem tény",
     blocks: [
-      { kind: "tension", html: "A valós chess.com is a 'végtelen piac' feltevéssel dolgozik hosszú távon — ez explicit, tudatos döntés, nem hanyagság. Egy befektetői pitchben viszont ez pontosan az a feltevés, amit meg kell tudnotok védeni." },
+      { kind: "tension", label: "Egy jó ökölszabály", html: "Ha úgy gondoljuk, az elérhető piac mérete <strong>legalább 10-szerese</strong> a jelenlegi méretünknek, ésszerű 'végtelennek' kezelni modellezési célra — a 10×-es korláton belüli telítődés hatása elhanyagolható a forecast-horizonton belül. Egy befektetői pitchben viszont ezt a feltevést meg kell tudnotok védeni." },
     ],
   },
 
@@ -252,6 +286,15 @@ window.SLIDES = [
         "→ Cégértékelés: cash flow vagy CLTV-skálázás",
       ]},
       { kind: "ask", step: 1, html: "Ha befektetők előtt kellene megvédenetek egyetlen feltevést a modellből, melyiket választanátok — és miért pont azt?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "A módszertan tétje",
+    title: "Ezért építettünk 3 külön modellt, nem egyet",
+    blocks: [
+      { kind: "text", html: "Emlékeztek az 1. rész elejéről: megtehettük volna, hogy egyszerűen trendvonalat illesztünk a múltbeli cash flow-ra és extrapolálunk. Ehelyett 3 <strong>függetlenül</strong> becsült mennyiséget építettünk (CLTV, DAU, előfizetőszám), és azokat kombináltuk." },
+      { kind: "tension", step: 1, label: "Ez a lényeg", html: "Mivel a 3 becslés más adatból, más módszertannal, más feltevésekkel készült, a hibáik nem korrelálnak tökéletesen — a kombinált becslés robusztusabb, mint egyetlen trendvonal, és minden darabja külön-külön megvédhető egy befektető előtt." },
     ],
   },
 ];
