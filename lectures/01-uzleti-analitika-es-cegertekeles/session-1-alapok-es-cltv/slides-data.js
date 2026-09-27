@@ -1,5 +1,20 @@
 window.LESSON_LABEL = "Üzleti analitika · 1/2";
 
+// Ugyanaz a jelölés-panel fut végig minden CLTV/churn dián (1/churn-től a
+// resub-perpetuitásig) -- konzisztensen, hogy ne kelljen diánként újra
+// kitalálni, melyik betű mit jelent.
+const CLTV_LEGEND = [
+  { symbol: "P", meaning: "havi előfizetési díj (ár)" },
+  { symbol: "r", meaning: "diszkontráta (WACC), periódusonként" },
+  { symbol: "c", meaning: "churn ráta — havi lemorzsolódás valószínűsége" },
+  { symbol: "ρ", meaning: "retention ráta = 1 − c" },
+  { symbol: "t", meaning: "periódus (hónap) sorszáma" },
+  { symbol: "V", meaning: "előfizető jelenértéke (CLTV, resub nélkül)" },
+  { symbol: "π", meaning: "resub ráta — visszatérés valószínűsége" },
+  { symbol: "δ", meaning: "diszkontfaktor = 1/(1+r)" },
+  { symbol: "g", meaning: "egy epizód várható hossza = 1/c + 1/π" },
+];
+
 window.SLIDES = [
   {
     type: "title",
@@ -9,8 +24,37 @@ window.SLIDES = [
     note: "Kárpáti András · 1. rész / 2",
   },
 
+  // ============ A CÉG BEMUTATÁSA ============
+  { type: "divider", index: "01", eyebrow: "A mai eset", title: "checkers.com" },
+  {
+    type: "content",
+    eyebrow: "A cég",
+    title: "Egy online, előfizetéses játékcég",
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "Online dámaoktatás és -platform — nem triviális belépni, de legutóbb virálissá vált a közösségi médiában",
+          "Egyetlen bevételi forrás: <strong>előfizetés</strong>. Nincs hirdetés.",
+          "Havi (csak havi!) díjfizetés, <strong>2 árszint</strong>: Alap és Prémium",
+          "Most keres befektetőket egy tőkebevonási körhöz",
+        ],
+      },
+      { kind: "text", step: 1, html: "Kvázi-monopólium a dáma-térben: a domain-név miatt gyakorlatilag <strong>ők az egyetlen jelentős szereplő</strong> a dáma-piacon. (Verseny persze VAN — de az emberek FIGYELMÉÉRT, nem a dáma-játékosokért: más játékok, közösségi média, bármi más szórakozás.)" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "A kérdés",
+    title: "Mennyit ér a checkers.com?",
+    blocks: [
+      { kind: "ask", label: "A ma hátralévő rész fő kérdése", html: "Ha be akarnátok fektetni — vagy el akarnátok adni a céget —, hogyan kezdenétek hozzá a fair ár meghatározásához?" },
+      { kind: "text", step: 1, html: "A válasz három építőkockán fog múlni: (1) <strong>mennyit ér egy előfizető</strong>, (2) <strong>hány előfizetőnk lesz</strong> a jövőben, és a kettő ötvözése: (3) egy <strong>teljes cash flow-előrejelzés</strong>." },
+    ],
+  },
+
   // ============ MI AZ ADATTUDOMÁNY? ============
-  { type: "divider", index: "01", eyebrow: "Nyitó kérdés", title: "Mi az adattudomány?" },
+  { type: "divider", index: "02", eyebrow: "Nyitó kérdés", title: "Mi az adattudomány?" },
   {
     type: "content",
     eyebrow: "Adat",
@@ -54,7 +98,7 @@ window.SLIDES = [
   },
 
   // ============ ÜZLETI ANALITIKA PIRAMIS ============
-  { type: "divider", index: "02", eyebrow: "Keretrendszer", title: "Az üzleti analitika piramisa" },
+  { type: "divider", index: "03", eyebrow: "Keretrendszer", title: "Az üzleti analitika piramisa" },
   {
     type: "content",
     eyebrow: "Négy szint",
@@ -89,7 +133,7 @@ window.SLIDES = [
   },
 
   // ============ NETFLIX — MIÉRT SZÁMÍT EZ ANNYIRA? ============
-  { type: "divider", index: "03", eyebrow: "Mielőtt belevágnánk", title: "Miért mozog ennyit egy részvényárfolyam?" },
+  { type: "divider", index: "04", eyebrow: "Mielőtt belevágnánk", title: "Miért mozog ennyit egy részvényárfolyam?" },
   {
     type: "content",
     eyebrow: "Valós adat — Netflix (NFLX)",
@@ -110,33 +154,6 @@ window.SLIDES = [
     ],
   },
 
-  // ============ A CÉG BEMUTATÁSA ============
-  { type: "divider", index: "04", eyebrow: "A mai eset", title: "checkers.com" },
-  {
-    type: "content",
-    eyebrow: "A cég",
-    title: "Egy online, előfizetéses játékcég",
-    blocks: [
-      {
-        kind: "list",
-        items: [
-          "Online dámaoktatás és -platform — nem triviális belépni, de legutóbb virálissá vált a közösségi médiában",
-          "Egyetlen bevételi forrás: <strong>előfizetés</strong>. Nincs hirdetés.",
-          "Havi (csak havi!) díjfizetés, <strong>2 árszint</strong>: Alap és Prémium",
-          "Most keres befektetőket egy tőkebevonási körhöz",
-        ],
-      },
-    ],
-  },
-  {
-    type: "content",
-    eyebrow: "A kérdés",
-    title: "Mennyit ér a checkers.com?",
-    blocks: [
-      { kind: "ask", label: "A ma hátralévő rész fő kérdése", html: "Ha be akarnátok fektetni — vagy el akarnátok adni a céget —, hogyan kezdenétek hozzá a fair ár meghatározásához?" },
-      { kind: "text", step: 1, html: "A válasz három építőkockán fog múlni: (1) <strong>mennyit ér egy előfizető</strong>, (2) <strong>hány előfizetőnk lesz</strong> a jövőben, és a kettő ötvözése: (3) egy <strong>teljes cash flow-előrejelzés</strong>." },
-    ],
-  },
   {
     type: "content",
     eyebrow: "Miért 3 külön modell?",
@@ -160,21 +177,23 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Felfrissítő",
-    title: "Annuitás: fix ideig tartó, fix kifizetés",
+    title: "Perpetuitás: örökké tartó, fix kifizetés",
     blocks: [
-      { kind: "text", html: "Ha egy befektetés <strong>C</strong> összeget fizet minden periódus végén, <strong>n</strong> perióduson át, és a diszkontráta periódusonként <strong>r</strong>, a jelenérték egy mértani sor összege:" },
-      { kind: "text", step: 1, html: "<code>PV = C/(1+r) + C/(1+r)² + … + C/(1+r)ⁿ</code>" },
-      { kind: "text", step: 2, html: "Zárt alakban: <strong>PV = C · [1 − (1+r)⁻ⁿ] / r</strong>" },
+      { kind: "text", html: "Ha egy befektetés <strong>C</strong> összeget fizet minden periódus végén, ÖRÖKKÉ, és a diszkontráta periódusonként <strong>r</strong>, a jelenérték egy mértani sor összege:" },
+      { kind: "text", step: 1, html: "<code>PV = C/(1+r) + C/(1+r)² + C/(1+r)³ + …</code>" },
+      { kind: "text", step: 2, html: "Zárt alakban (a mértani sor összegképletével): <strong>PV = C / r</strong>" },
+      { kind: "plaque", step: 3, year: "1648", html: "Hollandiában kibocsátják az első ismert örökjáradék-kötvényeket (perpetual bonds) gátak finanszírozására. Az egyik — a Lekdijk Bovendams-kötvény — a mai napig létezik, és a Yale Egyetem 2003-ban ténylegesen behajtotta rajta a kamatot." },
     ],
   },
   {
     type: "content",
-    eyebrow: "Felfrissítő",
-    title: "Perpetuitás: a végtelenbe tartó annuitás",
+    eyebrow: "Egy trükk",
+    title: "Az annuitás = két perpetuitás különbsége",
     blocks: [
-      { kind: "text", html: "Ha n → ∞, és r > 0, akkor (1+r)⁻ⁿ → 0. Az annuitás-formula lecsupaszodik:" },
-      { kind: "text", step: 1, html: "<strong>PV = C / r</strong> — a klasszikus perpetuitás-formula." },
-      { kind: "plaque", step: 2, year: "1648", html: "Hollandiában kibocsátják az első ismert örökjáradék-kötvényeket (perpetual bonds) gátak finanszírozására. Az egyik — a Lekdijk Bovendams-kötvény — a mai napig létezik, és a Yale Egyetem 2003-ban ténylegesen behajtotta rajta a kamatot." },
+      { kind: "text", html: "Mi van, ha a kifizetés nem örökké tart, csak <strong>n</strong> perióduson át (ez az annuitás)? Nem kell újra levezetni — két perpetuitás különbsége!" },
+      { kind: "text", step: 1, html: "<strong>A perpetuitás</strong>: fizet C-t t=1-től örökké → PV_A = C/r. <strong>B perpetuitás</strong>: fizet C-t t=(n+1)-től örökké — ugyanaz, csak n perióddal később kezdve → PV_B = (C/r) / (1+r)ⁿ." },
+      { kind: "text", step: 2, html: "A − B pontosan az 1. és n. periódus közötti kifizetéseket adja vissza (minden ami utána jön, kiesik): <strong>PV = C/r − (C/r)/(1+r)ⁿ = C · [1 − (1+r)⁻ⁿ] / r</strong>" },
+      { kind: "ask", step: 3, html: "Miért praktikus ez a trükk? (Gondoljatok arra: bármilyen véges cash flow-sorozatot fel tudtok bontani perpetuitások különbségeként — nem kell mindig új mértani sort levezetni.)" },
     ],
   },
 
@@ -192,6 +211,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Geometriai túlélés",
     title: "A várható aktív hossz: 1/churn",
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Annak valószínűsége, hogy valaki még a <em>t</em>-edik hónapban is aktív: <strong>ρᵗ</strong> (geometriai eloszlás)." },
       { kind: "text", step: 1, html: "A várható aktív hónapok száma: <strong>E[hossz] = Σ ρᵗ = 1/(1−ρ) = 1/c</strong>." },
@@ -203,6 +223,7 @@ window.SLIDES = [
     eyebrow: "Egy fontos árnyalat",
     title: "A churn valójában nem állandó",
     visual: { kind: "image", src: "../assets/churn_curve_simple.png", alt: "Illusztracios tulelesi gorbe: a churn gyors az elso honapokban, majd lassul" },
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Az imént <strong>állandó</strong> havi churn-rátát tételeztünk fel (egyszerűsítés). A valóságban a lemorzsolódás <strong>gyors az első hónapokban, majd lassul</strong> — aki túléli a kezdeti időszakot, egyre stabilabb előfizetővé válik." },
       { kind: "ask", step: 1, html: "Milyen üzleti okok állhatnak amögött, hogy a korai hónapokban ilyen magas a lemorzsolódás?" },
@@ -212,6 +233,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Az annuitás perpetuitássá válik",
     title: "Miért lesz ebből (majdnem) perpetuitás-formula?",
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "A jelenérték most: <strong>V = Σ P·ρᵗ / (1+r)ᵗ</strong> (t = 0, 1, 2, …, a hónap elején fizetve) — ez ismét egy mértani sor, csak a hányados most <strong>ρ/(1+r)</strong>." },
       { kind: "text", step: 1, html: "Nincs fix felső határ (n) — a sor a végtelenig fut, mert bármelyik hónapban <em>lehetne</em> még aktív, csak egyre csökkenő valószínűséggel. Ezért lesz a végeredmény szerkezetileg egy perpetuitás." },
@@ -222,6 +244,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Érzékenységvizsgálat",
     title: "Hogyan mozog a CLTV a paraméterekkel?",
+    legend: CLTV_LEGEND,
     blocks: [
       {
         kind: "columns",
@@ -240,6 +263,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "A valóság bonyolultabb",
     title: "A lemorzsolódás nem feltétlenül végleges",
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Sokan, akik lemondják az előfizetést, <strong>hónapokkal később visszatérnek</strong> (resubscription). Ha ezt figyelmen kívül hagyjuk, alulbecsüljük az ügyfél teljes értékét." },
       { kind: "ask", step: 1, html: "Ha a lemorzsolódás nem végleges — hogyan épül fel most a teljes ügyfélérték?" },
@@ -249,6 +273,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Az egyszerű logika",
     title: "Amit már tudunk, azt újra felhasználjuk",
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Ha már előfizető vagy, a jelenértéked <strong>V</strong> — ezt már kiszámoltuk (a resub nélküli zárt alak)." },
       { kind: "text", step: 1, html: "Egy „epizód” (aktív szakasz + az utána következő lemorzsolódott szakasz) átlagos hossza: az előfizetés átlagosan <strong>1/c</strong> ideig tart (ezt már láttuk!), utána átlagosan <strong>1/π</strong> ideig tart, míg valaki visszatér." },
@@ -259,6 +284,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Megint egy mértani sor",
     title: "Perpetuitás perpetuitásokból",
+    legend: CLTV_LEGEND,
     blocks: [
       { kind: "text", html: "Ez a ciklus (átlagosan g = 1/c + 1/π hónap egy teljes epizód) elvileg végtelen sokszor megismétlődhet — ismét egy mértani sor, csak most az „epizódok” szintjén:" },
       { kind: "text", step: 1, html: "<strong>Teljes érték = V · (1 + δᵍ + δ²ᵍ + …) = V / (1 − δᵍ)</strong>, ahol δ = 1/(1+r) és g = 1/c + 1/π." },
