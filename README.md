@@ -48,6 +48,18 @@ alkalomra bomlik).
    `_PLACEHOLDER` jelzésű, szintetikus, BigQuery-jóváhagyásra váró) adatsor a
    `data/` almappában — lásd az adott lecke `lesson-plan.md`-jét a
    részletekért.
+2. `02-hipotezisvizsgalat-es-ab-teszteles` (2×90 perc) — ugyanaz a fiktív
+   checkers.com, egy fejezettel később: eladták, az új mandátum a web DAU
+   duplázása 24 hónap alatt (lásd a lecke `business-case.md`-jét). 1. rész:
+   CLT-felfrissítő, a hipotézisvizsgálat kerete, egy végigszámolt kétmintás
+   arány-z-teszt, a három leggyakoribb hiba (p-hacking, multiple testing,
+   optional stopping), majd egy közösen levezetett mérőszám (nettó
+   konverzió/DAU), ami két, teljesen különböző elérésű kísérletet (egy
+   mindenkit érintő, kis hatású és egy szűk, nagy hatású) tesz
+   összehasonlíthatóvá. 2. rész: valódi kiscsoportos workshop — a
+   hallgatók saját termékötleteket terveznek, kísérletterv-dokumentumot
+   töltenek ki, és az előbbi mérőszámmal rangsorolva ütemtervet állítanak
+   össze a mandátum alá.
 
 ## Fejlesztői környezet
 
