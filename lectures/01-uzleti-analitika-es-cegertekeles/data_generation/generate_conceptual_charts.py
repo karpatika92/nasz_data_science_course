@@ -144,13 +144,11 @@ def venn_adattudomany():
         lx, ly = label_offsets[key]
         ax.text(lx, ly, labels[key], ha="center", va="center", fontsize=15, fontweight="bold", color=colors[key], family="monospace")
 
-    # Metszet-cimkek -- Monte Carlo centroid-becslessel pozicionalva (2M
-    # veletlen pont, mindegyik regio tenyleges tomegkozeppontja), nem
-    # kezzel becsulve.
-    ax.text(0, 0.91, "Gépi\ntanulás", ha="center", va="center", fontsize=12.5, color=INK, fontweight="bold")
-    ax.text(-0.75, -0.39, "Danger\nzone", ha="center", va="center", fontsize=12, color=INK, style="italic")
-    ax.text(0.75, -0.39, "Hagyományos\nkutatás", ha="center", va="center", fontsize=11.5, color=INK)
-    ax.text(0, 0.05, "Adat-\ntudomány", ha="center", va="center", fontsize=15, fontweight="bold", color=INK, family="monospace")
+    # Metszet-cimkek (kezzel pozicionalva a klasszikus 3-koros elrendezeshez)
+    ax.text(0, 0.62, "Gépi\ntanulás", ha="center", va="center", fontsize=12.5, color=INK, fontweight="bold")
+    ax.text(-0.78, -0.55, "Danger\nzone", ha="center", va="center", fontsize=12, color=INK, style="italic")
+    ax.text(0.78, -0.55, "Hagyományos\nkutatás", ha="center", va="center", fontsize=11.5, color=INK)
+    ax.text(0, -0.12, "Adat-\ntudomány", ha="center", va="center", fontsize=15, fontweight="bold", color=INK, family="monospace")
 
     ax.set_xlim(-2.1, 2.1)
     ax.set_ylim(-2.1, 1.9)

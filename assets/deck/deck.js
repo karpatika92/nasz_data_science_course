@@ -170,31 +170,8 @@
     return wrap;
   }
 
-  function renderLegend(items) {
-    const box = el("div", "legend-panel");
-    box.appendChild(el("p", "legend-title", "Jelölések"));
-    const list = el("div", "legend-list");
-    items.forEach((item) => {
-      const row = el("div", "legend-row");
-      row.appendChild(el("span", "legend-symbol", item.symbol));
-      row.appendChild(el("span", "legend-meaning", item.meaning));
-      list.appendChild(row);
-    });
-    box.appendChild(list);
-    return box;
-  }
-
   function buildSlide(data, index, total) {
-    const hasSide = Boolean(data.visual || data.legend);
-    const layoutClass =
-      data.visualLayout === "stack"
-        ? " has-visual--stack"
-        : data.visualLayout === "full"
-          ? " has-visual--full"
-          : data.visualLayout === "wide"
-            ? " has-visual--wide"
-            : "";
-    const visualClass = hasSide ? " has-visual" + layoutClass : "";
+    const visualClass = data.visual ? " has-visual" + (data.visualLayout === "stack" ? " has-visual--stack" : "") : "";
     const slide = el("section", "slide slide--" + data.type + visualClass);
     slide.dataset.index = String(index);
 
@@ -207,7 +184,7 @@
       slide.appendChild(el("div", "slide-number-huge", data.index));
     }
 
-    const target = hasSide ? el("div", "content-col") : slide;
+    const target = data.visual ? el("div", "content-col") : slide;
 
     if (data.eyebrow) target.appendChild(el("p", "eyebrow", data.eyebrow));
 
@@ -228,14 +205,9 @@
       target.appendChild(el("div", "note", data.note));
     }
 
-    if (hasSide) {
+    if (data.visual) {
       slide.appendChild(target);
-      const side = data.visual ? renderVisual(data.visual) : el("div", "slide-visual");
-      if (data.legend) {
-        side.classList.add("slide-visual--with-legend");
-        side.appendChild(renderLegend(data.legend));
-      }
-      slide.appendChild(side);
+      slide.appendChild(renderVisual(data.visual));
     }
 
     return slide;
