@@ -1,0 +1,81 @@
+# A checkers.com üzleti esete — 2. fejezet
+
+*Háttéranyag mindkét részhez. Max. 2 A4 oldal — ez minden, amit a cégről és a
+mandátumról tudni kell a mai két órához.*
+
+## Mi történt az 1. előadás óta
+
+Az 1. előadáson (Üzleti analitika és cégértékelés) a checkers.com még
+befektetőket keresett, és azt számoltuk ki, mennyit érhet a cég. Azóta
+**eladták**. Egy nagyobb, több játékmárkát összefogó holding, a **GameLeap
+Holdings** vásárolta fel 2026 elején. A vételi tézis lényege nem a jelenlegi
+bevétel volt, hanem egy növekedési feltevés: *a web platform napi aktív
+felhasználószáma (DAU) két éven belül megduplázható* — és az ár ezt a
+feltevést árazta be.
+
+A tranzakció lezárása óta ti vagytok (szimulációban) a termék- és
+növekedési csapat: a mandátumotok egyetlen mondatban: **duplázzátok meg a web
+DAU-t 24 hónap alatt.** Ez vált az új tulajdonos alatt az #1 vállalati
+célszámmá — nem a bevétel, nem a CLTV, hanem a napi aktív felhasználók
+száma a web platformon.
+
+**Fontos leszűkítés mára**: a checkers.com-nak van mobilalkalmazása is, de
+azt ma figyelmen kívül hagyjuk. Minden szám, minden kísérlet, amiről ma szó
+lesz, **kizárólag a web platformra** vonatkozik — ez tartja kezelhető
+méretben a mai gyakorlatot.
+
+## A cég ma — tények, amik nem változtak
+
+- Online dámaoktatás, -tréning, -matchmaking és -tartalom egy platformon.
+- Egyetlen bevételi forrás: havi előfizetés, két árszint (Alap/Prémium),
+  nincs hirdetés. *(A pontos árazás és a konverziós tölcsér ma nem
+  releváns — a mandátum a DAU-ról szól, nem a bevételről.)*
+- A felhasználói bázis a 2024-es virális növekedési hullám óta nagyjából
+  **platózott**: az elmúlt két negyedévben a web DAU 180-200 ezer között
+  ingadozott, szervesen alig nő tovább. Épp ezért nem elég "várni, hogy megint
+  bevirágozzon" — tudatos, kísérletalapú termékfejlesztés kell.
+
+## A web platform ma — a négy funkcióterület
+
+| Funkcióterület | Mit jelent | Napi aktív használók (DAU-ból) | Arány |
+|---|---|---|---|
+| **Matchmaking** (Játék) | Élő parti bot vagy másik felhasználó ellen, rangsorolt vagy casual | 190 000 | 95% |
+| **Tartalom** | Cikkek, hírek, videók, közösségi feed | 50 000 | 25% |
+| **Tréning** | Taktikai feladvány-gyakorló ("Puzzles") | 20 000 | 10% |
+| **Oktatás** | Strukturált leckék, kurzusok (nyitás, végjáték, stratégia) | 16 000 | 8% |
+
+**Teljes web DAU ma: 200 000.** A sorok nem zárják ki egymást — egy
+felhasználó aznap játszhat ÉS olvashat cikket is, ezért az arányok nem adnak
+ki 100%-ot. A legtöbb felhasználó gyakorlatilag csak játszik; a többi
+funkció egy-egy szűkebb, de elkötelezettebb szeletet szolgál ki.
+
+**A cél: 200 000 → 400 000 web DAU, 24 hónap alatt** (a felvásárlás
+lezárásától számítva).
+
+## Miért számít ez a mai két órának
+
+A régi kérdés (1. előadás) az volt: *mennyit ér a cég ma?* — egy
+egyszeri, pénzügyi becslés. Az új kérdés egészen más jellegű: *melyik
+termékváltoztatás viszi közelebb a céget a duplázáshoz, és melyiket
+érdemes előbb megcsinálni?* Ehhez nem egy modellre van szükség, hanem
+**sok, egymástól független kísérletre** — különböző funkcióterületeken,
+különböző időpontokban, különböző méretű közönségen —, amiket utólag
+**össze kell tudni hasonlítani egymással**. Ez a mai nap technikai
+magja: hogyan dönthető el szigorúan, hogy egy megfigyelt különbség valódi-e
+(1. rész), és hogyan mérhető úgy a hatása, hogy a teljesen más jellegű
+kísérletek mégis egy közös mérlegen legyenek (szintén 1. rész, a nap
+végén) — majd (2. rész) ebből hogyan épül fel egy rangsorolt ütemterv.
+
+## Korlátok, amik a 2. részben számítanak
+
+A termékcsapat kapacitása véges: egyszerre kb. **4-5 kísérlet** fut
+párhuzamosan, egy tipikus kísérlet **2-8 hét fejlesztői munkát** igényel a
+scope-jától függően (egy kis kopogtató A/B-teszt a kisebbik, egy új
+funkció/motor-csere a nagyobbik vége ennek a sávnak). A mandátum
+2 éve véges — nem lehet mind a négy funkcióterületen egyszerre mindent
+kipróbálni. **Priorizálni kell** — ez a 2. rész feladata.
+
+---
+
+*Minden szám ezen a lapon szintetikus, a gyakorlat kedvéért generált — nem
+valós Chess.com- vagy más cég adat.*
