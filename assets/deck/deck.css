@@ -417,41 +417,6 @@ h2.headline {
   max-height: 40vh;
 }
 
-/* "full": egy diagramnak NINCS versengő szövegblokkja (csak eyebrow+title) --
-   ilyenkor a kép a stack-nél is nagyobb, majdnem a teljes magasságot kaphatja. */
-.slide.has-visual.has-visual--full {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-}
-
-.slide.has-visual--full .content-col {
-  flex: none;
-  align-items: center;
-  text-align: center;
-}
-
-.slide.has-visual--full .slide-visual {
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
-}
-
-.slide.has-visual--full .figure img {
-  max-height: 66vh;
-}
-
-/* "wide": a kep aspect ratio-ja miatt szelesseg-korlatos az 50/50 oszlopban
-   -- ilyenkor a szoveg-oszlop rovasara tobb szelesseget adunk a kepnek. */
-.slide.has-visual--wide .content-col {
-  flex: 1 1 38%;
-}
-
-.slide.has-visual--wide .slide-visual {
-  flex: 1 1 62%;
-}
-
 .slide.has-visual .content-col {
   flex: 1 1 50%;
   min-width: 0;
@@ -463,63 +428,8 @@ h2.headline {
   flex: 1 1 48%;
   min-width: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-}
-
-/* Amikor egy kép ÉS egy jelölés-panel is a side oszlopba kerül, a képnek
-   kevesebb hely jut, hogy a panel is beleférjen overflow nélkül. */
-.slide-visual--with-legend .figure img {
-  max-height: 38vh;
-}
-
-/* ---------- jelölés-panel (side legend: melyik betű mit jelent) ---------- */
-
-.legend-panel {
-  width: 100%;
-  max-width: 380px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: var(--bg-raised);
-  padding: 16px 22px;
-}
-
-.legend-title {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin: 0 0 12px;
-}
-
-.legend-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.legend-row {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.legend-symbol {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--accent);
-  min-width: 1.4em;
-  flex-shrink: 0;
-}
-
-.legend-meaning {
-  font-size: 14px;
-  line-height: 1.4;
-  color: var(--ink-dim);
 }
 
 @media (max-width: 760px) {
