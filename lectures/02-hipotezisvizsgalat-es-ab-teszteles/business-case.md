@@ -59,26 +59,49 @@ lezárásától számítva).
 - **Regisztráció/nap (web)**: ~5 000 új felhasználó
 - **CURR** (*Current User Retention Rate* — egy már aktív felhasználó
   esélye, hogy holnap is aktív lesz): **99%**
-- **NURR** (*New User Retention Rate* — egy aznap regisztrált új
-  felhasználó esélye, hogy holnap is visszatér): **40%**
-- **Teljes konverziós ráta** (regisztrált → fizetős, a teljes bázisra):
-  **4,5%**
-- **Új felhasználók konverziója** (fizetőssé válás az első 30 napban):
-  **1,8%** — alacsonyabb, mint a teljes bázis átlaga, mert az utóbbiban a
-  régóta regisztráltaknál sok év alatt felhalmozott konverzió is benne van.
 
-| Funkcióterület | Konverziós ráta a funkció használóira (feltételes) |
+**Új felhasználók aktivitás-megtartása** (hányan térnek vissza egy adott
+nap után, a regisztráció napjához képest):
+
+| | D1 | D7 | D30 |
+|---|---|---|---|
+| Még aktív | **40%** | **22%** | **13%** |
+
+**NURR** (*New User Retention Rate*) **= a D1-érték, 40%** — ugyanaz a
+szám, csak a Markov-modell nyelvén: egy aznap regisztrált felhasználó
+esélye, hogy holnap is visszatér. A görbe lassuló esése (40%→22%→13%, nem
+40%→4%→0,4%) ugyanaz a jelenség, mint az 1. előadás churn-görbéje: a
+lemorzsolódás eleinte gyors, aztán lassul — akik 30 napig kitartanak,
+azok már egy stabilabb mag.
+
+**Konverziós tölcsér** (regisztrált → fizetős):
+
+- **Új felhasználók D7-konverziója** (fizetőssé válás az első 7 napban):
+  **2,0%** — ez a tölcsér legmagasabb pontja: próbaidőszak, bevezető
+  ajánlatok, "aha-élmény" frissen regisztráltaknál hajtja ezt a csúcsot.
+  **Új felhasználók D30-konverziója** (kumulált, az első 30 napban):
+  **3,5%**.
+- **Általános DAU-konverziós ráta** (egy tetszőleges, még nem fizető DAU
+  esélye, hogy fizetőssé válik egy 30 napos ablakban): **1,2%** —
+  **alacsonyabb, mint az új felhasználók D7-konverziója**, annak ellenére,
+  hogy itt a mérési ablak hosszabb (30 nap vs. 7 nap). Ennek oka: az
+  "könnyen konvertálók" jellemzően már a regisztráció utáni első napokban
+  fizetőssé váltak (ezt méri a D7-szám) — ami az általános DAU-ban marad,
+  az egy hosszabb ideje aktív, de eddig soha nem fizető, eleve
+  ellenállóbb népesség.
+
+| Funkcióterület | Konverziós ráta a funkció használóira (feltételes, 30 nap) |
 |---|---|
-| Matchmaking | 4,0% |
-| Tartalom | 3,5% |
-| Tréning (Puzzles) | 9,0% |
-| Oktatás | 11,0% |
+| Matchmaking | 1,3% |
+| Tartalom | 1,1% |
+| Tréning (Puzzles) | 2,8% |
+| Oktatás | 3,5% |
 
 *A funkcióterületek átfednek (lásd fent), ezért ezek a feltételes ráták nem
-adják ki súlyozott átlagként a 4,5%-os teljes rátát — jelzésértékűek: minél
-"elkötelezettebb" jellegű a funkció (Tréning, Oktatás), annál magasabb a
-hozzá tartozó konverzió, szemben a széles, inkább csak-játszó
-Matchmaking-tömeggel.*
+adják ki súlyozott átlagként az 1,2%-os általános rátát — jelzésértékűek:
+a Matchmaking (a DAU 95%-a) közel van az általános rátához, mert gyakorlatilag
+ő maga az általános DAU; minél "elkötelezettebb" jellegű a funkció (Tréning,
+Oktatás), annál magasabb a hozzá tartozó konverzió.*
 
 **Gyors konzisztencia-ellenőrzés** (az 1. előadás flow-balance logikájával:
 *kiesés = pótlás* egyensúlyban): (1 − CURR) × DAU = NURR × Regisztráció/nap,
