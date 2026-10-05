@@ -28,8 +28,9 @@ méretben a mai gyakorlatot.
 
 - Online dámaoktatás, -tréning, -matchmaking és -tartalom egy platformon.
 - Egyetlen bevételi forrás: havi előfizetés, két árszint (Alap/Prémium),
-  nincs hirdetés. *(A pontos árazás és a konverziós tölcsér ma nem
-  releváns — a mandátum a DAU-ról szól, nem a bevételről.)*
+  nincs hirdetés. *(A pontos árazás ma nem releváns — a mandátum a DAU-ról
+  szól, nem a bevételről — de a regisztráció/megtartás/konverzió
+  alapszámait lásd lent, mert ezek a kísérletek becsléséhez kellenek.)*
 - A felhasználói bázis a 2024-es virális növekedési hullám óta nagyjából
   **platózott**: az elmúlt két negyedévben a web DAU 180-200 ezer között
   ingadozott, szervesen alig nő tovább. Épp ezért nem elég "várni, hogy megint
@@ -51,6 +52,41 @@ funkció egy-egy szűkebb, de elkötelezettebb szeletet szolgál ki.
 
 **A cél: 200 000 → 400 000 web DAU, 24 hónap alatt** (a felvásárlás
 lezárásától számítva).
+
+## Napi szintű mutatók — regisztráció, megtartás, konverzió
+
+- **Teljes web DAU**: 200 000 (lásd fent)
+- **Regisztráció/nap (web)**: ~5 000 új felhasználó
+- **CURR** (*Current User Retention Rate* — egy már aktív felhasználó
+  esélye, hogy holnap is aktív lesz): **99%**
+- **NURR** (*New User Retention Rate* — egy aznap regisztrált új
+  felhasználó esélye, hogy holnap is visszatér): **40%**
+- **Teljes konverziós ráta** (regisztrált → fizetős, a teljes bázisra):
+  **4,5%**
+- **Új felhasználók konverziója** (fizetőssé válás az első 30 napban):
+  **1,8%** — alacsonyabb, mint a teljes bázis átlaga, mert az utóbbiban a
+  régóta regisztráltaknál sok év alatt felhalmozott konverzió is benne van.
+
+| Funkcióterület | Konverziós ráta a funkció használóira (feltételes) |
+|---|---|
+| Matchmaking | 4,0% |
+| Tartalom | 3,5% |
+| Tréning (Puzzles) | 9,0% |
+| Oktatás | 11,0% |
+
+*A funkcióterületek átfednek (lásd fent), ezért ezek a feltételes ráták nem
+adják ki súlyozott átlagként a 4,5%-os teljes rátát — jelzésértékűek: minél
+"elkötelezettebb" jellegű a funkció (Tréning, Oktatás), annál magasabb a
+hozzá tartozó konverzió, szemben a széles, inkább csak-játszó
+Matchmaking-tömeggel.*
+
+**Gyors konzisztencia-ellenőrzés** (az 1. előadás flow-balance logikájával:
+*kiesés = pótlás* egyensúlyban): (1 − CURR) × DAU = NURR × Regisztráció/nap,
+azaz 0,01 × 200 000 = **2 000** = 0,40 × 5 000. Stimmel — napi 2 000 fő esik
+ki a meglévő aktívak közül, és pont ennyi új, megtartott felhasználó
+pótolja őket. **Ez pontosan az az egyensúly, amitől a DAU plató, nem
+csökkenő** — de ez az egyensúly önmagában NEM elég a duplázáshoz, csak a
+jelenlegi szint tartásához. Erről szól a mai nap.
 
 ## Miért számít ez a mai két órának
 
