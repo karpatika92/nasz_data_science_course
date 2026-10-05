@@ -15,9 +15,14 @@ feltevést árazta be.
 
 A tranzakció lezárása óta ti vagytok (szimulációban) a termék- és
 növekedési csapat: a mandátumotok egyetlen mondatban: **duplázzátok meg a web
-DAU-t 24 hónap alatt.** Ez vált az új tulajdonos alatt az #1 vállalati
-célszámmá — nem a bevétel, nem a CLTV, hanem a napi aktív felhasználók
-száma a web platformon.
+DAU-t 24 hónap alatt — az egységgazdaságtan (unit economics) romlása
+nélkül.** Ez vált az új tulajdonos alatt az #1 vállalati célszámmá — nem a
+bevétel, nem a CLTV maga a cél, de egyik sem romolhat érdemben közben: a
+vételi tézis a mai CLTV-szintet (1. előadás) is beárazta, nem csak a
+DAU-t. **Amit ez kizár**: a DAU nem növelhető úgy, hogy közben összeomlik
+az előfizetői konverzió vagy az átlagos előfizetői érték — pl. "tegyünk
+mindent ingyenessé" növelné a DAU-t, de aláásná a tézist. Minden ötletet a
+nettó konverzió/DAU **mellett** erre is ellenőrizni kell.
 
 **Fontos leszűkítés mára**: a checkers.com-nak van mobilalkalmazása is, de
 azt ma figyelmen kívül hagyjuk. Minden szám, minden kísérlet, amiről ma szó
@@ -27,10 +32,15 @@ méretben a mai gyakorlatot.
 ## A cég ma — tények, amik nem változtak
 
 - Online dámaoktatás, -tréning, -matchmaking és -tartalom egy platformon.
-- Egyetlen bevételi forrás: havi előfizetés, két árszint (Alap/Prémium),
-  nincs hirdetés. *(A pontos árazás ma nem releváns — a mandátum a DAU-ról
-  szól, nem a bevételről — de a regisztráció/megtartás/konverzió
-  alapszámait lásd lent, mert ezek a kísérletek becsléséhez kellenek.)*
+- Egyetlen bevételi forrás: havi előfizetés, két fizetős árszint
+  (Alap/Prémium), nincs hirdetés. Van egy **ingyenes szint** is, amivel
+  bárki regisztrálhat fizetés nélkül: **korlátlan Matchmaking**, de csak
+  **1 ingyenes lecke** (Oktatás) és **4 ingyenes feladvány** (Tréning)
+  érhető el összesen — a **Tartalom szekció viszont teljesen ingyenes és
+  korlátlan**, fizetős szint nélkül is. *(A pontos árazás ma nem releváns
+  — de ezek a sapkák magyarázzák a lenti, funkcióterületenkénti
+  konverziós különbségeket; a regisztráció/megtartás/konverzió
+  alapszámait lásd lent.)*
 - A felhasználói bázis a 2024-es virális növekedési hullám óta nagyjából
   **platózott**: az elmúlt két negyedévben a web DAU 180-200 ezer között
   ingadozott, szervesen alig nő tovább. Épp ezért nem elég "várni, hogy megint
@@ -101,7 +111,11 @@ azok már egy stabilabb mag.
 adják ki súlyozott átlagként az 1,2%-os általános rátát — jelzésértékűek:
 a Matchmaking (a DAU 95%-a) közel van az általános rátához, mert gyakorlatilag
 ő maga az általános DAU; minél "elkötelezettebb" jellegű a funkció (Tréning,
-Oktatás), annál magasabb a hozzá tartozó konverzió.*
+Oktatás), annál magasabb a hozzá tartozó konverzió. Nem véletlen, hogy pont
+a Tréning és az Oktatás konvertál a legjobban: ott van valódi sapka az
+ingyenes szinten (4 feladvány / 1 lecke) — a korlátlan Matchmaking és a
+szintén korlátlan Tartalom esetén nincs ilyen természetes fizetési
+nyomás.*
 
 **Gyors konzisztencia-ellenőrzés** (az 1. előadás flow-balance logikájával:
 *kiesés = pótlás* egyensúlyban): (1 − CURR) × DAU = NURR × Regisztráció/nap,
@@ -133,6 +147,14 @@ scope-jától függően (egy kis kopogtató A/B-teszt a kisebbik, egy új
 funkció/motor-csere a nagyobbik vége ennek a sávnak). A mandátum
 2 éve véges — nem lehet mind a négy funkcióterületen egyszerre mindent
 kipróbálni. **Priorizálni kell** — ez a 2. rész feladata.
+
+**Egy további korlát, amit minden ötletnél végig kell gondolni**: a
+mandátum kizárja az egységgazdaságtan romlását (lásd fent). Egy ötlet, ami
+a sapkák feloldásával (pl. "legyen korlátlan az ingyenes feladvány is")
+hajtja fel a DAU-t, valószínűleg épp azt a fizetési nyomást szünteti meg,
+ami ma a Tréning/Oktatás magas konverzióját adja. **A nettó konverzió/DAU
+pontszám ezt NEM látja** — minden ötletnél külön meg kell kérdezni: ez a
+fizetős konverzió rovására megy-e?
 
 ---
 
