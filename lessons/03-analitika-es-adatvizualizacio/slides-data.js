@@ -301,10 +301,49 @@ window.SLIDES = [
   },
   {
     type: "content",
-    eyebrow: "Klasszikus · 1858",
-    title: "Nightingale: ábra, ami döntést vált ki",
+    eyebrow: "Klasszikus · történelmi háttér",
+    title: "Mi történt Scutariban?",
     blocks: [
-      { kind: "text", html: "A tanulság (a megelőzhető betegség okozta halálesetek — kék — messze túlszárnyalják a sebesüléseket — piros) csak akkor ér valamit, ha <strong>döntést vált ki</strong>. Az ábra célja nem a szépség, hanem a cselekvés." },
+      {
+        kind: "list",
+        items: [
+          "<strong>1854 novembere:</strong> Nightingale megérkezik a scutari kórházba. Kevés gyógyszer, elhanyagolt higiénia, tömeges, gyakran halálos fertőzések.",
+          "<strong>Az első tél:</strong> 4077 brit katona hal meg Scutariban. Nagyjából tízszer annyian haltak meg betegségben, mint harci sebekben.",
+          "<strong>1855 márciusa:</strong> a kormány Sanitary Commission-t küld: csatornák átöblítése, szellőzés javítása. A halálozás jelentősen csökken.",
+          "<strong>1858:</strong> a diagram megjelenik egy brit hadseregről szóló jelentéskötetben, és elküldik Viktória királynőnek.",
+          "<strong>1859:</strong> Nightingale a Royal Statistical Society első női tagja.",
+        ],
+      },
+      { kind: "ask", step: 1, html: "Miért épp <strong>diagram</strong>, miért nem táblázat? Kiknek készült?" },
+      { kind: "text", step: 2, html: "Képviselőknek és hivatalnokoknak, akik hagyományos statisztikai jelentéseket nem olvastak volna el. Az ábra célja nem a szépség, hanem hogy <strong>döntést váltson ki</strong>." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1858",
+    title: "Hogyan olvassuk?",
+    visual: { kind: "image", src: "assets/classics/nightingale.jpg", alt: "Florence Nightingale rózsadiagramja", caption: "Nightingale, 1858 · jobb: 1854. ápr.–1855. márc., bal: 1855. ápr.–1856. márc." },
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "<strong>Kék:</strong> megelőzhető vagy enyhíthető fertőző betegségek",
+          "<strong>Piros:</strong> sebesülés",
+          "<strong>Fekete:</strong> minden egyéb ok",
+          "A <strong>terület</strong> a havi halálozás (éves ráta, 1000 főre)",
+        ],
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1858",
+    title: "Mit nem bizonyít?",
+    visualLayout: "stack",
+    visual: { kind: "image", src: "assets/classics/nightingale.jpg", alt: "Florence Nightingale rózsadiagramja", caption: "a bal diagramon a kék szirmok kisebbek" },
+    blocks: [
+      { kind: "ask", label: "Gondolkodjatok", html: "A bal diagramon a kék szirmok kisebbek. Ez bizonyítja, hogy a Sanitary Commission miatt? <strong>Mi más változhatott?</strong>" },
+      { kind: "tension", step: 1, label: "Emlékeztető az 1. órából", html: "Az ábra az <em>előtte–utána</em> összefüggést mutatja, az okot nem. Egy meggyőző ábra még nem bizonyíték." },
     ],
   },
   {

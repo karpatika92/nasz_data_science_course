@@ -63,12 +63,32 @@ Nincs időzítési kényszer (a szerző szerint belefér) — a sorrend a lénye
 | Netflix (`makeover_good.png`) | saját ábra, repo-adat | „Mi történhetett 2022 áprilisában?” — a vitához a csoportra bízzuk; az 1. előadás terve szerint ez az első előfizető-vesztés egy évtizedben (**ezt itt nem ellenőriztem újra**) |
 | Várható élettartam | Our World in Data, CC BY 4.0 (a harmadik fél adatai saját feltételekkel: Riley; Zijdeman et al.; HMD; UN WPP) | Angol nyelvű; a cím téma, nem állítás — szándékosan **megszegi** az első szabályt, és ezt kérdezzük meg |
 | Snow koleratérképe, 1854 | közkincs (Wikimedia Commons, `Snow-cholera-map-1.jpg`) | letöltött kép: 1920 × 1801 px |
-| Nightingale rózsadiagramja, 1858 | közkincs (Commons, `Nightingale-mortality.jpg`) | letöltött kép: 3840 × 2100 px |
+| Nightingale rózsadiagramja, 1858 | közkincs (Commons, `Nightingale-mortality.jpg`) | letöltött kép: 3840 × 2100 px. Négy dia: nagy ábra + kérdés → történelmi háttér → olvasási útmutató → „mit nem bizonyít?” (lásd lent) |
 | Minard, 1869 | közkincs (Commons, `Minard.png`; a lapon US-tag is kell) | 2003 px — kivetítőn nézd meg teljes képernyőn; hőmérséklet Réaumur-ban |
 
 **Minard — hány adat?** Létszám (sávszélesség, 1 mm = 10 000 fő), pozíció (2 koordináta),
 irány (bézs = előre, fekete = vissza — az ábra saját magyarázata szerint),
 hőmérséklet, idő (a hőmérsékleti panel dátumai) — hat. (A „hat” Tufte-tól való, memóriából.)
+
+**Nightingale — a történelmi háttér forrásai** (megnyitva ellenőrizve, de másodlagos
+források; a Wikipedia-cikknek csak az első 100 000 karakterét olvastam át):
+- *Wikipedia, Florence Nightingale:* 1854 novembere, Scutari (Selimiye-laktanya),
+  elhanyagolt higiénia, tömeges fertőzések; 1855 márciusa, Sanitary Commission („csatornák
+  átöblítése, szellőzés javítása”, a halálozás „jelentősen csökkent” — pontos számot a cikk
+  nem ad); 4077 halott az első télen; „nagyjából tízszer annyian haltak meg betegségben,
+  mint harci sebekben”; a coxcomb-diagramokat képviselőknek és hivatalnokoknak szánta;
+  1859: a Royal Statistical Society első női tagja (a cikk „member”-t ír, nem „fellow”-t).
+- *Commons fájloldal:* 1858; a *Notes on Matters Affecting the Health, Efficiency, and
+  Hospital Administration of the British Army* c. kötetből; ugyanabban az évben
+  Viktória királynőnek is elküldve; kék = megelőzhető vagy enyhíthető fertőző betegségek
+  (zymotic), piros = sebek, fekete = minden egyéb ok; havi éves halálozási ráta 1000 főre.
+- *Maga az ábra* (megnézve): a két időszak (jobb: 1854 ápr.–1855 márc., bal: 1855
+  ápr.–1856 márc.) és a „szirmok területe a közös középponttól mérve” jelmagyarázat.
+- **Nem vettem át:** Paget állítását, hogy a halálozás 42%-ról 2%-ra esett (a cikk csak
+  „claimed”-ként idézi, nem ellenőriztem). A „szirmok kisebbek a bal diagramon” az ábráról
+  leolvasott vizuális benyomás, nem számolt érték. Az „okságot” szándékosan nyitva
+  hagyjuk: az ábra az előtte–utána különbséget mutatja, a Sanitary Commission hatását nem
+  bizonyítja.
 
 **TEENDŐ — egyszerű, közéleti ábra:** nem találtam ellenőrzött politikai/közéleti
 ábrát (NYT / 538 szerzői jogvédett). Ha kell, tegyél be egy általad választottat
