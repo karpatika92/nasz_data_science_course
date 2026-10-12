@@ -88,9 +88,9 @@ A szókratészi ív (mindenhol előbb kérdezz, aztán mutasd):
    → átlagos élettartam 1/c → **V = P(1+r)/(r+c)** (a csoport vezesse le a táblán).
 4. *„P, c, r — melyik adat, melyik feltevés?”* r feltevés; c: de melyik c?
 5. *Jóslat, mielőtt futtatod:* a tényleges görbével nagyobb vagy kisebb a CLTV?
-6. `demo.ipynb` futtatás → **három gyanúsított**, hogy miért tér el (lásd lent).
+6. Élő számolás → **három gyanúsított**, hogy miért tér el (lásd lent).
 7. Resubscription (π = feltevés, nincs resub-esemény az adatban).
-8. Mi mozgatja az értéket? (1 pp churn vs +10% ár — csoport tippel, notebook mutatja.)
+8. Mi mozgatja az értéket? (1 pp churn vs +10% ár — csoport tippel, utána kiszámoljuk.)
 9. Döntés: LTV/CAC, **döntési kártya** (mit teszünk · mérőszám · kill-kritérium).
 10. **Ti jöttök:** egy önmagában érthető ábra a CLTV-történetről (cím = insight) —
     a vizualizációs rész alkalmazása.
@@ -124,7 +124,7 @@ jelentésétől függ — én a generátor docstringje alapján olvastam
 BigQuery-adatnál ellenőrizni kell a definíciót. A `lectures/` fájlokat **nem
 módosítottam**.
 
-**Döntési kártya a notebookban:** CAC = $65 egy *tetszőleges* kiinduló érték (a
+**Döntési kártya:** CAC = $65 egy *tetszőleges* kiinduló érték (a
 csoport a sajátját mondja). Ezzel az alsó korlát LTV/CAC = 0,92 („nem éri meg”),
 a farokkal bővített és a zárt alak 1,05–1,66 („megéri”) — a döntés a farokról szóló
 feltevésen fordul. **Nem** a kapott CAC-hoz hangoltam az adatot, de a flip-tartomány

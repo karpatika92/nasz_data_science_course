@@ -1,5 +1,33 @@
 <title>Analitika és adatvizualizáció</title>
 <link rel="stylesheet" href="../../assets/deck/deck.css" />
+<style>
+  /* Ennek az órának az ábrái nagyobbak: a megosztott deck.css-t nem módosítjuk. */
+
+  /* oldalra tett ábra (négyzetes/magasabb képek): a kép oszlopa kapja a hely nagyobb részét */
+  .slide.has-visual:not(.has-visual--stack) .content-col { flex: 1 1 36%; }
+  .slide.has-visual:not(.has-visual--stack) .slide-visual { flex: 1 1 64%; }
+  .slide.has-visual:not(.has-visual--stack) .figure img { max-height: 72vh; }
+
+  /* szöveg ALATT, majdnem teljes szélességben (széles képek); az auto-fit lejjebb veszi, ha kell */
+  .slide.has-visual--stack .figure img { max-height: 74vh; }
+
+  /* A deck.css-ben a `.slide.has-visual .content-col {flex: 1 1 50%}` később jön, mint a stack szabály, és
+     azonos a specificitásuk — ezért a stack dián is a magasság 50%-át foglalná a szöveg. Itt felülírjuk. */
+  .slide.has-visual.has-visual--stack .content-col { flex: none; }
+
+  /* tömörebb fejléc és szöveg az ábrás diákon, hogy a függőleges helyet az ábra kapja */
+  .slide.has-visual--stack { padding-top: 44px; gap: 6px; }
+  .slide.has-visual--stack .eyebrow { margin: 0 0 4px; }
+  .slide.has-visual--stack h2.headline { font-size: clamp(26px, 2.5vw, 38px); line-height: 1.1; margin: 0 0 8px; }
+  .slide.has-visual--stack .ask { padding: 8px 18px; }
+  .slide.has-visual--stack .ask p:not(.ask-label) { font-size: clamp(18px, 1.7vw, 24px); line-height: 1.25; }
+  /* ha a kérdés az egyetlen blokk, a deck.css nagy betűt ad MINDEN p-nek benne — a címkét is; ezt visszavesszük */
+  .slide.has-visual--stack .body-stack > .ask:only-child p.ask-label { font-size: 11px; }
+  .slide.has-visual--stack .body-stack > .ask:only-child p:not(.ask-label) { font-size: clamp(20px, 2vw, 28px); }
+  .slide.has-visual--stack .body-stack { gap: 8px; }
+  .slide.has-visual--stack .body-stack:empty { display: none; }
+  .slide.has-visual--stack .body-stack > p { font-size: clamp(16px, 1.5vw, 21px); line-height: 1.35; margin: 0; }
+</style>
 
 <div class="deck" id="deck"></div>
 
@@ -13,3 +41,60 @@
 
 <script src="slides-data.js"></script>
 <script src="../../assets/deck/deck.js"></script>
+<script>
+  // Auto-fit: minden ábra a lehető legnagyobb, ami a TELJESEN felfedett dián még
+  // elfér (görgetés nélkül). A betűtípusok és a képek betöltése után, ill. átméretezéskor újraszámol.
+  (function () {
+    function fitAll() {
+      document.querySelectorAll(".slide.has-visual").forEach(function (slide) {
+        var img = slide.querySelector(".slide-visual img");
+        if (!img || !img.complete || !img.naturalWidth) return;
+        var wasActive = slide.classList.contains("is-active");
+        var steps = Array.prototype.slice.call(slide.querySelectorAll("[data-step]"));
+        var was = steps.map(function (n) { return n.classList.contains("is-revealed"); });
+        slide.classList.add("is-active");
+        steps.forEach(function (n) { n.classList.add("is-revealed"); });
+        img.style.maxHeight = ""; // vissza a CSS-sapkához
+        // offsetHeight (nem getBoundingClientRect): a dia átmeneti transzformja nem torzítja
+        // "túl nagy" = a dia görgethető, VAGY a kép a fölötte lévő szövegbe lóg, VAGY az aljánál
+        // (felirattal együtt) kilóg. Az utóbbi kettő görgetés nélkül is látszik, ezért kell külön mérni.
+        var cc = slide.querySelector(".content-col");
+        var fig = img.closest("figure") || img.closest(".slide-visual");
+        var stacked = slide.classList.contains("has-visual--stack");
+        function excess() {
+          var sr = slide.getBoundingClientRect();
+          var over = [slide.scrollHeight - slide.clientHeight, fig.getBoundingClientRect().bottom - (sr.bottom - 16)];
+          if (stacked && cc) over.push(cc.getBoundingClientRect().bottom + 6 - img.getBoundingClientRect().top);
+          return Math.max.apply(null, over);
+        }
+        // A kép függőlegesen középre igazított, ezért zsugorításkor a teteje csak a felével mozdul:
+        // iteratív levonás túlzsugorítana, így bináris kereséssel keressük a legnagyobb elférő magasságot.
+        var start = excess();
+        if (start > 0) {
+          var hi = img.offsetHeight;
+          var lo = 120;
+          for (var k = 0; k < 9; k++) {
+            var mid = Math.floor((lo + hi) / 2);
+            img.style.maxHeight = mid + "px";
+            if (excess() <= 0) lo = mid; else hi = mid;
+          }
+          img.style.maxHeight = lo + "px";
+          // ha még a legkisebb méretnél sem fér el (a SZÖVEG a hosszú), ne zsugorítsuk feleslegesen
+          if (excess() > 0) img.style.maxHeight = "";
+        }
+        steps.forEach(function (n, i) { if (!was[i]) n.classList.remove("is-revealed"); });
+        if (!wasActive) slide.classList.remove("is-active");
+      });
+    }
+    function init() {
+      document.querySelectorAll(".slide-visual img").forEach(function (im) {
+        if (!im.complete) im.addEventListener("load", fitAll);
+      });
+      fitAll();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+      window.addEventListener("resize", fitAll);
+    }
+    if (document.readyState === "complete") init();
+    else window.addEventListener("load", init);
+  })();
+</script>

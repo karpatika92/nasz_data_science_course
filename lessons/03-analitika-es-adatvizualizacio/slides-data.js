@@ -102,6 +102,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Trükk 1",
     title: "Csonkolt tengely",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/lie_truncated_axis.png", alt: "Csonkolt és nulláról induló oszlopdiagram", caption: "szintetikus illusztráció" },
     blocks: [
       { kind: "ask", html: "Ugyanaz a +2%. Melyik képen „duplázódott” a bevétel — és <strong>mi változott</strong> a két ábra között?" },
@@ -112,6 +113,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Trükk 2",
     title: "Két y-tengely",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/lie_dual_axis.png", alt: "Két y-tengelyes vonaldiagram és pontdiagram", caption: "szintetikus illusztráció" },
     blocks: [
       { kind: "ask", html: "Úgy tűnik, a két sor együtt mozog. Mi a gyanús?" },
@@ -122,6 +124,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Trükk 3",
     title: "Terület vagy hossz?",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/lie_area.png", alt: "Két kör, a sugár az értékkel skálázva", caption: "szintetikus illusztráció" },
     blocks: [
       { kind: "ask", html: "Az érték megduplázódott. Hányszor nagyobbnak látjátok a narancssárga kört?" },
@@ -133,24 +136,33 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Rossz példa · élő átalakítás",
     title: "Mi a baj ezzel az ábrával?",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/makeover_bad.png", alt: "Szándékosan rossz árfolyamábra", caption: "szándékosan rossz — a saját adatunkból" },
     blocks: [
       { kind: "ask", label: "Közösen", html: "Egy cég árfolyama. <strong>Mi hiányzik, mi zavar, mit hallgat el?</strong>" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Rossz példa · élő átalakítás",
+    title: "Mit találtunk — és most javítsuk meg",
+    blocks: [
       {
-        kind: "list", step: 1,
+        kind: "list",
         items: [
           "Se cím, se tengelycím, se egység, se forrás",
           "<strong>Kiválogatott ablak</strong> (mélypont → csúcs): „mindig csak felfelé megy”",
           "Kövér rács, telített háttér: az adat a díszítésben elvész",
         ],
       },
-      { kind: "ask", step: 2, label: "Ti jöttök (5 perc)", html: "Az ügynökötökkel <strong>javítsátok meg</strong> (<code>nflx_weekly_price.csv</code>). Mi lesz a <em>cím</em>?" },
+      { kind: "ask", step: 1, label: "Ti jöttök (5 perc)", html: "Az ügynökötökkel <strong>javítsátok meg</strong> (<code>nflx_weekly_price.csv</code>). Mi lesz a <em>cím</em>?" },
     ],
   },
   {
     type: "content",
     eyebrow: "Rossz példa · az átalakítás eredménye",
     title: "Ugyanaz az adat — most önmagában érthető",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/makeover_good.png", alt: "Javított árfolyamábra", caption: "cím = állítás · annotált fordulópontok · forrás" },
     blocks: [
       { kind: "text", html: "Teljes idősor (nem kiválogatott ablak), a <strong>cím maga az insight</strong>, tengelycímek és egység, három annotált pont, forrás." },
@@ -164,11 +176,19 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Diagramtípusok",
     title: "Először a kérdés, aztán a forma",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/chart_types.png", alt: "Hat diagramtípus", caption: "szintetikus adatok, csak a forma kedvéért" },
     blocks: [
       { kind: "ask", html: "Párosítsátok a hat diagramot a hat kérdéssel." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Diagramtípusok",
+    title: "Melyik kérdéshez melyik forma?",
+    blocks: [
       {
-        kind: "list", step: 1,
+        kind: "list",
         items: [
           "<strong>Időbeli változás?</strong> → vonal",
           "<strong>Melyik nagyobb?</strong> → oszlop (nulláról)",
@@ -178,7 +198,7 @@ window.SLIDES = [
           "<strong>Két dimenzió × érték?</strong> → hőtérkép (pl. kohorsz-megtartás)",
         ],
       },
-      { kind: "text", step: 2, html: "<strong>Szabály:</strong> ha nem tudod a kérdést, amire az ábra válaszol, még nem diagramot kell választanod." },
+      { kind: "text", step: 1, html: "<strong>Szabály:</strong> ha nem tudod a kérdést, amire az ábra válaszol, még nem diagramot kell választanod." },
     ],
   },
 
@@ -188,6 +208,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Színek",
     title: "A szivárvány hazudik",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/color_rainbow.png", alt: "Ugyanaz az adat szivárvány és egyszínű skálán", caption: "ugyanaz az adat, két színskála" },
     blocks: [
       { kind: "ask", html: "Ugyanaz a két domb. Hány „csúcsot” és „határvonalat” láttok a bal oldali képen — és hányat az adatban?" },
@@ -198,18 +219,26 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Színek",
     title: "A szín kódolás, nem dísz",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/color_types.png", alt: "Szekvenciális, divergáló és kategoriális skála", caption: "három feladat, három skála" },
     blocks: [
       { kind: "ask", html: "Három feladatot adhat a szín egy ábrán. Mi lehet a három?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Színek",
+    title: "Három feladat, három skála",
+    blocks: [
       {
-        kind: "list", step: 1,
+        kind: "list",
         items: [
           "<strong>Mennyiség</strong> → szekvenciális: <em>egy</em> színárnyalat, világostól sötétig",
           "<strong>Eltérés egy középponttól</strong> → divergáló: két árnyalat + semleges közép",
           "<strong>Azonosság</strong> (melyik csoport) → kategoriális: kevés, jól megkülönböztethető szín, mindig ugyanabban a sorrendben",
         ],
       },
-      { kind: "tension", step: 2, label: "Miért számít?", html: "A piros–zöld „jó–rossz” skála kulturálisan magától értetődő, de aki nem különbözteti meg a kettőt, annak üres. A szín mellé mindig kell másik jel is (címke, forma, pozíció)." },
+      { kind: "tension", step: 1, label: "Miért számít?", html: "A piros–zöld „jó–rossz” skála kulturálisan magától értetődő, de aki nem különbözteti meg a kettőt, annak üres. A szín mellé mindig kell másik jel is (címke, forma, pozíció)." },
     ],
   },
 
@@ -235,6 +264,7 @@ window.SLIDES = [
     type: "content",
     eyebrow: "Egy árfolyam története",
     title: "Netflix, 2016–2026",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/makeover_good.png", alt: "Netflix árfolyam, annotálva", caption: "ugyanaz az ábra, most történetként olvasva" },
     blocks: [
       { kind: "ask", label: "30 másodperc", html: "Mondjátok el a történetet az ábra alapján: kontextus, fordulat, tanulság." },
@@ -248,7 +278,7 @@ window.SLIDES = [
     visual: { kind: "image", src: "assets/classics/owid_life_expectancy.png", alt: "Várható élettartam a világ régióiban, 1770-től", caption: "Our World in Data · CC BY 4.0 · Riley; Zijdeman et al.; HMD; UN WPP" },
     blocks: [
       { kind: "ask", html: "Ehhez nem kell magyarázat. De <strong>megszegi az első szabályunkat</strong>: a cím téma, nem állítás. Mégis érthető — miért?" },
-      { kind: "text", step: 1, html: "Egy kérdés (hogyan változott az élettartam?), egy vonal-család, <strong>közvetlen címkék</strong> a vonalak végén, egyetlen mértékegység. A forma maga a történet: tartósan felfelé, és 1950 óta a régiók közti rés szűkül. (Az ábra angol nyelvű — Our World in Data.)" },
+      { kind: "text", step: 1, html: "Egy kérdés, egy vonal-család, <strong>közvetlen címkék</strong> a vonalak végén, egy mértékegység. A forma maga a történet: tartósan felfelé, és 1950 óta a régiók közti rés szűkül." },
     ],
   },
   {
@@ -264,22 +294,34 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Klasszikus · 1858",
-    title: "Nightingale rózsadiagramja",
+    title: "Nightingale, 1858 — mit akart elérni vele?",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/classics/nightingale.jpg", alt: "Florence Nightingale rózsadiagramja", caption: "Florence Nightingale, 1858 · közkincs (Wikimedia Commons)" },
+    blocks: [],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1858",
+    title: "Nightingale: ábra, ami döntést vált ki",
     blocks: [
-      { kind: "ask", html: "Mit akart elérni vele? Mi a <strong>döntés</strong>, amit ki akart váltani?" },
-      { kind: "text", step: 1, html: "A tanulság (a megelőzhető betegség okozta halálesetek — kék — messze túlszárnyalják a sebesüléseket — piros) csak akkor ér valamit, ha <strong>döntést vált ki</strong>. Az ábra célja nem a szépség, hanem a cselekvés." },
+      { kind: "text", html: "A tanulság (a megelőzhető betegség okozta halálesetek — kék — messze túlszárnyalják a sebesüléseket — piros) csak akkor ér valamit, ha <strong>döntést vált ki</strong>. Az ábra célja nem a szépség, hanem a cselekvés." },
     ],
   },
   {
     type: "content",
     eyebrow: "Klasszikus · 1869",
-    title: "Napóleon oroszországi hadjárata (Minard)",
+    title: "Minard: hány adat van a képen?",
+    visualLayout: "stack",
     visual: { kind: "image", src: "assets/classics/minard.png", alt: "Minard térképe Napóleon oroszországi hadjáratáról", caption: "Charles Minard, 1869 · közkincs (Wikimedia Commons)" },
+    blocks: [],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1869",
+    title: "Minard: hat adat, egy állítás",
     blocks: [
-      { kind: "ask", html: "Nem egyszerű — mégis olvasható. <strong>Hány adat van ezen az egy képen?</strong>" },
-      { kind: "text", step: 1, html: "A sáv vastagsága a sereg létszáma, a sáv földrajzi pozíciója az útvonal, a színe az irány (előre/vissza), alul a hőmérséklet az idővel. Aki nem ismeri a történetet, <em>akkor is látja</em>, hogy a sereg eltűnik." },
-      { kind: "text", step: 2, html: "Az ábra megmutatja, mi az, amit a legtöbb ábra nem tud: sok dimenziót <strong>egyetlen állításhoz</strong> rendelni." },
+      { kind: "text", html: "A sáv vastagsága a sereg létszáma, a sáv földrajzi pozíciója az útvonal, a színe az irány (előre/vissza), alul a hőmérséklet az idővel. Aki nem ismeri a történetet, <em>akkor is látja</em>, hogy a sereg eltűnik." },
+      { kind: "text", step: 1, html: "Az ábra megmutatja, mi az, amit a legtöbb ábra nem tud: sok dimenziót <strong>egyetlen állításhoz</strong> rendelni." },
     ],
   },
 
@@ -371,7 +413,7 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Élő demó",
-    title: "Futtassuk: demo.ipynb",
+    title: "Számoljuk ki élőben",
     blocks: [
       { kind: "text", html: "Empirikus hazárd → túlélési görbe → CLTV <strong>kétféleképpen</strong>: zárt alakkal és a tényleges görbe szerinti összegzéssel." },
       { kind: "tension", label: "Figyelem", html: "A mai adat <strong>szintetikus (placeholder)</strong>, nem valós checkers.com-minta. A <em>módszer</em> a tanulság, a konkrét számok nem." },
@@ -408,7 +450,7 @@ window.SLIDES = [
     eyebrow: "Információ → insight",
     title: "Mi mozgatja az értéket?",
     blocks: [
-      { kind: "ask", html: "Melyik többet ér: <strong>1 százalékponttal kisebb churn</strong>, vagy <strong>10%-kal drágább előfizetés</strong>? Tippeljetek, aztán számoljuk ki a notebookban." },
+      { kind: "ask", html: "Melyik többet ér: <strong>1 százalékponttal kisebb churn</strong>, vagy <strong>10%-kal drágább előfizetés</strong>? Tippeljetek, aztán számoljuk ki." },
       { kind: "text", step: 1, html: "Minél alacsonyabb már a churn, annál nagyobb az <strong>abszolút</strong> hatása egy további csökkentésnek (a V a c-nek konvex függvénye)." },
     ],
   },
