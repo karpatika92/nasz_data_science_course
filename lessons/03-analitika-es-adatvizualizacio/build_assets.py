@@ -23,17 +23,22 @@ NFLX = (
     / "../../lectures/01-uzleti-analitika-es-cegertekeles/data/nflx_weekly_price.csv"
 )
 
-# dataviz skill referencia-paletta (világos mód) + semleges tintaszínek
-SURFACE, INK, INK2, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#e4e3df"
-BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
-SEQ = LinearSegmentedColormap.from_list("seq_blue", ["#e8f1fb", "#2a78d6", "#123a6e"])
-DIV = LinearSegmentedColormap.from_list("div_bo", [BLUE, "#f2f2f0", ORANGE])
+# A deck színeihez igazítva (assets/deck/deck.css: --bg, --ink, --ink-dim, --line a háttéren).
+# Kategoriális színek: a dataviz skill SÖTÉT módú lépései; a validate_palette.js-sel ellenőrizve a
+# deck hátterén (#0d2a20): minden próba PASS (CVD ΔE 8,4 az adjacens párokra, kontraszt >= 3:1).
+# Szekvenciális rámpa (egy árnyalat, monoton világosság, a legsötétebb lépés is >= 2:1): szintén validált.
+SURFACE, INK, INK2, GRID = "#0d2a20", "#e9e4d2", "#b9c2b3", "#30483c"
+BLUE, ORANGE, AQUA, YELLOW = "#3987e5", "#d95926", "#199e70", "#c98500"
+SEQ = LinearSegmentedColormap.from_list(
+    "seq_blue_dark", ["#2f66a8", "#3f7cc6", "#5f9be0", "#92bdf0", "#c3dcf8"]
+)
+DIV = LinearSegmentedColormap.from_list("div_bo_dark", [BLUE, "#4a5c53", ORANGE])
 
 plt.rcParams.update(
     {
         "figure.facecolor": SURFACE,
         "axes.facecolor": SURFACE,
-        "savefig.facecolor": SURFACE,
+        "savefig.facecolor": "auto",  # az ábra saját háttere (a szándékosan rossz ábráé sárga marad)
         "text.color": INK,
         "axes.labelcolor": INK2,
         "xtick.color": INK2,
@@ -166,7 +171,9 @@ def makeover():
     ax.grid(True, color="black", lw=1.4)
     for s in ("top", "right"):
         ax.spines[s].set_visible(True)
-    ax.tick_params(labelsize=9)
+    ax.tick_params(
+        labelsize=9, colors="black"
+    )  # a szándékosan rossz ábra világos háttéren él
     save(fig, "makeover_bad.png")
 
     # JÓ: teljes idősor, a cím maga az insight, tengelycímek + egység, annotált fordulópontok, forrás
@@ -310,8 +317,11 @@ def chart_types():
         [rng.normal(m, s, 150) for m, s in [(0, 1), (0.5, 1.6), (1.2, 0.7)]],
         tick_labels=["X", "Y", "Z"],
         patch_artist=True,
-        boxprops={"facecolor": "#bcd6f3", "color": INK2},
+        boxprops={"facecolor": "#2f66a8", "color": INK2},
         medianprops={"color": ORANGE, "lw": 2.5},
+        whiskerprops={"color": INK2},
+        capprops={"color": INK2},
+        flierprops={"markeredgecolor": INK2},
     )
     axes[1, 1].set_title("Boxplot — eloszlások összevetése")
     m = np.array(
@@ -348,7 +358,7 @@ def colors():
     fig, axes = plt.subplots(1, 2, figsize=(12, 5.2))
     for ax, cm, ttl in [
         (axes[0], "jet", "Szivárvány („jet”): hamis határok"),
-        (axes[1], SEQ, "Egyszínű, világostól sötétig"),
+        (axes[1], SEQ, "Egyszínű, egyre világosabb"),
     ]:
         im = ax.imshow(z, cmap=cm, extent=(-3, 3, -3, 3))
         ax.grid(False)
@@ -371,7 +381,7 @@ def colors():
     axes[0].set_title("Szekvenciális: mennyiség (kevés → sok)", fontsize=14)
     axes[1].imshow(g, cmap=DIV, aspect="auto")
     axes[1].set_title("Divergáló: két pólus + semleges közép", fontsize=14)
-    pal = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]
+    pal = [BLUE, ORANGE, AQUA, YELLOW]
     for i, c in enumerate(pal):
         axes[2].add_patch(plt.Rectangle((i, 0), 0.9, 1, color=c))
     axes[2].set_xlim(0, 4)
@@ -387,6 +397,81 @@ def colors():
     save(fig, "color_types.png")
 
 
+# ------------------------------------- Minard: a hőmérsékleti panel újrarajzolva
+def minard_temperature():
+    """A Minard-térkép alsó hőmérsékleti paneljének jelölt pontjai, olvashatóan újrarajzolva.
+
+    A (dátum, °Réaumur) párok a térkép feliratairól vannak leolvasva (a nagyított kivágáson
+    ellenőrizve): "Zéro le 18 8.bre", "-9° le 9 9.bre", "-21° le 14 9.bre", "-20° le 28 9.bre",
+    "-24° le 1er X.bre", "-30° le 6 X.bre", "-26° le 7 X.bre". A régi hónapjelölés: 8.bre = október,
+    9.bre = november, X.bre = december. Egy további pont (-11°) dátum nélkül szerepel a térképen,
+    ezért kimarad. Réaumur -> Celsius: x1,25 (a Réaumur-skálán a víz 0 °R-en fagy, 80 °R-en forr).
+    """
+    readings = [
+        ("1812-10-18", 0),
+        ("1812-11-09", -9),
+        ("1812-11-14", -21),
+        ("1812-11-28", -20),
+        ("1812-12-01", -24),
+        ("1812-12-06", -30),
+        ("1812-12-07", -26),
+    ]
+    dates = pd.to_datetime([d for d, _ in readings])
+    reau = np.array([r for _, r in readings], dtype=float)
+    celsius = reau * 1.25
+    months = {10: "okt.", 11: "nov.", 12: "dec."}
+
+    def hu(v):
+        """Magyar tizedesvessző, valódi mínuszjel, felesleges nullák nélkül (−11,25 és nem −11,2)."""
+        s = f"{v:.2f}".rstrip("0").rstrip(".")
+        return s.replace(".", ",").replace("-", "−")
+
+    fig, ax = plt.subplots(figsize=(11, 5.4))
+    ax.plot(dates, celsius, color=BLUE, lw=2.4, marker="o", ms=8, zorder=3)
+    low = int(np.argmin(celsius))
+    ax.scatter([dates[low]], [celsius[low]], color=ORANGE, s=90, zorder=4)
+    # felirat-eltolás pontban és igazítás pontonként: a decemberi pontok egymáshoz közel vannak
+    placement = [
+        ((0, 16), "center"),  # okt. 18.
+        ((12, -4), "left"),  # nov. 9.
+        ((-6, -34), "right"),  # nov. 14.
+        ((0, 16), "center"),  # nov. 28.
+        ((14, 10), "left"),  # dec. 1.
+        ((-14, -30), "right"),  # dec. 6.
+        ((16, -24), "left"),  # dec. 7.
+    ]
+    for (t, r, c), (off, ha) in zip(zip(dates, reau, celsius), placement):
+        ax.annotate(
+            f"{months[t.month]} {t.day}.\n{hu(r)} °R = {hu(c)} °C",
+            (t, c),
+            textcoords="offset points",
+            xytext=off,
+            ha=ha,
+            fontsize=12,
+            color=INK,
+        )
+    ax.set_title(
+        "A visszavonulás alatt a hőmérséklet 0 °R-ról −30 °R-ra (−37,5 °C-ra) esett",
+        fontsize=16,
+    )
+    ax.set_ylabel("Hőmérséklet (°C, a Réaumur-érték × 1,25)")
+    ax.set_xlabel("1812 (a térkép dátumai: okt. 18. – dec. 7.)")
+    ax.set_ylim(-48, 10)
+    ax.set_xlim(pd.Timestamp("1812-10-12"), pd.Timestamp("1812-12-24"))
+    ticks = pd.to_datetime(["1812-10-18", "1812-11-01", "1812-11-15", "1812-12-01"])
+    ax.set_xticks(ticks)
+    ax.set_xticklabels([f"{months[d.month]} {d.day}." for d in ticks], fontsize=12)
+    fig.text(
+        0.01,
+        -0.04,
+        "Forrás: Minard (1869) hőmérsékleti panelje; a jelölt mérési pontok leolvasva a térképről. "
+        "Az idő itt balról jobbra telik (a térképen jobbról balra).",
+        fontsize=10.5,
+        color=INK2,
+    )
+    save(fig, "minard_temperature.png")
+
+
 if __name__ == "__main__":
     anscombe()
     datasaurus()
@@ -394,3 +479,4 @@ if __name__ == "__main__":
     lies()
     chart_types()
     colors()
+    minard_temperature()

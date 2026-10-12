@@ -90,6 +90,48 @@ források; a Wikipedia-cikknek csak az első 100 000 karakterét olvastam át):
   hagyjuk: az ábra az előtte–utána különbséget mutatja, a Sanitary Commission hatását nem
   bizonyítja.
 
+**Snow — a történelmi háttér forrásai** (megnyitva ellenőrizve, másodlagos források; mindkét
+Wikipedia-cikknek az első 100 000 karakterét olvastam át):
+- *Wikipedia, 1854 Broad Street cholera outbreak:* kezdet 1854. aug. 31., Broad Street (ma
+  Broadwick Street), Soho; az első 3 napban 127 halott, szept. 10-ig 300 fölött, összesen 420;
+  a lakók háromnegyede elmenekült a következő héten; a Board of Health a miazmával magyarázta;
+  Snow a Rev. Henry Whitehead segítségével interjúzott; szept. 7-én a St James plébánia Board of
+  Guardians-e előtt mutatta be; a kar eltávolítása „másnap” (a cikk időrendje szerint szept. 8.,
+  kifejezetten nem állítja); Snow maga jegyezte meg, hogy a járvány már a kútzárás előtt
+  csökkenőben volt; a kutat ~3 lábra ásták egy szivárgó emésztőgödörtől (pelenkamosóvíz egy
+  kolerás csecsemőtől); a járványt az epidemiológia alapító eseményének tartják.
+- *Wikipedia, John Snow:* 1813. márc. 15., York – 1858. jún. 16., London; angol orvos;
+  érzéstelenítés és orvosi higiénia; 1849-es esszé (*On the Mode of Communication of Cholera*),
+  1855-ös részletes értekezés.
+- **Nem vettem át / nyitott:** a cikk szerint a térkép „pontokat” vagy „egymásra rakott téglalapokat”
+  mutat, és nem mondja ki, hogy egy sáv egy halott — a dián ezért csak „a fekete sávok a
+  haláleseteket jelölik” szerepel. A szaggatott határvonalat a térképen nem magyarázom
+  (a cikk Voronoi-szerű felosztásról ír, de a vonal azonosítását nem erősíti meg).
+  A járvány végének dátumát a cikk nem adja meg.
+
+**Minard — a számok és a hőmérséklet forrása:**
+- *Wikipedia, Charles Joseph Minard:* 1 mm = 10 000 fő; Minard saját jelmagyarázata szerint
+  vörös = Oroszországba belépők, fekete = kilépők (a letöltött képen bézs/fekete); „hatféle adat”.
+  A cikk **nem ad** létszámot és hőmérsékletet.
+- *Maga a térkép* (a nagyított kivágásokon olvasva): 422 000 a Nyemennél, 100 000 Moszkvánál
+  (előre- és visszafelé is), 10 000 a visszaút végén (10 000 / 422 000 = 2,4%). A térkép szövegében
+  Minard leírja, hogy Jérôme herceg és Davout marsall hadtesteit (Minszkre és Mogiljovra
+  kiküldve, majd Orsa és Vityebszk környékén újra csatlakozva) úgy számolta, mintha mindig a
+  fősereggel meneteltek volna.
+- *Hőmérséklet:* a 7 dátumozott pont a térképről leolvasva (a 18 8.bre: 0°; 9 9.bre: −9°; 14 9.bre:
+  −21°; 28 9.bre: −20°; 1 X.bre: −24°; 6 X.bre: −30°; 7 X.bre: −26°), Réaumur-fokban; a −11°-os
+  pont dátum nélkül szerepel, ezért kimaradt. 8.bre/9.bre/X.bre = okt./nov./dec. (régi
+  hónapjelölés, a latin számozásból). Réaumur → Celsius ×1,25 (Commons-fájloldal alapján).
+  Az ábra (`assets/minard_temperature.png`) **saját újrarajzolás** a leolvasott pontokból, nem az eredeti.
+
+**Az ábráink színei (sötét téma):** a generált ábrák a deck színeire vannak igazítva
+(háttér #0d2a20, szöveg #e9e4d2). A kategoriális színek a dataviz-skill sötét módú lépései
+(kék #3987e5, narancs #d95926, kékeszöld #199e70, sárga #c98500); a `validate_palette.js` a deck hátterén
+mindet PASS-ra értékelte (legrosszabb adjacens CVD ΔE 8,4 — ezért az ábrákon közvetlen címkék is
+vannak). A szekvenciális rámpa (#2f66a8 → #c3dcf8) szintén PASS. A szándékosan rossz ábra
+(`makeover_bad.png`) és a külső, történelmi képek (Minard, Nightingale, Snow, OWID) **nem**
+lettek átszínezve.
+
 **TEENDŐ — egyszerű, közéleti ábra:** nem találtam ellenőrzött politikai/közéleti
 ábrát (NYT / 538 szerzői jogvédett). Ha kell, tegyél be egy általad választottat
 (kép + forrás), vagy keress CC BY-os OWID-ábrát.

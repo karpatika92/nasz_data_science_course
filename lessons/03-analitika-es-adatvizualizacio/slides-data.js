@@ -233,7 +233,7 @@ window.SLIDES = [
       {
         kind: "list",
         items: [
-          "<strong>Mennyiség</strong> → szekvenciális: <em>egy</em> színárnyalat, világostól sötétig",
+          "<strong>Mennyiség</strong> → szekvenciális: <em>egy</em> színárnyalat, a kis értéktől a nagyig egyre világosabb",
           "<strong>Eltérés egy középponttól</strong> → divergáló: két árnyalat + semleges közép",
           "<strong>Azonosság</strong> (melyik csoport) → kategoriális: kevés, jól megkülönböztethető szín, mindig ugyanabban a sorrendben",
         ],
@@ -284,11 +284,107 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Klasszikus · 1854",
-    title: "Snow koleratérképe",
-    visual: { kind: "image", src: "assets/classics/snow_cholera.jpg", alt: "John Snow londoni koleratérképe, 1854", caption: "John Snow, 1854 · közkincs (Wikimedia Commons)" },
+    title: "Ki volt John Snow?",
     blocks: [
-      { kind: "ask", html: "Mit kérdezett Snow, és <strong>miért térkép</strong> a jó válasz — miért nem táblázat?" },
-      { kind: "text", step: 1, html: "A kérdés <em>hol</em> volt: a halálesetek egy kút körül sűrűsödnek. A forma a kérdésből jön." },
+      { kind: "ask", html: "Mit tudtok a 19. századi kolerajárványokról? <strong>Mi okozta őket — szerintetek, és szerintük?</strong>" },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Angol orvos (<strong>1813. március 15., York – 1858. június 16., London</strong>).",
+          "Az <strong>érzéstelenítés</strong> és az orvosi higiénia fejlesztésének úttörője.",
+          "<strong>1849:</strong> esszét ír a kolera terjedéséről. <strong>1855:</strong> részletes értekezés, benne az 1854-es soho-i járvány vizsgálata.",
+          "A Broad Street-i járvány vizsgálatát az <strong>epidemiológia egyik alapító eseményének</strong> tartják.",
+        ],
+      },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1854",
+    title: "Mi történt a Broad Streeten?",
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "<strong>1854. augusztus 31.:</strong> kolerajárvány tör ki Londonban, <strong>Soho</strong>-ban, a Broad Street (ma Broadwick Street) környékén.",
+          "Az első három napban <strong>127-en</strong> haltak meg; szeptember 10-ig több mint 300-an; összesen <strong>420-an</strong>. A következő héten a lakók háromnegyede elmenekült.",
+          "Az uralkodó nézet a <strong>miazma-elmélet</strong>: a kolerát a rothadó anyagokból származó, levegőben terjedő részecskék okozzák.",
+          "<strong>Snow szerint</strong> szennyezett víz terjeszti. Lakókkal és az áldozatok családjaival beszélt (Henry Whitehead tiszteletes segítségével), majd térképre vitte az eseteket és a vízkutakat.",
+          "<strong>1854. szeptember 7.:</strong> bemutatja a találatait a plébánia vezetőinek (Board of Guardians); a Broad Street-i kút karját <strong>másnap</strong> eltávolítják.",
+        ],
+      },
+      { kind: "ask", step: 1, html: "Miért térkép a jó válasz, és miért nem táblázat?" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1854",
+    title: "Snow térképe — mit kérdezett?",
+    visualLayout: "stack",
+    visual: { kind: "image", src: "assets/classics/snow_cholera.jpg", alt: "John Snow londoni koleratérképe, 1854", caption: "John Snow, 1854 · közkincs (Wikimedia Commons)" },
+    blocks: [],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1854",
+    title: "Hogyan olvassuk a térképet?",
+    visual: { kind: "image", src: "assets/classics/snow_cholera.jpg", alt: "John Snow londoni koleratérképe, 1854", caption: "a fekete sávok a halálesetek, a PUMP jelek a vízkutak" },
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "A <strong>fekete sávok</strong> a haláleseteket jelölik, házanként egymásra rakva.",
+          "A <strong>PUMP</strong> feliratok a vízkutak.",
+          "A sávok a <strong>Broad Street-i kút</strong> körül sűrűsödnek.",
+        ],
+      },
+      { kind: "text", step: 1, html: "A kérdés <em>hol</em> volt: a forma a kérdésből jön." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1854",
+    title: "Mit nem bizonyít a térkép?",
+    blocks: [
+      { kind: "ask", html: "A halálesetek a kút körül sűrűsödnek. <strong>Bizonyítja ez, hogy a víz okozta a járványt?</strong> Mi másra gondolhatnánk?" },
+      { kind: "text", step: 1, html: "Snow maga is megjegyezte, hogy a járvány már a kút lezárása előtt visszaszorulóban lehetett (a lakók elmenekültek), vagyis a kar eltávolítása nem egyedül magyarázza a végét." },
+      { kind: "tension", step: 2, label: "A későbbi nyomozás", html: "A kutat egy régi, szivárgó emésztőgödörtől mintegy 3 lábra (kb. 1 méterre) ásták, és a gödörbe egy kolerás csecsemő pelenkáinak mosóvize jutott. <strong>A térkép a „hol”-t mutatta meg; a „miért”-hez további nyomozás kellett.</strong>" },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · kicsoda ő?",
+    title: "Ki volt Florence Nightingale?",
+    blocks: [
+      { kind: "ask", html: "Hallottatok már Florence Nightingale-ről? <strong>Mit tudtok róla?</strong>" },
+      {
+        kind: "list", step: 1,
+        items: [
+          "Angol társadalmi reformer és <strong>statisztikus</strong>; a <strong>modern ápolás megalapozója</strong>.",
+          "<strong>1820. május 12-én született</strong> Firenzében, <strong>1910. augusztus 13-án halt meg</strong>.",
+          "Az éjszakai kórtermi körútjairól „<strong>a lámpás hölgy</strong>” (<em>The Lady with the Lamp</em>) néven vált ikonná.",
+          "<strong>1860:</strong> Londonban, a St Thomas' Kórházban ápolóiskolát alapít, ezzel megteremtve a hivatásos ápolást.",
+        ],
+      },
+      { kind: "tension", step: 2, label: "Ma a statisztikusról lesz szó", html: "Arról az <strong>egy diagramról</strong>, amellyel meg akarta győzni a döntéshozókat." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · hol és mikor?",
+    title: "A krími háború és Scutari",
+    blocks: [
+      {
+        kind: "list",
+        items: [
+          "<strong>A krími háború (1853–1856):</strong> Oroszország az Oszmán Birodalom, Nagy-Britannia és Franciaország szövetsége ellen (1855-től Szardínia is). A harcok fő színtere a <strong>Krím-félsziget</strong> volt.",
+          "<strong>Scutari = Üsküdar</strong>, ma Isztambul <strong>ázsiai oldalán</strong> (akkor Konstantinápoly, az Oszmán Birodalom fővárosa).",
+          "A <strong>Selimiye-laktanya</strong> ideiglenes katonai kórház lett a brit hadsereg számára.",
+          "<strong>1854. november 4.:</strong> Nightingale 37 önkéntes ápolónővel megérkezik.",
+        ],
+      },
+      { kind: "ask", step: 1, html: "Miért van egy brit kórház Isztambulban, és nem Londonban vagy a Krímben?" },
+      { kind: "text", step: 2, html: "A laktanyát a Krím felé tartó brit hadseregnek jelölték ki; miután két gyalogezred a frontra indult, <strong>ideiglenes katonai kórházzá</strong> alakították." },
     ],
   },
   {
@@ -357,9 +453,57 @@ window.SLIDES = [
   {
     type: "content",
     eyebrow: "Klasszikus · 1869",
-    title: "Minard: hat adat, egy állítás",
+    title: "Hány fő indult, és hányan tértek vissza?",
     blocks: [
-      { kind: "text", html: "A sáv vastagsága a sereg létszáma, a sáv földrajzi pozíciója az útvonal, a színe az irány (előre/vissza), alul a hőmérséklet az idővel. Aki nem ismeri a történetet, <em>akkor is látja</em>, hogy a sereg eltűnik." },
+      { kind: "ask", html: "A térkép szerint hány katonával lépte át Napóleon serege az orosz határt (a Nyemen folyót)? Hányan értek Moszkvába? Hányan jöttek vissza?" },
+      {
+        kind: "list", step: 1,
+        items: [
+          "<strong>A sáv vastagsága a létszám:</strong> 1 mm = 10 000 fő (Minard saját jelmagyarázata).",
+          "<strong>Bézs sáv</strong> (az eredetiben vörös): befelé, Oroszországba. <strong>Fekete sáv:</strong> kifelé.",
+          "<strong>Indulás</strong> (a Nyemen átlépése): <strong>422 000</strong> fő.",
+          "<strong>Moszkva:</strong> <strong>100 000</strong> fő.",
+          "<strong>A visszaút vége:</strong> <strong>10 000</strong> fő.",
+        ],
+      },
+      { kind: "tension", step: 2, label: "A szám, ami elmondja a történetet", html: "10 000 a 422 000-ből: a térkép szerint a kiindulók <strong>alig 2,4%-a</strong> ért vissza a Nyemenhez. A számokat a térképen feliratok adják, nem kell kiolvasni a vastagságból." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1869",
+    title: "Olvasd el a lábjegyzetet is",
+    blocks: [
+      { kind: "ask", html: "Minard a térkép szövegében leírja, <strong>hogyan számolt</strong>. Szerintetek mire hívja fel a figyelmet, és miért fontos ez?" },
+      { kind: "text", step: 1, html: "Hogy a veszteség jobban látsszon, <strong>feltételezte</strong>, hogy Jérôme herceg és Davout marsall hadtestei (amelyek Minszk és Mogiljov felé váltak le, majd Orsa és Vityebszk környékén csatlakoztak vissza) <strong>végig a fősereggel meneteltek</strong>." },
+      { kind: "tension", step: 2, label: "Ami ebből következik", html: "Az ábra számai egy <strong>szerkesztői döntést</strong> is tartalmaznak. A jó ábra ezt a lábjegyzetben el is mondja — ugyanúgy, ahogy a forrást és a mértékegységet." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1869",
+    title: "A hőmérséklet a térkép alján — mennyi ez Celsiusban?",
+    visualLayout: "stack",
+    visual: { kind: "image", src: "assets/minard_temperature.png", alt: "A Minard-térkép hőmérsékleti pontjai Réaumur- és Celsius-fokban", caption: "a térkép jelölt pontjai, olvashatóan újrarajzolva" },
+    blocks: [],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1869",
+    title: "Hogyan olvassuk a hőmérsékleti skálát?",
+    blocks: [
+      { kind: "ask", html: "A térkép aljára Minard külön hőmérséklet-diagramot tett, <strong>Réaumur-fokban</strong>. Hogyan számoljuk át Celsiusra?" },
+      { kind: "text", step: 1, html: "<strong>Réaumur → Celsius: × 1,25.</strong> A skála a fagypont <em>alatt</em> számol (0-tól 30-ig lefelé = egyre hidegebb), tehát −30 °R = <strong>−37,5 °C</strong>." },
+      { kind: "text", step: 2, html: "Az idő a térképen <strong>jobbról balra</strong> telik (a visszavonulás Moszkvától a Nyemenig); a vékony függőleges vonalak a hőmérsékleti pontot a térkép megfelelő helyéhez kötik." },
+      { kind: "text", step: 3, html: "A dátumok régi írásmóddal: <strong>8.bre = október, 9.bre = november, X.bre = december</strong>." },
+    ],
+  },
+  {
+    type: "content",
+    eyebrow: "Klasszikus · 1869",
+    title: "Hat adat, egy állítás",
+    blocks: [
+      { kind: "text", html: "Hat adat egy képen: <strong>létszám, két földrajzi koordináta, irány, hőmérséklet és dátum</strong>. Aki nem ismeri a történetet, <em>akkor is látja</em>, hogy a sereg eltűnik." },
       { kind: "text", step: 1, html: "Az ábra megmutatja, mi az, amit a legtöbb ábra nem tud: sok dimenziót <strong>egyetlen állításhoz</strong> rendelni." },
     ],
   },
