@@ -27,7 +27,11 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
 2. `02-gepi-tanulas` — bias-variance tradeoff (polinom-illesztés), neurális
    hálók, SVM, döntési fa → Random Forest → Gradient Boosting,
    modellösszehasonlítás a Titanic-adatsoron
-3. *(tervben: analitika — adatvizualizáció, EDA, ügyfélérték-számítás)*
+3. `03-analitika-es-adatvizualizacio` — házi beszámoló, adatvizualizáció
+   (Anscombe/Datasaurus, rossz ábrák és trükkök, élő átalakítás),
+   diagramtípusok, színelmélet, történetmesélés (Minard, Snow, Nightingale), majd
+   a checkers.com-esettanulmány: fizetési adat → CLTV → LTV/CAC-döntés
+   (adat → információ → insight → döntés). Az ábrákat a `build_assets.py` generálja.
 
 ## Előadások (`lectures/`)
 
