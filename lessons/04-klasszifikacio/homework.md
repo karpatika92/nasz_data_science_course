@@ -37,7 +37,7 @@ kérdése: **te találsz-e olyan jellemzőt, ami az XGBoostnak is segít?** Tipp
 6. **Mutatók:** kiegyensúlyozott pontosság, PR-AUC, konfúziós mátrix, és a legkockázatosabb X% találati aránya egy választott küszöbnél. Írd le, miért **nem** a nyers pontosságra támaszkodtál.
 7. **Egy dokumentált visszacsatolási kör** a tanító halmaz out-of-fold jóslatain: milyen hibákat néztél meg, mi volt a hipotézis, mit változtattál, mi lett az eredmény **ugyanazokon a foldokon** (páros különbség ± szórás). **Legalább egy új jellemzőt próbálj ki.** Ha nem segített, az is érvényes eredmény, ha őszintén leírod.
 8. **Hangolás** a legjobb modellre, CV-n; az eredményt ellenőrizd olyan foldokon, amelyeket a keresés nem látott. Ha nem javult, tartsd meg az egyszerűbbet, és írd le.
-9. **A teszthalmaz egyszer:** bootstrap konfidenciaintervallummal a PR-AUC-ra, és páros összehasonlítás az alapmodelleddel.
+9. **A teszthalmaz egyszer:** add meg a bizonytalanságot is (pl. bootstrap konfidenciaintervallum a PR-AUC-ra: ha nem ismered, nézz utána), és hasonlítsd az alapmodelledhez.
 10. **Korlátok:** három őszinte mondat.
 
 ## Hogyan pontozunk
@@ -47,11 +47,11 @@ támaszt alá, és világosan leírod, mi **nem** működött. Magasabb teszt-po
 
 ## Buktatók, amiket keresni fogunk
 
-- Újramintavételezés vagy imputálás a **split előtt** (ahogy az órán a 2. szándékos hibánál).
+- Bármi, ami az adatból tanul (imputálás, skálázás, **célérték-átlag kódolás**, mintavételezés), a **split előtt** vagy az egész adaton illesztve: szivárgás.
 - Modell- vagy küszöbválasztás a teszthalmazon.
-- A nyers pontosság mint fő mutató, vagy a pontosságra optimalizált küszöb (az 1. szándékos hiba).
+- A nyers pontosság mint fő mutató (a pontosság a hasznos küszöböt „bünteti”).
+- Időbeli adatnál véletlenszerű vágás: a múltból kell jósolni a jövőre.
 - Egy különbség valódinak nevezése, miközben kisebb, mint a foldok közti szórás.
-- Egy üres cella eldobása vagy észrevétlen kitöltése, anélkül hogy megnéznéd, jelent-e valamit.
+- Egy üres cella eldobása vagy észrevétlen kitöltése, anélkül hogy megnéznéd, jelent-e valamit (és hogy nem szivárgás-e).
 
-*(Miért ilyen a feladat? Az órán két hibát szándékosan elkövettünk, hogy lássuk, milyen könnyű valóban elkövetni. A házi arról szól, hogy
-ezeket a saját adatodon már ne kövesd el, és ha mégis, vedd észre.)*
+*(Miért ilyen a feladat? Az órán láttuk, milyen könnyű félrevezető számot kapni. A házi arról szól, hogy ezeket a saját adatodon már ne kövesd el, és ha mégis, vedd észre.)*
