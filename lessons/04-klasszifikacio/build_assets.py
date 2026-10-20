@@ -88,17 +88,20 @@ print("ár-sávok (ezer USD): autók száma és rossz vétel aránya")
 print(g.assign(mean=lambda d: d["mean"].round(3)).T.to_string())
 
 # ---------------------------------------------------------------- 2. nyers sorok: a problémás értékekkel
-cols = ["PurchDate", "VehicleAge", "Make", "Transmission", "WheelType", "VNZIP1", "MMRAcquisitionAuctionAveragePrice", "VehBCost"]
-r_ok = raw[(raw.WheelType.notna()) & (raw.MMRAcquisitionAuctionAveragePrice > 0) & (raw.Transmission == "AUTO")].iloc[0]
-r_zero = raw[raw.MMRAcquisitionAuctionAveragePrice == 0].iloc[0]
-r_wheel = raw[raw.WheelType.isna() & (raw.MMRAcquisitionAuctionAveragePrice > 0)].iloc[0]
-r_man = raw[raw.Transmission == "Manual"].iloc[0]
-rows = pd.DataFrame([r_ok, r_zero, r_wheel, r_man])[cols]
+cols = ["PurchDate", "Make", "Transmission", "WheelType", "VNZIP1", "MMRAcquisitionAuctionAveragePrice", "MMRCurrentAuctionAveragePrice"]
+ok = (raw.MMRAcquisitionAuctionAveragePrice > 0) & (raw.MMRCurrentAuctionAveragePrice > 0)
+r_ok = raw[ok & raw.WheelType.notna() & (raw.Transmission == "AUTO")].iloc[0]
+r_zero_acq = raw[raw.MMRAcquisitionAuctionAveragePrice == 0].iloc[0]                                   # 0 dollár a vásárláskori becslés
+r_zero_cur = raw[(raw.MMRCurrentAuctionAveragePrice == 0) & (raw.MMRAcquisitionAuctionAveragePrice > 0)].iloc[0]   # 0 dollár a mai becslés
+r_manual_up = raw[raw.Transmission == "MANUAL"].iloc[0]                                                # a helyes írásmód
+r_manual_bad = raw[raw.Transmission == "Manual"].iloc[0]                                               # a másik írásmód
+r_wheel = raw[raw.WheelType.isna() & ok].iloc[0]
+rows = pd.DataFrame([r_ok, r_zero_acq, r_zero_cur, r_manual_up, r_manual_bad, r_wheel])[cols]
 show = rows.copy()
-show.columns = ["PurchDate", "kor", "Make", "Transmission", "WheelType", "VNZIP1", "MMR vételkori átlagár", "VehBCost"]
+show.columns = ["PurchDate", "Make", "Transmission", "WheelType", "VNZIP1", "piaci becslés vásárláskor", "piaci becslés ma"]
 for c in show.columns:
     show[c] = show[c].map(lambda v: "NaN" if pd.isna(v) else (f"{v:.0f}" if isinstance(v, (int, float, np.integer, np.floating)) else str(v)))
-hl = {(1, 6), (0, 0), (2, 4), (3, 3), (0, 5)}               # 0 dollár, unix-idő, hiányzó keréktípus, „Manual”, irányítószám
+hl = {(0, 0), (0, 4), (1, 5), (2, 6), (3, 2), (4, 2), (5, 3)}   # unix-idő, irányítószám, 0 dollár (kétszer), MANUAL/Manual, hiányzó keréktípus
 table_png(show, "tbl_raw", hl_cells=hl, fs=15)
 print("nyers sorok:\n", show.to_string())
 
@@ -107,14 +110,16 @@ X, y = raw.drop(columns="IsBadBuy"), raw.IsBadBuy.astype(int)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=.2, stratify=y, random_state=42)
 gm = float(y_train.mean())
 stat = pd.DataFrame({"y": y_train.values, "m": X_train.Model.values}).groupby("m").y.agg(["size", "mean"])
+MIN_N = 30                                              # KISS: a 30-nál ritkább érték hiányzónak számít (nincs simítás)
 top = stat.sort_values("size", ascending=False).head(4)
 rare = stat[(stat["size"].between(3, 5))].sort_values("mean", ascending=False).head(1)
 ex = pd.concat([top, rare])
-tab = pd.DataFrame({"Model": [str(i)[:26] for i in ex.index], "autók száma (tanító)": [thou(v) for v in ex["size"]],
-                    "rossz vétel aránya": [f"{v:.0%}".replace(".", ",") for v in ex["mean"]]})
-tab = pd.concat([tab, pd.DataFrame({"Model": ["(minden autó)"], "autók száma (tanító)": [thou(len(y_train))], "rossz vétel aránya": [f"{gm:.1%}".replace(".", ",")]})])
+enc = ["hiányzik (NaN)" if n < MIN_N else f"{m:.0%}".replace(".", ",") for n, m in zip(ex["size"], ex["mean"])]
+tab = pd.DataFrame({"Model": [str(i)[:26] for i in ex.index], "autók száma (tanító)": [thou(v) for v in ex["size"]], "kódolt érték (rossz vétel aránya)": enc})
 table_png(tab.reset_index(drop=True), "tbl_celatlag", hl_rows=[4], fs=16)
-print("célérték-átlag példa:\n", tab.to_string(), "\nkülönböző Model a tanítóban:", int(stat.shape[0]))
+n_rare = int((stat["size"] < MIN_N).sum())
+print("célérték-átlag példa:\n", tab.to_string(), "\nkülönböző Model a tanítóban:", int(stat.shape[0]),
+      f"| ebből {n_rare} értéknél van {MIN_N}-nál kevesebb autó (a tanító autók {stat.loc[stat['size'] < MIN_N, 'size'].sum() / len(y_train):.1%}-a)")
 
 # ---------------------------------------------------------------- 4. időbeli adat: kiterjedő ablak (múltból a jövőbe)
 fig, ax = plt.subplots(figsize=(11, 4.2))
