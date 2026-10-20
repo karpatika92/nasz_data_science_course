@@ -32,6 +32,12 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    diagramtípusok, színelmélet, történetmesélés (Minard, Snow, Nightingale), majd
    a checkers.com-esettanulmány: fizetési adat → CLTV → LTV/CAC-döntés
    (adat → információ → insight → döntés). Az ábrákat a `build_assets.py` generálja.
+4. `04-klasszifikacio` — klasszifikáció a nyers adattól a hangolt modellig az IBM Telco
+   churn-adaton (EDA, tisztítás, kiértékelés: miért rossz a nyers pontosság, kiegyensúlyozott
+   pontosság, precision/recall, ROC vs PR; logisztikus regresszió → fa → Random Forest → XGBoost;
+   egy visszacsatolási kör két szándékos hibával — a pontosságra optimalizálás és az
+   adatszivárgás —, hangolás, egyszeri teszt). A slide-ok a 2. óra gif-jeit használják újra; a
+   `demo.ipynb` generálja az ábrákat (`assets/`), nem vetítjük.
 
 ## Előadások (`lectures/`)
 
