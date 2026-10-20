@@ -32,12 +32,14 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    diagramtípusok, színelmélet, történetmesélés (Minard, Snow, Nightingale), majd
    a checkers.com-esettanulmány: fizetési adat → CLTV → LTV/CAC-döntés
    (adat → információ → insight → döntés). Az ábrákat a `build_assets.py` generálja.
-4. `04-klasszifikacio` — klasszifikáció a nyers adattól a hangolt modellig az IBM Telco
-   churn-adaton (EDA, tisztítás, kiértékelés: miért rossz a nyers pontosság, kiegyensúlyozott
-   pontosság, precision/recall, ROC vs PR; logisztikus regresszió → fa → Random Forest → XGBoost;
-   egy visszacsatolási kör két szándékos hibával — a pontosságra optimalizálás és az
-   adatszivárgás —, hangolás, egyszeri teszt). A slide-ok a 2. óra gif-jeit használják újra; a
-   `demo.ipynb` generálja az ábrákat (`assets/`), nem vetítjük.
+4. `04-klasszifikacio` — klasszifikáció a nyers adattól a hangolt modellig a Kaggle „Don't Get
+   Kicked!” (használtautó-aukció, rossz vétel) adatsoron (EDA, tisztítás, one-hot kódolás,
+   keresztvalidáció, kiértékelés: miért rossz a nyers pontosság, kiegyensúlyozott pontosság,
+   precision/recall, ROC vs PR; logisztikus regresszió → fa → Random Forest → XGBoost; egy
+   visszacsatolási kör két szándékos hibával — a pontosságra optimalizálás és az adatszivárgás —
+   és egy valódi javítással: feature engineering, amely a fa-alapú modellnek segít, a lineárisnak
+   nem; hangolás, egyszeri teszt). A slide-ok a 2. óra gif-jeit használják újra; a `demo.ipynb`
+   generálja az ábrákat (`assets/`), nem vetítjük. A demó 30 000 soros mintán, 3-fold CV-vel fut.
 
 ## Előadások (`lectures/`)
 

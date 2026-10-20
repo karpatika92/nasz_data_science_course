@@ -1,51 +1,57 @@
 # 4. házi feladat — Építs saját klasszifikátort
 
-Válassz **egy** adatsort (lehetőleg mindenki mást), és építs rá bináris klasszifikátort.
-A beadandó **egyetlen notebook**. Ugyanazt az utat járod be, mint az órán a Telco-adaton: nyers adat, EDA,
-tisztítás, modellek, egy visszacsatolási kör, hangolás, záró teszt.
+Válassz **egy** adatsort (lehetőleg mindenki mást), és építs rá bináris klasszifikátort. A beadandó **egyetlen notebook**.
+Ugyanazt az utat járod be, mint az órán: nyers adat, EDA, tisztítás, modellek, egy visszacsatolási kör, hangolás, záró teszt.
+
+Az adatsorok mind letölthetők bejelentkezés nélkül, az OpenML-ről:
+
+```python
+from sklearn.datasets import fetch_openml
+df = fetch_openml(data_id=46911, as_frame=True).frame      # Bank Customer Churn
+```
 
 ## Adatsorok
 
-| Adatsor | Hol | Amit ellenőriztem | Amit nem |
-|---|---|---|---|
-| Bank Marketing | https://archive.ics.uci.edu/dataset/222/bank+marketing | 45 211 sor, célváltozó `y` (lekötött betét: igen/nem), CC BY 4.0 | a pozitívak aránya |
-| Default of Credit Card Clients | https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients | 30 000 sor, célváltozó: nem fizetés (1/0), az oldal szerint nincs hiányzó érték | a pozitívak aránya |
-| Adult / Census Income | https://archive.ics.uci.edu/dataset/2/adult | 48 842 sor, célváltozó: jövedelem > 50K, hiányzó értékek (workclass, occupation) | a pozitívak aránya |
-| Give Me Some Credit | https://www.kaggle.com/c/GiveMeSomeCredit | csak a verseny címe | minden más (bejelentkezés, sorok száma, pozitívak aránya) |
+| Adatsor | OpenML `data_id` | Sor × oszlop | Pozitív arány | Amit **ellenőriztem** | Amit nem |
+|---|---|---|---|---|---|
+| Bank Customer Churn | 46911 | 10 000 × 11 | 20,4% | letöltöttem, a méretet és az arányt megmértem, nincs hiányzó érték | — |
+| Online Shoppers (vásárlási szándék) | 46947 | 12 330 × 18 | 15,5% | letöltöttem, megmértem, nincs hiányzó érték | — |
+| Give Me Some Credit | 46929 | 150 000 × 11 | 6,7% | letöltöttem, megmértem; a `MonthlyIncome` ~20%-a hiányzik | — |
+| Telco Customer Churn | 42178 | 7 043 × 20 | 26,5% | csak az OpenML-listázás adata | nem töltöttem le; két OpenML-verzió van (42178, 45568), a listázás szerint csak a 45568-ban van hiányzó érték (11): ellenőrizd, melyikkel dolgozol |
 
-**A pozitívak arányát az EDA-ban neked kell megmérni és leírni**; ne az én emlékezetemre építs.
+A **pozitívak arányát az EDA-ban neked kell megmérni és leírni**.
 
-**Megjegyzések:**
-- **Bank Marketing:** van egy `duration` oszlop (a hívás hossza másodpercben). Az érvelés: ez az érték
-  csak a hívás **után** ismert, ezért egy valós előrejelzésben nem használható. Döntsd el, megtartod-e, és **indokold meg**.
-  (Ez a saját érvelésünk; az UCI-oldal ezt nem emeli ki.)
-- **Adult:** ha a `sex` vagy `race` oszlopot használod, írj pár mondatot arról, miért érdemes ezen elgondolkodni.
-- **Give Me Some Credit:** kaggle-fiók kell hozzá; ha nincs, válassz mást.
+**Tájékoztató előzetes mérések** (saját, nem a notebookban; teljes adat, 5-fold CV): az első háromnál az XGBoost erősen
+veri a logisztikus regressziót, **de a feature engineering a fa-alapú modellnek ott nem segített, a lineárisnak igen**
+(pl. Bank Churn: egyetlen `products ≥ 3` jelző a logisztikus PR-AUC-ját ~0,47-ről ~0,60-ra vitte). Ez a házi egyik
+kérdése: **te találsz-e olyan jellemzőt, ami az XGBoostnak is segít?** Tipp: olyat keress, amely **két oszlopból számol**
+(hányados, különbség), nem egyből.
 
 ## Mit kell tartalmaznia a notebooknak
 
-1. **A kérdés és a célváltozó:** egy bekezdés. Mi a pozitív? Mibe kerül egy álpozitív, és mibe egy álnegatív?
+1. **A kérdés és a célváltozó:** egy bekezdés. Mi a pozitív? Mibe kerül egy álriasztás, és mibe egy kihagyott pozitív?
 2. **EDA:** legalább két ábra, és a célváltozó aránya.
-3. **Tisztítás:** minden döntéshez egy indok; ha találtál hiányzás-mechanizmust, írd le.
+3. **Tisztítás:** minden döntéshez egy indok; ha találtál hiányzás-mechanizmust, írd le. Kérdezd meg: a hiányzás **jel** vagy **szivárgás**?
 4. **A split előbb:** zárolt teszthalmaz; írd le, hogyan osztottál (rétegzés, seed).
-5. **Alapmodellek:** dummy és logisztikus regresszió, plusz **legalább két** a következőkből: döntési fa, Random Forest, XGBoost. Ugyanazok a foldok mindenkinek.
-6. **Mutatók:** kiegyensúlyozott pontosság, PR-AUC, konfúziós mátrix és precision@K egy választott küszöbnél. Írd le, miért **nem** a nyers pontosságra támaszkodtál.
-7. **Egy dokumentált visszacsatolási kör** a train out-of-fold jóslatain: milyen hibákat néztél meg, mi volt a hipotézis, mit változtattál, mi lett az eredmény **ugyanazokon a foldokon**. Ha a változtatás **nem** segített, az is érvényes eredmény, ha őszintén leírod.
-8. **Hangolás:** a legjobb modellre, CV-n; az eredményt ellenőrizd olyan foldokon, amelyeket a keresés nem látott.
+5. **Alapmodellek:** dummy és logisztikus regresszió, plusz **legalább két** a következőkből: döntési fa, Random Forest, XGBoost. Ugyanazok a foldok mindenkinek. A kódolást (one-hot vagy sorszám) indokold.
+6. **Mutatók:** kiegyensúlyozott pontosság, PR-AUC, konfúziós mátrix, és a legkockázatosabb X% találati aránya egy választott küszöbnél. Írd le, miért **nem** a nyers pontosságra támaszkodtál.
+7. **Egy dokumentált visszacsatolási kör** a tanító halmaz out-of-fold jóslatain: milyen hibákat néztél meg, mi volt a hipotézis, mit változtattál, mi lett az eredmény **ugyanazokon a foldokon** (páros különbség ± szórás). **Legalább egy új jellemzőt próbálj ki.** Ha nem segített, az is érvényes eredmény, ha őszintén leírod.
+8. **Hangolás** a legjobb modellre, CV-n; az eredményt ellenőrizd olyan foldokon, amelyeket a keresés nem látott. Ha nem javult, tartsd meg az egyszerűbbet, és írd le.
 9. **A teszthalmaz egyszer:** bootstrap konfidenciaintervallummal a PR-AUC-ra, és páros összehasonlítás az alapmodelleddel.
 10. **Korlátok:** három őszinte mondat.
 
 ## Hogyan pontozunk
 
-Az **indoklás** számít, nem a pontszám. Teljes pontot ér: nincs szivárgás, a mutatókat előre választottad, minden állítást szám támaszt alá,
-és világosan leírod, mi **nem** működött. Magasabb teszt-pontszámért nem jár többlet.
+Az **indoklás** számít, nem a pontszám. Teljes pontot ér: nincs szivárgás, a mutatókat előre választottad, minden állítást szám
+támaszt alá, és világosan leírod, mi **nem** működött. Magasabb teszt-pontszámért nem jár többlet.
 
 ## Buktatók, amiket keresni fogunk
 
 - Újramintavételezés vagy imputálás a **split előtt** (ahogy az órán a 2. szándékos hibánál).
-- Küszöb- vagy modellválasztás a teszthalmazon.
-- A nyers pontosság mint fő mutató.
+- Modell- vagy küszöbválasztás a teszthalmazon.
+- A nyers pontosság mint fő mutató, vagy a pontosságra optimalizált küszöb (az 1. szándékos hiba).
 - Egy különbség valódinak nevezése, miközben kisebb, mint a foldok közti szórás.
-- Egy mérőszámra optimalizálás anélkül, hogy megnéznéd, mi történik a többivel (ahogy az 1. szándékos hibánál).
+- Egy üres cella eldobása vagy észrevétlen kitöltése, anélkül hogy megnéznéd, jelent-e valamit.
 
-*(Miért ilyen a feladat? Az órán két hibát szándékosan elkövettünk, hogy lássuk, milyen könnyű valóban elkövetni. A házi arról szól, hogy ezeket a saját adatodon már ne kövesd el, és ha mégis, vedd észre.)*
+*(Miért ilyen a feladat? Az órán két hibát szándékosan elkövettünk, hogy lássuk, milyen könnyű valóban elkövetni. A házi arról szól, hogy
+ezeket a saját adatodon már ne kövesd el, és ha mégis, vedd észre.)*
