@@ -1,0 +1,207 @@
+# 3. óra — Analitika és adatvizualizáció
+
+Oktatói jegyzet, ugyanaz a formátum, mint az 1–2. óránál (szókratészi, kiscsoportos).
+A `slides.html` a vetített anyag, a `demo.ipynb` az élő CLTV-notebook,
+a `build_assets.py` generálja a saját ábrákat (`uv run python build_assets.py`).
+
+**Végcél:** a csoport maga vezesse le a *adat → információ → insight → döntés*
+láncot egy valós típusú kérdésen (fizetési adatból cégérték), és közben minden
+ábrájuk legyen **önmagában érthető és mesélő**.
+
+Nincs időzítési kényszer (a szerző szerint belefér) — a sorrend a lényeg.
+
+## Menet
+
+| # | Rész | Mi történik |
+|---|------|-------------|
+| 0 | Házi beszámoló | Szóban: 1. házi (kódoló ügynök kifaggatott), 2. házi (Kaggle, saját ötlet). **Az új házik szóban mennek, nincs `homework.md`.** |
+| 1 | Adatvizualizáció | Tézis → Anscombe + Datasaurus → trükkök (csonkolt/két tengely/terület) → élő átalakítás |
+| 2 | Diagramtípusok | Hat forma, hat kérdés |
+| 3 | Színelmélet | Szivárvány vs. egyszínű; három feladat (mennyiség/eltérés/azonosság) |
+| 4 | Történetmesélés | Netflix, OWID, Snow, Nightingale, Minard |
+| 5 | Esettanulmány | checkers.com: fizetési adat → cégérték (CLTV) |
+
+## 0. Házi beszámoló
+
+- **1. házi:** „Mit kérdezett az ügynök? Volt-e kimenet?” — hagyd őket beszélni, ne értékelj.
+- **2. házi:** a kulcskérdés a **„melyik halmazon mérted?”** — ha a hangoláshoz használt
+  halmazon mértek javulást, az nem javulás (2. óra: holdout). Ez nem csapda, hanem a
+  leggyakoribb hiba; kérdezd meg mindenkitől.
+
+## 1. Adatvizualizáció
+
+- **Tézis:** egy ábra legyen önmagában érthető. Az „5 másodperces teszt” a kulcs:
+  kapja meg e-mailben, minden más nélkül.
+- **Anscombe és Datasaurus:** a számok azonosak, az ábra nem. Mindkét ábra
+  statisztikája a scriptből ellenőrzött (Anscombe: átlag 7,50, r = 0,816; Datasaurus:
+  13 halmaz, azonos átlag/szórás, r ≈ −0,06). *Előbb nézd meg, aztán számolj* = EDA.
+- **Trükkök** (mind szintetikus illusztráció): csonkolt tengely (oszlopnál tilos,
+  vonalnál elfogadható), két y-tengely (álkorreláció), terület vs. hossz.
+- **Élő átalakítás (rossz példa dián):** a „rossz” ábra szándékos — kiválogatott
+  ablak (mélypont→csúcs), se cím, se tengelycím. Adat: `nflx_weekly_price.csv` a
+  `lectures/01…/data/` alól. A csoport az ügynökével javítja 5 percig; hasonlítsd össze
+  a `makeover_good.png`-vel (a cím a lényeg: −75%, majd 7,5×, azóta −46%; számok
+  a scriptből, a repo adatfájljából).
+- **Reddit-példák (TEENDŐ, kézzel):** a Reddit scriptből 403-at ad, ezért nincsenek
+  benne. Válaszd ki a „Top, all time” posztokat az r/dataisbeautiful és
+  r/dataisugly alól, mentsd a **képet** az `assets/reddit/` mappába, és vedd fel a
+  `slides-data.js` tetején a `PICKS_GOOD` / `PICKS_BAD` tömbbe (`{ src, why }`).
+  Amíg a tömb üres, nem jelenik meg dia (nincs törött kép).
+
+## 2–3. Diagramtípusok, színek
+
+- A hőtérkép példája a kohorsz-megtartás — előrevetíti a következő (CLTV/Markov) anyagot.
+- Színek: a szivárvány „hamis határokat” mutat; a világosság hordoz sorrendet, nem az
+  árnyalat. Ábráink a dataviz-skill validált palettájából dolgoznak
+  (kék #2a78d6, narancs #eb6834). A színvakságra csak egy általános mondat van
+  (nincs konkrét arány a dián).
+
+## 4. Történetmesélés
+
+| Dia | Forrás / licenc | Megjegyzés |
+|-----|-----------------|------------|
+| Netflix (`makeover_good.png`) | saját ábra, repo-adat | „Mi történhetett 2022 áprilisában?” — a vitához a csoportra bízzuk; az 1. előadás terve szerint ez az első előfizető-vesztés egy évtizedben (**ezt itt nem ellenőriztem újra**) |
+| Várható élettartam | Our World in Data, CC BY 4.0 (a harmadik fél adatai saját feltételekkel: Riley; Zijdeman et al.; HMD; UN WPP) | Angol nyelvű; a cím téma, nem állítás — szándékosan **megszegi** az első szabályt, és ezt kérdezzük meg |
+| Snow koleratérképe, 1854 | közkincs (Wikimedia Commons, `Snow-cholera-map-1.jpg`) | letöltött kép: 1920 × 1801 px |
+| Nightingale rózsadiagramja, 1858 | közkincs (Commons, `Nightingale-mortality.jpg`) | letöltött kép: 3840 × 2100 px. Négy dia: nagy ábra + kérdés → történelmi háttér → olvasási útmutató → „mit nem bizonyít?” (lásd lent) |
+| Minard, 1869 | közkincs (Commons, `Minard.png`; a lapon US-tag is kell) | 2003 px — kivetítőn nézd meg teljes képernyőn; hőmérséklet Réaumur-ban |
+
+**Minard — hány adat?** Létszám (sávszélesség, 1 mm = 10 000 fő), pozíció (2 koordináta),
+irány (bézs = előre, fekete = vissza — az ábra saját magyarázata szerint),
+hőmérséklet, idő (a hőmérsékleti panel dátumai) — hat. (A „hat” Tufte-tól való, memóriából.)
+
+**Nightingale — a történelmi háttér forrásai** (megnyitva ellenőrizve, de másodlagos
+források; a Wikipedia-cikknek csak az első 100 000 karakterét olvastam át):
+- *Wikipedia, Florence Nightingale:* 1854 novembere, Scutari (Selimiye-laktanya),
+  elhanyagolt higiénia, tömeges fertőzések; 1855 márciusa, Sanitary Commission („csatornák
+  átöblítése, szellőzés javítása”, a halálozás „jelentősen csökkent” — pontos számot a cikk
+  nem ad); 4077 halott az első télen; „nagyjából tízszer annyian haltak meg betegségben,
+  mint harci sebekben”; a coxcomb-diagramokat képviselőknek és hivatalnokoknak szánta;
+  1859: a Royal Statistical Society első női tagja (a cikk „member”-t ír, nem „fellow”-t).
+- *Commons fájloldal:* 1858; a *Notes on Matters Affecting the Health, Efficiency, and
+  Hospital Administration of the British Army* c. kötetből; ugyanabban az évben
+  Viktória királynőnek is elküldve; kék = megelőzhető vagy enyhíthető fertőző betegségek
+  (zymotic), piros = sebek, fekete = minden egyéb ok; havi éves halálozási ráta 1000 főre.
+- *Maga az ábra* (megnézve): a két időszak (jobb: 1854 ápr.–1855 márc., bal: 1855
+  ápr.–1856 márc.) és a „szirmok területe a közös középponttól mérve” jelmagyarázat.
+- **Nem vettem át:** Paget állítását, hogy a halálozás 42%-ról 2%-ra esett (a cikk csak
+  „claimed”-ként idézi, nem ellenőriztem). A „szirmok kisebbek a bal diagramon” az ábráról
+  leolvasott vizuális benyomás, nem számolt érték. Az „okságot” szándékosan nyitva
+  hagyjuk: az ábra az előtte–utána különbséget mutatja, a Sanitary Commission hatását nem
+  bizonyítja.
+
+**Snow — a történelmi háttér forrásai** (megnyitva ellenőrizve, másodlagos források; mindkét
+Wikipedia-cikknek az első 100 000 karakterét olvastam át):
+- *Wikipedia, 1854 Broad Street cholera outbreak:* kezdet 1854. aug. 31., Broad Street (ma
+  Broadwick Street), Soho; az első 3 napban 127 halott, szept. 10-ig 300 fölött, összesen 420;
+  a lakók háromnegyede elmenekült a következő héten; a Board of Health a miazmával magyarázta;
+  Snow a Rev. Henry Whitehead segítségével interjúzott; szept. 7-én a St James plébánia Board of
+  Guardians-e előtt mutatta be; a kar eltávolítása „másnap” (a cikk időrendje szerint szept. 8.,
+  kifejezetten nem állítja); Snow maga jegyezte meg, hogy a járvány már a kútzárás előtt
+  csökkenőben volt; a kutat ~3 lábra ásták egy szivárgó emésztőgödörtől (pelenkamosóvíz egy
+  kolerás csecsemőtől); a járványt az epidemiológia alapító eseményének tartják.
+- *Wikipedia, John Snow:* 1813. márc. 15., York – 1858. jún. 16., London; angol orvos;
+  érzéstelenítés és orvosi higiénia; 1849-es esszé (*On the Mode of Communication of Cholera*),
+  1855-ös részletes értekezés.
+- **Nem vettem át / nyitott:** a cikk szerint a térkép „pontokat” vagy „egymásra rakott téglalapokat”
+  mutat, és nem mondja ki, hogy egy sáv egy halott — a dián ezért csak „a fekete sávok a
+  haláleseteket jelölik” szerepel. A szaggatott határvonalat a térképen nem magyarázom
+  (a cikk Voronoi-szerű felosztásról ír, de a vonal azonosítását nem erősíti meg).
+  A járvány végének dátumát a cikk nem adja meg.
+
+**Minard — a számok és a hőmérséklet forrása:**
+- *Wikipedia, Charles Joseph Minard:* 1 mm = 10 000 fő; Minard saját jelmagyarázata szerint
+  vörös = Oroszországba belépők, fekete = kilépők (a letöltött képen bézs/fekete); „hatféle adat”.
+  A cikk **nem ad** létszámot és hőmérsékletet.
+- *Maga a térkép* (a nagyított kivágásokon olvasva): 422 000 a Nyemennél, 100 000 Moszkvánál
+  (előre- és visszafelé is), 10 000 a visszaút végén (10 000 / 422 000 = 2,4%). A térkép szövegében
+  Minard leírja, hogy Jérôme herceg és Davout marsall hadtesteit (Minszkre és Mogiljovra
+  kiküldve, majd Orsa és Vityebszk környékén újra csatlakozva) úgy számolta, mintha mindig a
+  fősereggel meneteltek volna.
+- *Hőmérséklet:* a 7 dátumozott pont a térképről leolvasva (a 18 8.bre: 0°; 9 9.bre: −9°; 14 9.bre:
+  −21°; 28 9.bre: −20°; 1 X.bre: −24°; 6 X.bre: −30°; 7 X.bre: −26°), Réaumur-fokban; a −11°-os
+  pont dátum nélkül szerepel, ezért kimaradt. 8.bre/9.bre/X.bre = okt./nov./dec. (régi
+  hónapjelölés, a latin számozásból). Réaumur → Celsius ×1,25 (Commons-fájloldal alapján).
+  Az ábra (`assets/minard_temperature.png`) **saját újrarajzolás** a leolvasott pontokból, nem az eredeti.
+
+**Az ábráink színei (sötét téma):** a generált ábrák a deck színeire vannak igazítva
+(háttér #0d2a20, szöveg #e9e4d2). A kategoriális színek a dataviz-skill sötét módú lépései
+(kék #3987e5, narancs #d95926, kékeszöld #199e70, sárga #c98500); a `validate_palette.js` a deck hátterén
+mindet PASS-ra értékelte (legrosszabb adjacens CVD ΔE 8,4 — ezért az ábrákon közvetlen címkék is
+vannak). A szekvenciális rámpa (#2f66a8 → #c3dcf8) szintén PASS. A szándékosan rossz ábra
+(`makeover_bad.png`) és a külső, történelmi képek (Minard, Nightingale, Snow, OWID) **nem**
+lettek átszínezve.
+
+**TEENDŐ — egyszerű, közéleti ábra:** nem találtam ellenőrzött politikai/közéleti
+ábrát (NYT / 538 szerzői jogvédett). Ha kell, tegyél be egy általad választottat
+(kép + forrás), vagy keress CC BY-os OWID-ábrát.
+
+## 5. Esettanulmány — checkers.com, fizetési adat → cégérték
+
+Ugyanaz a fiktív dámacég, mint a BCE-s előadáson (`lectures/01…`). **A mai adat
+`subscriptions_PLACEHOLDER.csv` — szintetikus, nem valós.** A módszer a tanulság.
+
+A szókratészi ív (mindenhol előbb kérdezz, aztán mutasd):
+
+1. *„Van egy fizetési adatsorunk. Mit kezdjünk vele?”* — gyűjtsd a táblára; a szándékolt
+   válasz: **értékeljük a céget**.
+2. *„Hogyan értékelnétek egy céget?”* → DCF → előbb egy előfizető értéke.
+3. *„P-t fizet n hónapig”* (annuitás) → *„végtelen?”* (perpetuitás) → *„ha c eséllyel lelép?”*
+   → átlagos élettartam 1/c → **V = P(1+r)/(r+c)** (a csoport vezesse le a táblán).
+4. *„P, c, r — melyik adat, melyik feltevés?”* r feltevés; c: de melyik c?
+5. *Jóslat, mielőtt futtatod:* a tényleges görbével nagyobb vagy kisebb a CLTV?
+6. Élő számolás → **három gyanúsított**, hogy miért tér el (lásd lent).
+7. Resubscription (π = feltevés, nincs resub-esemény az adatban).
+8. Mi mozgatja az értéket? (1 pp churn vs +10% ár — csoport tippel, utána kiszámoljuk.)
+9. Döntés: LTV/CAC, **döntési kártya** (mit teszünk · mérőszám · kill-kritérium).
+10. **Ti jöttök:** egy önmagában érthető ábra a CLTV-történetről (cím = insight) —
+    a vizualizációs rész alkalmazása.
+
+### Amit a notebookon MÉRTEM (placeholder adat, `demo.ipynb` outputjai)
+
+| Mennyiség | Érték |
+|---|---|
+| P (átlagár) | $12,96/hó |
+| r (havi, 10% éves WACC) | 0,797% |
+| c (első 12 hazárd egyszerű átlaga) | 14,02% |
+| CLTV zárt alak | $88,21 |
+| CLTV numerikus (az 1. előadás notebookja szerint) | $48,26 |
+| CLTV numerikus, időzítés javítva (horizonton levágva) | $59,99 |
+| Állandó churn, ami ezt reprodukálja | 20,98% |
+| Kockázatban lévők a 19.–24. tenure-hónapban | 81, 65, 49, 44, 25, 8 |
+| Túlélés a megfigyelés végén (24 hó) | 8,0% |
+| + farok, ha a farok-churn 1% / 3% / 5% / 10% | $107,67 / $82,56 / $74,77 / $67,93 (a farok a CLTV 44% / 27% / 20% / 12%-a) |
+| Tier CLTV (időzítés javítva): Alap / Prémium | $45,82 / $93,38 |
+| 1 pp churn-csökkentés / +10% ár (zárt alak, ceteris paribus) | +7,2% / +10,0% |
+
+**Fontos felfedezés (az 1. előadás notebookjára is vonatkozik):** a `demo_cltv.ipynb`
+numerikus összege `S(t) = P(tenure > t)`-vel súlyoz, miközben a zárt alak a hónap
+*elején* fizettet (`P(tenure ≥ t) = S(t−1)`). Állandó hazárdnál (c = 14%) ezt
+**egységteszttel** ellenőriztem: zárt alak $88,21, numerikus `S(t)` szerint $74,42,
+a hónap elején élők szerint $86,55 (a maradék a 24 hónapos levágás). Tehát az
+előadáson látott „zárt alak $88 vs. numerikus $48” eltérés **egy része off-by-one**
+artefaktum, nem a nem-állandó churn hatása. **Feltétel:** ez a `tenure_months`
+jelentésétől függ — én a generátor docstringje alapján olvastam
+(„ahány hónapja előfizető”; egy tenure=0 sor is egyszer fizetett). Valós
+BigQuery-adatnál ellenőrizni kell a definíciót. A `lectures/` fájlokat **nem
+módosítottam**.
+
+**Döntési kártya:** CAC = $65 egy *tetszőleges* kiinduló érték (a
+csoport a sajátját mondja). Ezzel az alsó korlát LTV/CAC = 0,92 („nem éri meg”),
+a farokkal bővített és a zárt alak 1,05–1,66 („megéri”) — a döntés a farokról szóló
+feltevésen fordul. **Nem** a kapott CAC-hoz hangoltam az adatot, de a flip-tartomány
+nagyjából $60 és $108 közé esik: más CAC-nál lehet, hogy mindegyik ugyanazt mondja.
+
+**Amit ez a számolás NEM tud:** a placeholder adat szintetikus (a generátor hazárdja
+`0,02 + 0,5/(t+1)`), a farokra a 8 emberes mintán semmilyen becslés nem
+megbízható, az áremelés→churn hatást nem modelleztük.
+
+## Források és hivatkozások
+
+- Anscombe (1973), *Graphs in Statistical Analysis*. Matejka & Fitzmaurice (2017),
+  *Same Stats, Different Graphs* (Datasaurus: TidyTuesday 2020-10-13 `datasaurus.csv`,
+  letöltve → `data/datasaurus.csv`).
+- Our World in Data, *Life expectancy* (CC BY 4.0).
+- Wikimedia Commons: Minard, Nightingale, Snow (közkincs).
+- Kutatás: a `general-purpose` ügynök találta a forrásokat; a Reddit-linkek nem
+  voltak ellenőrizhetők, ezért nincsenek az anyagban.

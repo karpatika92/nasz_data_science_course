@@ -188,6 +188,12 @@ h2.headline {
   font-size: clamp(24px, 2.7vw, 34px);
 }
 
+/* Kérdés + sima bekezdés(ek) válasz (nincs lista/plaque/tension): a válasz a dia mondanivalója, ezért
+   ugyanúgy nagyobb, mint a csak-bekezdéses diákon. `> p`: az ask belső p-jét nem érinti. */
+.slide--content:not(.has-visual) .body-stack:has(> .ask):not(:has(> :not(p):not(.ask))) > p {
+  font-size: clamp(24px, 2.7vw, 34px);
+}
+
 .body-stack ul {
   margin: 0;
   padding-left: 1.1em;
@@ -296,6 +302,12 @@ h2.headline {
 .body-stack > .tension:only-child {
   font-size: clamp(22px, 2.6vw, 30px);
   padding: 24px 32px;
+}
+
+/* Kérdés + tension válasz (nincs lista/plaque/bekezdés): a válasz a dia mondanivalója. */
+.slide--content:not(.has-visual) .body-stack:has(> .ask):has(> .tension):not(:has(> ul, > .plaque, > p)) > .tension {
+  font-size: clamp(22px, 2.6vw, 30px);
+  padding: 22px 30px;
 }
 
 .body-stack > .tension:only-child .tension-label {

@@ -27,7 +27,20 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
 2. `02-gepi-tanulas` — bias-variance tradeoff (polinom-illesztés), neurális
    hálók, SVM, döntési fa → Random Forest → Gradient Boosting,
    modellösszehasonlítás a Titanic-adatsoron
-3. *(tervben: analitika — adatvizualizáció, EDA, ügyfélérték-számítás)*
+3. `03-analitika-es-adatvizualizacio` — házi beszámoló, adatvizualizáció
+   (Anscombe/Datasaurus, rossz ábrák és trükkök, élő átalakítás),
+   diagramtípusok, színelmélet, történetmesélés (Minard, Snow, Nightingale), majd
+   a checkers.com-esettanulmány: fizetési adat → CLTV → LTV/CAC-döntés
+   (adat → információ → insight → döntés). Az ábrákat a `build_assets.py` generálja.
+4. `04-klasszifikacio` — klasszifikáció a nyers adattól a hangolt modellig a Kaggle „Don't Get
+   Kicked!” (használtautó-aukció, rossz vétel) adatsoron (EDA, tisztítás, one-hot kódolás,
+   keresztvalidáció, kiértékelés: miért rossz a nyers pontosság, kiegyensúlyozott pontosság,
+   precision/recall, ROC vs PR; célérték-átlag kódolás, időbeli adat; logisztikus regresszió →
+   fa → Random Forest → XGBoost; egy visszacsatolási kör: hibaelemzés és feature engineering,
+   amely a fa-alapú modellnek segít, a lineárisnak nem; hangolás, egyszeri teszt). 90 perc, 52
+   slide, 6 kérdés. A slide-ok a 2. óra gif-jeit használják újra; a `demo.ipynb` és a
+   `build_assets.py` generálja az ábrákat (`assets/`), nem vetítjük. A demó 30 000 soros mintán,
+   3-fold CV-vel fut.
 
 ## Előadások (`lectures/`)
 
