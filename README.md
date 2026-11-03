@@ -41,6 +41,16 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    slide, 6 kérdés. A slide-ok a 2. óra gif-jeit használják újra; a `demo.ipynb` és a
    `build_assets.py` generálja az ábrákat (`assets/`), nem vetítjük. A demó 30 000 soros mintán,
    3-fold CV-vel fut.
+5. `05-regresszio` — regresszió, a kiértékelésre és a diagnosztikára építve, az UCI Bike Sharing
+   (óránkénti kerékpár-kölcsönzés) adatsoron: időrendi vágás (és mennyit hazudik a véletlen vágás), alapmodellek
+   („múlt heti azonos óra”), mutatók (RMSE, MAE, WAPE, RMSLE, R² csapdái), tisztességes lineáris baseline →
+   az idő mint változó (óra kategóriaként vs körre csavarva: sin/cos, animációval) →
+   fa → Random Forest → XGBoost, diagnosztika (kalibráció, reziduum vs becslés és a log-cél, negatív jóslat,
+   szegmensek, autokorreláció), egy visszacsatolási kör (szándékosan szivárgó jellemző, majd késleltetések),
+   sodródás (a fa nem extrapolál) és a célváltozó átfogalmazása ellene (változás a múlt héthez képest: delta és log-arány,
+   hiányzó múlt heti érték szomszéd-kitöltéssel), záró teszt bootstrap-intervallummal és kvantilis-sávval. 58 slide (kb. 88 perc; a kivett
+   slide-ok a `slides-cut.js`-ben vannak), 6 kérdés. A közös kód a `bike.py`, a számokat a `results.py` (`results.json`), az ábrákat a `build_assets.py`
+   állítja elő. Házi: King County házárak.
 
 ## Előadások (`lectures/`)
 
