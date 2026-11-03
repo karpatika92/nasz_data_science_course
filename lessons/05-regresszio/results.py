@@ -54,7 +54,7 @@ def compute():
         return pd.concat(parts, ignore_index=True)
     ladder["mean"] = oof_dummy()
     ladder["naive_week"] = oof_naive("lag168")
-    ladder["naive_prev"] = oof_naive("lag1")
+    ladder["naive_lag2"] = oof_naive("lag2")
     ladder["lr_naive"] = B.oof_time(B.lr_naive, B.BASE, df)
     ladder["lr_fair"] = B.oof_time(B.lr_fair, cols_fair, df)
     ladder["tree"] = B.oof_time(B.tree, B.BASE, df)
@@ -119,23 +119,23 @@ def compute():
     rm = lambda y, p: float(np.sqrt(((y - p) ** 2).mean()))
     boots = B.day_bootstrap(both, lambda g: rm(g.y, g.p0) - rm(g.y, g.p))
     R["fe_right"]["gain_boot"] = {"mean": float(boots.mean()), "lo": float(np.percentile(boots, 2.5)), "hi": float(np.percentile(boots, 97.5))}
-    # egyes lag-ek külön-külön (ablation); a lag1 külön is megmarad: az egyszerűbb jelölt
+    # egyes lag-ek külön-külön (ablation); a lag2 külön is megmarad: az egyszerűbb jelölt
     abl = {}
-    for name in ["lag1", "lag24", "lag168", "roll3"]:
+    for name in ["lag2", "lag24", "lag168", "roll3"]:
         o = B.oof_time(B.xgb, B.BASE + [name], df)
         abl[name] = B.metrics(o.y, o.p)["rmse"]
-        if name == "lag1":
-            o_lag1 = o
+        if name == "lag2":
+            o_lag2 = o
     R["fe_ablation_rmse"] = abl
-    R["fe_lag1"] = {**B.metrics(o_lag1.y, o_lag1.p), "fold_rmse": B.fold_rmse(o_lag1),
-                    "fold_diff_vs_all_lags": (np.array(B.fold_rmse(o_lag1)) - np.array(R["fe_right"]["xgb_lags"]["fold_rmse"])).tolist()}
-    O["xgb_lag1"] = o_lag1
+    R["fe_lag2"] = {**B.metrics(o_lag2.y, o_lag2.p), "fold_rmse": B.fold_rmse(o_lag2),
+                    "fold_diff_vs_all_lags": (np.array(B.fold_rmse(o_lag2)) - np.array(R["fe_right"]["xgb_lags"]["fold_rmse"])).tolist()}
+    O["xgb_lag2"] = o_lag2
     # lehetetlen jóslatok: negatív kereslet az alap XGBoost-nál
     pb = ladder["xgb"].merge(df[["ts", "hr"]], on="ts")
     R["negative_preds"] = {"share": float((pb.p < 0).mean()), "count": int((pb.p < 0).sum()),
                            "share_night": float((pb[pb.hr <= 5].p < 0).mean()), "min": float(pb.p.min()),
                            "rmsle_unclipped_note": "az RMSLE-hez a jóslatot 0-ra vágjuk (bike.metrics)"}
-    R["fe_lag1"]["acf_lag1"] = float(B.acf((o_lag1.y - o_lag1.p).to_numpy(), 48)[1])
+    R["fe_lag2"]["acf_lag1"] = float(B.acf((o_lag2.y - o_lag2.p).to_numpy(), 48)[1])
     # diagnosztika a javítás után
     ol = o_lag.copy(); ol["resid"] = ol.y - ol.p
     O["acf_lags"] = B.acf(ol.resid.to_numpy(), 48)
@@ -143,7 +143,7 @@ def compute():
     R["segments_lags"] = seg_rmse(o_lag)
     olog2 = B.oof_time(B.xgb, B.BASE + B.LAGS, df, log=True)
     R["fe_right"]["xgb_lags_log"] = B.metrics(olog2.y, olog2.p)
-    R["fe_right"]["r2_prev_hour_only"] = B.metrics(ladder["naive_prev"].y, ladder["naive_prev"].p)["r2"]
+    R["fe_right"]["r2_lag2_only"] = B.metrics(ladder["naive_lag2"].y, ladder["naive_lag2"].p)["r2"]
     # tölcsér a javítás után
     ol["dec"] = pd.qcut(ol.p, 10, labels=False, duplicates="drop")
     f2 = ol.groupby("dec").agg(p_mean=("p", "mean"), sd=("resid", "std"))
@@ -153,7 +153,7 @@ def compute():
     tr, te = df.ts < "2012-01-01", df.ts >= "2012-01-01"
     te = te & (df.ts < B.DEV_END)
     ext = {}
-    for name, mk, cols in [("xgb_base", B.xgb, B.BASE), ("xgb_lags", B.xgb, B.BASE + B.LAGS), ("xgb_lag1", B.xgb, B.BASE + ["lag1"]),
+    for name, mk, cols in [("xgb_base", B.xgb, B.BASE), ("xgb_lags", B.xgb, B.BASE + B.LAGS), ("xgb_lag2", B.xgb, B.BASE + ["lag2"]),
                            ("lr_fair", B.lr_fair, cols_fair), ("lr_fair_lags", lambda: B.lr_fair(B.LAGS), cols_fair + B.LAGS)]:
         p, _ = B.fit_predict(mk, cols, tr, te, df)
         y = df.loc[te, "cnt"].to_numpy()
@@ -172,15 +172,15 @@ def compute():
     R["pdp_peaks"] = {wd: {"argmax": int(np.argmax(v)), "max": float(max(v))} for wd, v in pdp.items()}
 
     # ---------------- 7. VÉGSŐ TESZT (egyszer): a szabály előre rögzítve = a legkisebb dev-RMSE a jelöltek közül
-    cands = {"xgb_lag1": R["fe_lag1"]["rmse"], "xgb_lags": R["fe_right"]["xgb_lags"]["rmse"], "xgb": R["ladder"]["xgb"]["rmse"],
+    cands = {"xgb_lag2": R["fe_lag2"]["rmse"], "xgb_lags": R["fe_right"]["xgb_lags"]["rmse"], "xgb": R["ladder"]["xgb"]["rmse"],
              "lr_fair_lags": R["fe_right"]["lr_fair_lags"]["rmse"], "lr_fair": R["ladder"]["lr_fair"]["rmse"]}
     R["final_rule"] = {"rule": "legkisebb dev-RMSE a jelöltek közül (a foldok nem a végső tesztből jönnek)",
                        "candidates_dev_rmse": cands, "winner": min(cands, key=cands.get)}
     trm, tem = df.ts < B.FINAL[0], (df.ts >= B.FINAL[0]) & (df.ts < B.FINAL[1])
     final = {}
     spec = {"naive_week": None, "lr_fair": (B.lr_fair, cols_fair), "lr_fair_lags": (lambda: B.lr_fair(B.LAGS), cols_fair + B.LAGS),
-            "xgb": (B.xgb, B.BASE), "xgb_lags": (B.xgb, B.BASE + B.LAGS), "xgb_lag1": (B.xgb, B.BASE + ["lag1"])}
-    WIN_COLS = {"xgb_lag1": B.BASE + ["lag1"], "xgb_lags": B.BASE + B.LAGS, "xgb": B.BASE}
+            "xgb": (B.xgb, B.BASE), "xgb_lags": (B.xgb, B.BASE + B.LAGS), "xgb_lag2": (B.xgb, B.BASE + ["lag2"])}
+    WIN_COLS = {"xgb_lag2": B.BASE + ["lag2"], "xgb_lags": B.BASE + B.LAGS, "xgb": B.BASE}
     fo = {}
     for name, s in spec.items():
         if s is None:
@@ -215,6 +215,138 @@ def compute():
                      "coverage_high_pred": float(ins[fo[R["final_rule"]["winner"]].p.to_numpy() >= 100].mean()),
                      "width_low_pred": float((hi - lo)[fo[R["final_rule"]["winner"]].p.to_numpy() < 100].mean()),
                      "width_high_pred": float((hi - lo)[fo[R["final_rule"]["winner"]].p.to_numpy() >= 100].mean())}
+    # ---------------- 9. Az idő mint változó: az óra kódolása (kategória vs sin/cos), az órán kívüli jellemzők mindenhol ugyanazok
+    dft = B.add_time_enc(df)
+    te = {}
+    encs = ["num", "cat", "cat_x"] + [f"sc{k}" for k in range(1, 7)] + [f"sc{k}_x" for k in range(1, 13)]
+    for enc in encs:
+        o = B.oof_time(lambda enc=enc: B.lr_time(enc)[0], B.lr_time(enc)[1], dft)
+        n_par = 1 if enc == "num" else 24 if enc == "cat" else 48 if enc == "cat_x" else 2 * int(enc.removeprefix("sc").removesuffix("_x")) * (2 if enc.endswith("_x") else 1)
+        te[enc] = {**B.metrics(o.y, o.p), "hour_params": n_par, "fold_rmse": B.fold_rmse(o)}
+    R["time_enc_lr"] = te
+    sc_cols = [c for c in B.BASE if c != "hr"] + ["hs1", "hc1"]
+    seeds, xa, xb = list(range(5)), [], []
+    for s in seeds:
+        oa = B.oof_time(lambda s=s: B.xgb(random_state=s), B.BASE, dft)
+        ob_ = B.oof_time(lambda s=s: B.xgb(random_state=s), sc_cols, dft)
+        xa.append(B.metrics(oa.y, oa.p)["rmse"]); xb.append(B.metrics(ob_.y, ob_.p)["rmse"])
+    xa, xb = np.array(xa), np.array(xb)
+    R["time_enc_xgb"] = {"seeds": seeds, "rmse_number": xa.tolist(), "rmse_sincos": xb.tolist(), "diff": (xa - xb).tolist(),
+                         "diff_mean": float((xa - xb).mean()), "diff_sd": float((xa - xb).std()),
+                         "fold_rmse_number_seed0": B.fold_rmse(B.oof_time(B.xgb, B.BASE, dft)),
+                         "fold_rmse_sincos_seed0": B.fold_rmse(B.oof_time(B.xgb, sc_cols, dft))}
+    # a hónap is kör: one-hot (11) vs sin/cos (k = 1, 2); az óra: óra x munkanap dummyk
+    from sklearn.compose import ColumnTransformer
+    from sklearn.linear_model import Ridge
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+    ang = 2 * np.pi * (dft["mnth"] - 1) / 12
+    dm = dft.copy()
+    for j in (1, 2):
+        dm[f"ms{j}"], dm[f"mc{j}"] = np.sin(j * ang), np.cos(j * ang)
+    def lr_month(mcols, onehot):
+        cat = ["hr_wd", "weathersit"] + (["mnth"] if onehot else [])
+        num = ["temp", "atemp", "hum", "windspeed", "yr", "holiday", "workingday", *mcols]
+        ct = ColumnTransformer([("c", OneHotEncoder(handle_unknown="ignore"), cat), ("n", StandardScaler(), num)])
+        return make_pipeline(ct, Ridge(1.0)), cat + num
+    month = {}
+    for name, mcols, oh, npar in [("none", [], False, 0), ("onehot", [], True, 11), ("sc1", ["ms1", "mc1"], False, 2), ("sc2", ["ms1", "mc1", "ms2", "mc2"], False, 4)]:
+        mdl, cols = lr_month(mcols, oh)
+        o = B.oof_time(lambda mcols=mcols, oh=oh: lr_month(mcols, oh)[0], cols, dm)
+        month[name] = {"rmse": B.metrics(o.y, o.p)["rmse"], "month_params": npar}
+    R["time_enc_month"] = month
+    # illusztratív illesztések (a teljes dev szakaszra illesztve, nem out-of-fold): az átlagos óra-görbe munkanapon és hétvégén
+    trm_all = dft.ts < B.DEV_END
+    fits = {}
+    for enc in ("sc1_x", "sc2_x", "sc6_x", "cat_x"):
+        mdl, cols = B.lr_time(enc)
+        mdl.fit(dft.loc[trm_all, cols], dft.loc[trm_all, "cnt"])
+        pred = pd.Series(mdl.predict(dft.loc[trm_all, cols]), index=dft.index[trm_all])
+        d_ = dft.loc[trm_all].assign(p=pred)
+        fits[enc] = {w: d_[d_.workingday == w].groupby("hr").p.mean().tolist() for w in (0, 1)}
+    O["time_fits"] = fits
+    O["time_actual"] = {w: dft[trm_all & (dft.workingday == w)].groupby("hr").cnt.mean().tolist() for w in (0, 1)}
+
+    # ---------------- 10. A cél átfogalmazása: változás a múlt héthez képest (delta) és a log-arány; a nő-rendszer próbáján (2011 -> 2012)
+    dw = B.add_week_feats(dft)
+    # (jellemzők, alap-oszlop). A "nyers" változat a szomszéd-kitöltés nélküli lag168-at használja: hiány esetén az egyszerű szint-modell jósol.
+    csets = {"lag2": ([*B.BASE, "lag2"], "wk"), "lag2+wk": ([*B.BASE, "lag2", "wk"], "wk"),
+             "teljes": (B.CHANGE_COLS, "wk"), "teljes_nyers": (B.CHANGE_COLS_RAW, "lag168")}
+    tr11, te12 = dw.ts < "2012-01-01", (dw.ts >= "2012-01-01") & (dw.ts < B.DEV_END)
+    trf, tef = dw.ts < B.FINAL[0], (dw.ts >= B.FINAL[0]) & (dw.ts < B.FINAL[1])
+    y12 = dw.loc[te12, "cnt"].to_numpy()
+    ch = {}
+    for sname, (cols, base) in csets.items():
+        for mode in ("level", "delta", "logratio"):
+            parts = []
+            for i_, (a_, b_) in enumerate(B.FOLDS):
+                tr_, te_ = dw["ts"] < a_, (dw["ts"] >= a_) & (dw["ts"] < b_)
+                pp, _ = B.fit_predict_target(dw, tr_, te_, cols, mode, 0, base)
+                parts.append(pd.DataFrame({"y": dw.loc[te_, "cnt"].to_numpy(), "p": pp}))
+            o = pd.concat(parts)
+            dr = []
+            for sd in range(3):
+                p_, nfb = B.fit_predict_target(dw, tr11, te12, cols, mode, seed=sd, base_col=base)
+                mt = B.metrics(y12, p_)
+                dr.append((mt["rmse"], p_.sum() / y12.sum(), mt["rmsle"], mt["mae"], int((p_ < 0).sum()), nfb))
+                if sd == 0 and sname == "teljes":
+                    O.setdefault("drift_change", {})[mode] = pd.DataFrame({"ts": dw.loc[te12, "ts"].to_numpy(), "y": y12, "p": p_})
+            dr = np.array(dr)
+            pf, nff = B.fit_predict_target(dw, trf, tef, cols, mode, base_col=base)
+            ch[f"{sname}|{mode}"] = {"folds_rmse": B.metrics(o.y, o.p)["rmse"], "folds_rmsle": B.metrics(o.y, o.p)["rmsle"],
+                                      "drift_rmse": float(dr[:, 0].mean()), "drift_rmse_sd": float(dr[:, 0].std()), "drift_ratio": float(dr[:, 1].mean()),
+                                      "drift_rmsle": float(dr[:, 2].mean()), "drift_negatives": int(dr[0, 4]), "drift_fallback_rows": int(dr[0, 5]),
+                                      "final_rmse": B.metrics(dw.loc[tef, "cnt"], pf)["rmse"], "final_fallback_rows": nff}
+    R["change"] = ch
+    # a múlt heti érték forrása: ugyanaz az óra / szomszéd órák / két hete / semmi
+    cov = {}
+    for nm, msk in (("folds", (dw.ts >= B.FOLDS[0][0]) & (dw.ts < B.FOLDS[-1][1])), ("drift", te12), ("final", tef)):
+        cov[nm] = {k: int(v) for k, v in dw.loc[msk, "wk_how"].value_counts().items()} | {"rows": int(msk.sum())}
+    # POST-HOC: a záró teszt ezekre a modellekre már nem tiszta (a hibát a záró teszten vettük észre, a dev foldokon nincs hiányzó múlt heti érték).
+    nof = {}
+    pn, _ = B.fit_predict_target(dw, trf, tef, B.CHANGE_COLS_RAW, "level", base_col="lag168", fallback=False)
+    nof["raw_level_no_fallback_final_rmse"] = B.metrics(dw.loc[tef, "cnt"], pn)["rmse"]
+    tt = dw.loc[tef, ["ts", "cnt", "lag168", "wk_how"]].assign(p=pn).reset_index(drop=True)
+    pw, _ = B.fit_predict_target(dw, trf, tef, B.CHANGE_COLS, "level")
+    tt["p_neighbor"] = pw
+    for d_ in ("2012-11-05", "2012-11-06"):
+        g = tt[tt.ts.dt.floor("D") == d_]
+        nof[f"day_{d_}"] = {"actual_mean": float(g.cnt.mean()), "pred_mean_raw_no_fallback": float(g.p.mean()), "pred_mean_neighbor_fill": float(g.p_neighbor.mean()),
+                            "lag168_missing_hours": int(g.lag168.isna().sum()), "neighbor_filled_hours": int((g.wk_how == "neighbor").sum()), "two_week_filled_hours": int((g.wk_how == "2weeks").sum()),
+                            "unfilled_hours": int((g.wk_how == "none").sum())}
+    if cov["final"].get("none", 0) == 0:  # ha nincs kitöltetlen sor, a delta/log-arány is fut fallback nélkül
+        for mode in ("level", "delta", "logratio"):
+            pq, _ = B.fit_predict_target(dw, trf, tef, B.CHANGE_COLS, mode, fallback=False)
+            nof[f"neighbor_{mode}_no_fallback_final_rmse"] = B.metrics(dw.loc[tef, "cnt"], pq)["rmse"]
+    R["change_post_hoc"] = nof
+    nv = dw.loc[te12, "lag168"].fillna(dw.loc[tr11, "cnt"].mean()).to_numpy()
+    R["change_meta"] = {"naive_week_drift_rmse": B.metrics(y12, nv)["rmse"], "wk_source_rows": cov,
+                        "lr_fair_lags_drift_rmse": R["extrapolation"]["lr_fair_lags"]["rmse"], "lr_fair_lags_drift_ratio": R["extrapolation"]["lr_fair_lags"]["sum_ratio"]}
+    # a három célváltozó átlaga évenként (azonos hónapok, jan-okt): a szint nő, a változás nem
+    jo = dw[(dw.ts < B.DEV_END) & (dw.mnth <= 10)].dropna(subset=["lag168"])
+    R["change_meta"]["janoct_target_means"] = {
+        int(yr): {"level": float(g.cnt.mean()), "delta": float((g.cnt - g.lag168).mean()),
+                  "logratio": float((np.log1p(g.cnt) - np.log1p(g.lag168)).mean()),
+                  "delta_sd": float((g.cnt - g.lag168).std()), "level_sd": float(g.cnt.std()),
+                  "logratio_sd": float((np.log1p(g.cnt) - np.log1p(g.lag168)).std())}
+        for yr, g in jo.groupby("yr")}
+    # ---------------- 11. Mennyire használható a lag1 éles esetben? Jóslási horizont h: az utolsó ISMERT forgalom h órával a jósolt óra előtti (h = 1: az előző óra ismert).
+    # És a megfigyelt időjárás szerepe (a slide-ok előrejelzésnek nevezik; az adatban megfigyelt érték van).
+    sf = df.set_index("ts")["cnt"].reindex(pd.date_range(df.ts.min(), df.ts.max(), freq="h"))
+    dh = df.copy()
+    for k in range(1, 28):
+        dh[f"L{k}"] = sf.shift(k).reindex(dh["ts"]).to_numpy()
+    dh["L336"] = sf.shift(336).reindex(dh["ts"]).to_numpy()
+    wcols = ["temp", "atemp", "hum", "windspeed", "weathersit"]
+    hor = {}
+    for h in (1, 2, 3, 6, 12, 24):
+        rec = [f"L{h}", f"L{h + 1}", f"L{h + 2}"] + (["L24"] if h <= 24 else [])
+        hor[str(h)] = {}
+        for wname, wdrop in (("weather", False), ("no_weather", True)):
+            hcols = list(dict.fromkeys([c for c in B.BASE if not (wdrop and c in wcols)] + rec + ["lag168", "L336"]))
+            o = B.oof_time(B.xgb, hcols, dh)
+            hor[str(h)][wname] = B.metrics(o.y, o.p)["rmse"]
+    R["horizon"] = hor
     return R, O, df
 
 

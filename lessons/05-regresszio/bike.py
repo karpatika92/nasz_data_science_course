@@ -4,8 +4,9 @@ A build_assets.py, a results.py és a demo.ipynb is ezt importálja, hogy a slid
 ugyanazt a definíciót használják (egyetlen igazságforrás).
 
 Feltevések (a slide-okon is szerepelnek):
-- Cél: a KÖVETKEZŐ óra kölcsönzésszáma (cnt). A jósláskor ismert: minden korábbi óra forgalma, az időjárás-előrejelzés
-  (a temp/atemp/hum/windspeed oszlopokat előrejelzésként kezeljük), a naptár.
+- Cél: egy óra kölcsönzésszáma (cnt). A jóslatot a jósolt óra ELŐTTI óra elején adjuk ki: ekkor a jósolt óra előtti óra még tart, tehát
+  az utolsó ISMERT óra 2 órával korábbi (lag2); a lag1 NEM használható. Az időjárást előrejelzésnek tekintjük (az adatban a megfigyelt
+  érték áll helyette: ez optimista; a temp/atemp/hum/windspeed/weathersit), a naptár ismert.
 - A `casual` és `registered` oszlop összege = cnt, ezért eldobjuk (szivárgás).
 - A foldok időrendiak (kiterjedő ablak); a végső teszt 2012-11 és 2012-12, amit egyszer nézünk meg.
 """
@@ -25,7 +26,7 @@ from xgboost import XGBRegressor
 
 HERE = Path(__file__).parent
 BASE = ["season", "yr", "mnth", "hr", "holiday", "weekday", "workingday", "weathersit", "temp", "atemp", "hum", "windspeed"]
-LAGS = ["lag1", "lag2", "lag3", "lag24", "lag168", "roll3"]
+LAGS = ["lag2", "lag3", "lag4", "lag24", "lag168", "roll3"]  # lag1 nincs: a jóslat kiadásakor még nem ismert
 # Kiterjedő ablakos foldok: a teszt-blokk előtti összes hónapon tanulunk. A végső teszt (FINAL) nincs köztük.
 FOLDS = [("2012-05-01", "2012-07-01"), ("2012-07-01", "2012-09-01"), ("2012-09-01", "2012-11-01")]
 FINAL = ("2012-11-01", "2013-01-01")
@@ -45,9 +46,9 @@ def add_lags(df: pd.DataFrame) -> pd.DataFrame:
     """Késleltetett jellemzők IDŐBÉLYEG szerint (nem sor-eltolással: az adatból 165 óra hiányzik, ott NaN lesz)."""
     s = df.set_index("ts")["cnt"]
     out = df.copy()
-    for h in (1, 2, 3, 24, 168):
+    for h in (2, 3, 4, 24, 168):
         out[f"lag{h}"] = s.reindex(df["ts"] - pd.Timedelta(hours=h)).to_numpy()
-    out["roll3"] = out[["lag1", "lag2", "lag3"]].mean(axis=1)
+    out["roll3"] = out[["lag2", "lag3", "lag4"]].mean(axis=1)  # a három legutóbbi ISMERT óra átlaga
     return out
 
 
@@ -57,6 +58,43 @@ def add_leaky_roll(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["roll3_centered"] = s.rolling(3, center=True, min_periods=1).mean().reindex(df["ts"]).to_numpy()
     return out
+
+
+def add_time_enc(df: pd.DataFrame, harmonics: int = 12) -> pd.DataFrame:
+    """Az óra körre csavarva: hs{k} = sin(2*pi*k*hr/24), hc{k} = cos(...). A *_w oszlopok a munkanappal szorzottak
+    (így a munkanapnak és a hétvégének külön görbéje lehet, mint az óra x munkanap dummyknál)."""
+    out = df.copy()
+    ang = 2 * np.pi * out["hr"] / 24
+    for k in range(1, harmonics + 1):
+        out[f"hs{k}"], out[f"hc{k}"] = np.sin(k * ang), np.cos(k * ang)
+        out[f"hs{k}_w"], out[f"hc{k}_w"] = out[f"hs{k}"] * out["workingday"], out[f"hc{k}"] * out["workingday"]
+    return out
+
+
+# Az órán kívüli jellemzők minden időkódolásnál ugyanazok: így csak az ÓRA kódolása különbözik.
+TIME_CAT, TIME_NUM = ["mnth", "weathersit"], ["temp", "atemp", "hum", "windspeed", "yr", "holiday", "workingday"]
+
+
+def time_spec(enc: str):
+    """(kategorikus, numerikus) oszlopok az óra egy kódolásához. enc: 'num' | 'cat' | 'cat_x' | 'sc{k}' | 'sc{k}_x'
+    (cat_x / sc{k}_x: külön görbe munkanapra és hétvégére)."""
+    if enc == "num":
+        return TIME_CAT, [*TIME_NUM, "hr"]
+    if enc == "cat":
+        return [*TIME_CAT, "hr"], TIME_NUM
+    if enc == "cat_x":
+        return [*TIME_CAT, "hr_wd"], TIME_NUM
+    k = int(enc.removeprefix("sc").removesuffix("_x")); x = enc.endswith("_x")
+    cols = [f"{p}{j}" for j in range(1, k + 1) for p in ("hs", "hc")]
+    if x:
+        cols += [c + "_w" for c in cols]
+    return TIME_CAT, [*TIME_NUM, *cols]
+
+
+def lr_time(enc: str):
+    cat, num = time_spec(enc)
+    ct = ColumnTransformer([("c", OneHotEncoder(handle_unknown="ignore"), cat), ("n", StandardScaler(), num)])
+    return make_pipeline(ct, Ridge(1.0)), cat + num
 
 
 # ---------------------------------------------------------------- modellek
@@ -125,6 +163,69 @@ def oof_time(make, cols, df, log=False, folds=FOLDS) -> pd.DataFrame:
 
 def fold_rmse(o: pd.DataFrame) -> list:
     return [float(mean_squared_error(g["y"], g["p"]) ** .5) for _, g in o.groupby("fold")]
+
+
+def add_week_feats(df: pd.DataFrame) -> pd.DataFrame:
+    """Heti késleltetések időbélyeg szerint (lag168 már az add_lags-ból megvan): lag170, lag336, és d2 = lag2 - (a lag2 óra múlt heti értéke)
+    (az utolsó ismert óra a múlt hetihez képest: az idei hét eltérése a múlt héttől)."""
+    full = pd.date_range(df["ts"].min(), df["ts"].max(), freq="h")
+    s = df.set_index("ts")["cnt"].reindex(full)  # szabályos órás tengely: a hiányzó óra NaN, a shift(h) pontosan h órával korábbi
+    out = df.copy()
+    out["lag170"] = s.shift(170).reindex(df["ts"]).to_numpy()
+    out["lag336"] = s.shift(336).reindex(df["ts"]).to_numpy()
+    out["d2raw"] = out["lag2"] - out["lag170"]
+    # „Múlt heti érték”, hiányzó adatnál a legközelebbi elérhető szomszéddal: 1) ugyanaz az óra múlt héten, 2) a múlt heti szomszéd órák
+    # (t-167, t-169) átlaga, 3) ugyanaz az óra két hete. Csak ha mind hiányzik, marad NaN.
+    nb = pd.concat([s.shift(167), s.shift(169)], axis=1).mean(axis=1, skipna=True)
+    wk = s.shift(168).fillna(nb).fillna(s.shift(336))
+    out["wk"] = wk.reindex(df["ts"]).to_numpy()
+    out["wk_prev2"] = wk.shift(2).reindex(df["ts"]).to_numpy()  # a lag2 óra „múlt heti értéke”, ugyanazzal a szabállyal
+    out["d2"] = out["lag2"] - out["wk_prev2"]
+    out["wk_how"] = np.where(out["lag168"].notna(), "same", np.where(nb.reindex(df["ts"]).notna(), "neighbor", np.where(s.shift(336).reindex(df["ts"]).notna(), "2weeks", "none")))
+    return out
+
+
+# A „változás a múlt héthez képest” célhoz a múlt heti szintet (wk) a jellemzők közé is be kell tenni: nélküle nincs mihez viszonyítani.
+CHANGE_COLS = [*BASE, "lag2", "wk", "d2", "lag24", "lag336"]
+CHANGE_COLS_RAW = [*BASE, "lag2", "lag168", "d2raw", "lag24", "lag336"]  # a szomszéd-kitöltés nélküli változat (nyers lag168, hiányzik, ha az az óra hiányzik)
+
+
+def fit_predict_target(df, tr, te, cols, mode="level", seed=0, base_col="wk", fallback=True):
+    """Három célváltozó. level: cnt. delta: cnt - lag168 (a jóslat = lag168 + modell). logratio: log(1+cnt) - log(1+lag168)
+    (a jóslat = expm1(log(1+lag168) + modell), sosem negatív). A tanításból kiesnek azok a sorok, ahol a lag168 hiányzik;
+    a tesztben, ahol hiányzik, a szint-modell jósol (visszaadjuk, hány ilyen sor van)."""
+    base, y = df[base_col], df["cnt"]
+    ok = tr & base.notna()
+    if mode == "level":
+        t = y
+    elif mode == "delta":
+        t = y - base
+    else:
+        t = np.log1p(y) - np.log1p(base)
+    m = xgb(random_state=seed)
+    m.fit(df.loc[ok, cols], t[ok])
+    raw = m.predict(df.loc[te, cols])
+    b = base[te].to_numpy()
+    p = raw if mode == "level" else (b + raw) if mode == "delta" else np.expm1(np.log1p(b) + raw)
+    # hiányzó-adat szabály: ha a múlt heti érték (alap) hiányzik, az egyszerű szint-modell jósol (BASE + lag2)
+    weekly = [c for c in ("wk", "lag168") if c in cols]  # csak a múlt heti érték (alap) hiánya számít
+    miss = df.loc[te, weekly].isna().any(axis=1).to_numpy() if weekly else np.zeros(len(p), bool)
+    if mode != "level":
+        miss = miss | np.isnan(b)  # a delta/log-arány jóslathoz mindig kell a múlt heti alap
+    if fallback and miss.any():
+        fb = xgb(random_state=seed)
+        fb.fit(df.loc[tr, [*BASE, "lag2"]], y[tr])
+        p[miss] = fb.predict(df.loc[te, [*BASE, "lag2"]][miss])
+    return p, int(miss.sum())
+
+
+def oof_time_target(df, cols, mode="level", seed=0, folds=FOLDS) -> pd.DataFrame:
+    parts = []
+    for i, (a, b) in enumerate(folds):
+        tr, te = df["ts"] < a, (df["ts"] >= a) & (df["ts"] < b)
+        p, _ = fit_predict_target(df, tr, te, cols, mode, seed)
+        parts.append(pd.DataFrame({"ts": df.loc[te, "ts"].to_numpy(), "y": df.loc[te, "cnt"].to_numpy(), "p": p, "fold": i}))
+    return pd.concat(parts, ignore_index=True)
 
 
 def day_bootstrap(o: pd.DataFrame, fn, n=2000, seed=0):
