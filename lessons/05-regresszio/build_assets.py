@@ -40,7 +40,8 @@ def keep(fig, name):
 def table_png(df, name, hl_rows=None, hl_cells=None, fs=16, first_left=False):
     """Sötét témájú táblázat-ábra (a deck-motornak nincs táblázat-blokkja). hl_cells: {(sor, oszlop)} narancs kiemelés."""
     widths = [max(len(str(v)) for v in [c, *df[c]]) * 0.155 + 0.8 for c in df.columns]
-    fig, ax = plt.subplots(figsize=(sum(widths), .62 * (len(df) + 1)))
+    extra = .55 if any("\n" in str(c) for c in df.columns) else 0  # kétsoros fejléc: több hely
+    fig, ax = plt.subplots(figsize=(sum(widths), .62 * (len(df) + 1) + extra))
     ax.axis("off")
     t = ax.table(cellText=df.values.tolist(), colLabels=list(df.columns), loc="center", cellLoc="center",
                  colWidths=[w / sum(widths) for w in widths])
@@ -54,6 +55,8 @@ def table_png(df, name, hl_rows=None, hl_cells=None, fs=16, first_left=False):
             cell.get_text().set_ha("left"); cell.set_text_props(ha="left"); cell._loc = "left"
         if r == 0:
             cell.set_facecolor("#123626"); cell.get_text().set_color("#d1a13a"); cell.get_text().set_fontweight("bold")
+            if extra:
+                cell.set_height(cell.get_height() * 1.7)
         else:
             cell.set_facecolor("#16442f" if hl_rows and (r - 1) in hl_rows else SURFACE)
             cell.get_text().set_color(INK)
@@ -535,11 +538,11 @@ JM = CM["janoct_target_means"]
 R["change_meta"]["janoct_fig_note"] = "a szint 2011→2012 jan–okt: " + ", ".join(f"{hu(JM[k]['level'], 1)}" for k in sorted(JM))
 
 # B) a csapda: a változás-célhoz a múlt heti szintet is be kell adni (normál foldok / 2012-re, 2011-en tanulva)
-cell = lambda k: f"{hu(CH[k]['folds_rmse'], 1)} / {hu(CH[k]['drift_rmse'], 1)}"
-rows_ = [("csak a 2 órával korábbi óra (lag2)", "lag2"), ("+ múlt heti érték (wk)", "lag2+wk"), ("teljes: lag2, wk, d2, lag24, lag336", "teljes")]
-t_ = pd.DataFrame([[nm, cell(f"{k}|level"), cell(f"{k}|delta"), cell(f"{k}|logratio")] for nm, k in rows_],
-                  columns=["Jellemzők", "szint-cél", "változás (delta)", "log-arány"])
-table_png(t_, "tbl_cel_jellemzok", hl_cells={(0, 2), (0, 3)}, fs=15, first_left=True)
+c1 = lambda k, key: hu(CH[k][key], 1)
+t_rows = [[f"{tn}, {pn}"] + [c1(f"{k}|{m}", key) for k in ("lag2", "lag2+wk", "teljes")]
+          for tn, m in (("szint-cél", "level"), ("változás-cél", "delta"), ("log-arány", "logratio")) for pn, key in (("normál", "folds_rmse"), ("növekedés", "drift_rmse"))]
+t_ = pd.DataFrame(t_rows, columns=["Célváltozó, időszak", "csak lag2", "lag2 + wk", "mind az öt"])
+table_png(t_, "tbl_cel_jellemzok", hl_cells={(2, 1), (4, 1)}, fs=18, first_left=True)
 
 # C) 2011-en tanulva 2012-t jósolunk: a három célváltozó havi átlaga
 fig, ax = plt.subplots(figsize=(10.5, 4.9))

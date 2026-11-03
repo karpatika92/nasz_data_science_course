@@ -170,10 +170,16 @@ window.SLIDES = [
       blocks: ["„A gépi tanulás veri a lineárist” <strong>feltétele</strong>, hogy a jövő hasonlítson a tanítóra. Sodródás esetén újratanítás és figyelés kell."] }),
 
   // ---------------- A cél átfogalmazása: változás a múlt héthez képest ----------------
+  S({ eyebrow: "Sodródás · új célváltozó", title: "Három célváltozó",
+      blocks: [LIST("<strong>szint-cél</strong> (a sima eset): a modell magát a <code>cnt</code>-t jósolja; a jóslat = a modell kimenete",
+                    "<strong>változás-cél</strong> (delta): a modell a <code>cnt − wk</code> értéket jósolja; a jóslat = <code>wk</code> + a modell kimenete",
+                    "<strong>log-arány</strong>: a modell a <code>log(1+cnt) − log(1+wk)</code> értéket jósolja (egy szorzót); a jóslat = <code>expm1(log(1+wk) + a modell kimenete)</code>, sosem negatív",
+                    "<code>wk</code> = ugyanaz az óra múlt héten (ha hiányzik: lásd később)",
+                    "Jellemzők: <code>lag2</code> = a 2 órával korábbi forgalom (a legutóbbi ismert óra); <code>lag24</code> = tegnap ugyanekkor; <code>lag336</code> = két hete ugyanekkor; <code>d2</code> = a lag2 és a saját múlt heti értéke közti különbség (az idei hét eltérése a múlt héttől); <strong>mind az öt</strong> = lag2, wk, d2, lag24, lag336")] }),
   S({ eyebrow: "Sodródás · új célváltozó", title: "Változást jósolunk", img: "cel_stacionaritas.png", caption: "heti átlagok a fejlesztési szakaszon (azon órák, ahol van múlt heti érték); szaggatott: nulla",
       blocks: ["Cél: <code>y − y(múlt hét)</code>, vagy a log-arány. A szint nő (150 → 244), a változás átlaga alig (2,0 → 4,1)."] }),
-  S({ eyebrow: "Sodródás · új célváltozó", title: "Mihez viszonyítunk?", img: "tbl_cel_jellemzok.png", caption: "XGBoost, RMSE: normál foldok / 2012-re (2011-en tanulva, 3 seed átlaga)",
-      blocks: ["Csak a lag2 mellett a változás-cél összeomlik (94,2 és 147,0): a modellnek tudnia kell, mihez viszonyít."] }),
+  S({ eyebrow: "Sodródás · új célváltozó", title: "Mihez viszonyítunk?", img: "tbl_cel_jellemzok.png", caption: "XGBoost, RMSE (kisebb a jobb). normál: időrendi foldok, 2012-05–10 (1 seed); növekedés: 2011-en tanulva, 2012-01–10-re (3 seed átlaga)",
+      blocks: ["<code>wk</code> nélkül (csak lag2) a változás-cél normál időszakban is összeomlik (94,2 és 147,0): a modell nem látja, mit vonunk ki belőle."] }),
   S({ eyebrow: "Sodródás · új célváltozó", title: "Újra 2012-ben", img: "ext_trend_change.png", caption: "havi átlagos jóslat 2012-ben; a modellek csak 2011-et láttak; XGBoost, ugyanazok a jellemzők",
       blocks: ["2012-re a szint-cél 95,4 (az összforgalom 86%-a), a változás-cél 73,1 (93%), a log-arány 74,6 (90%)."] }),
   S({ eyebrow: "Sodródás · új célváltozó", title: "Hiányzó múlt hét", img: "tbl_cel_hianyzo.png", caption: "2012-11-05: a Sandy utáni hét; utólagos (post-hoc) vizsgálat: a záró teszt ezekre a modellekre már nem tiszta",

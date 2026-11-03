@@ -1,7 +1,7 @@
 # 5. óra — Regresszió (90 perc)
 
-Oktatói jegyzet, ugyanaz a formátum, mint a 4. óránál. A `slides.html` a vetített anyag (**57 slide**); a notebookot **nem vetítjük**
-(`demo.ipynb`), a hallgatók az órán nem látják az adatot, ezért minden kell-nem-kell a slide-on van. **Az óra 57 slide, kb. 87 perc (a 69 slide-os változatból 12 slide-ot kivettünk, lásd lent).**
+Oktatói jegyzet, ugyanaz a formátum, mint a 4. óránál. A `slides.html` a vetített anyag (**58 slide**); a notebookot **nem vetítjük**
+(`demo.ipynb`), a hallgatók az órán nem látják az adatot, ezért minden kell-nem-kell a slide-on van. **Az óra 58 slide, kb. 88 perc (a 69 slide-os változatból 12 slide-ot kivettünk, lásd lent).**
 
 **Cél:** hogy a hallgatók ne egy szám (RMSE, R²) alapján higgyenek egy regressziós modellnek, hanem tudják, **mit mér** a mutató,
 **hol téved** a modell (diagnosztika), és hogy egy „túl jó” javulás gyanús. Az óra súlypontja a **kiértékelés és a diagnosztika**: regressziónál
@@ -17,7 +17,7 @@ házárak lett a házi (ott a lineáris is sokat nyer a térbeli jellemzőn, lá
 
 **Kérdés-költségvetés: összesen 6 kérdés** (a `qa()` segédfüggvény), mindegyik válasza a *következő kattintásra* jelenik meg. A hat kérdés:
 véletlen vs időrendi vágás (12), tisztességes lineáris (20), mi a teendő a tölcsérrel (30), „elhiszed?” a szivárgó jellemzőre (37), ki nyer 2012-ben (44),
-jobb lett-e a modell a teszten (53). Az „Idő mint változó” (21–25) és az „új célváltozó” (47–51) blokk csupa állítás-slide, nincs bennük új kérdés.
+jobb lett-e a modell a teszten (54). Az „Idő mint változó” (21–25) és az „új célváltozó” (47–52) blokk csupa állítás-slide, nincs bennük új kérdés.
 
 ---
 
@@ -33,14 +33,14 @@ jobb lett-e a modell a teszten (53). Az „Idő mint változó” (21–25) és 
 | Diagnosztika | 27–34 | 15 |
 | Visszacsatolási kör (szivárgó próba, késleltetések) | 35–42 | 15 |
 | Sodródás (a fa nem extrapolál) | 43–46 | 6 |
-| Új célváltozó: változás a múlt héthez képest | 47–51 | 5 |
-| Záró teszt, bizonytalanság, ellenőrzőlista, házi | 52–57 | 10 |
+| Új célváltozó: változás a múlt héthez képest | 47–52 | 6 |
+| Záró teszt, bizonytalanság, ellenőrzőlista, házi | 53–58 | 10 |
 
-Összesen kb. **87 perc** (egy állítás-slide 1 perc, a hat kérdés 2–3 perc), 3 perc tartalékkal. **Kivettük a 69 slide-os változatból** (a `slides-cut.js`-ben megvannak, visszarakhatók; a „Blokkonként” rész ezek tartalmát is leírja):
+Összesen kb. **88 perc** (egy állítás-slide 1 perc, a hat kérdés 2–3 perc), 3 perc tartalékkal. **Kivettük a 69 slide-os változatból** (a `slides-cut.js`-ben megvannak, visszarakhatók; a „Blokkonként” rész ezek tartalmát is leírja):
 a gradient descent recap-et, a hőmérséklet szerinti és a célváltozó-eloszlás EDA-t, a „Miért nehezebb regressziónál?” keretet, az óralapos poláris ábrát, az „És a fának?” slide-ot (a 3,9 ± 1,1 a 25. slide-on maradt), a „Mit tanult a fa?”-t, a „mutatók vitatkoznak” táblát,
-az „Egy rossz hét” slide-ot, a klasszikus feltevések táblázatát, a második autokorreláció-slide-ot (a 0,63 → 0,45 a 41. slide-on maradt) és a „Mibe kerül?” táblázatot (a számok a 49. és az 51. slide-on).
+az „Egy rossz hét” slide-ot, a klasszikus feltevések táblázatát, a második autokorreláció-slide-ot (a 0,63 → 0,45 a 41. slide-on maradt) és a „Mibe kerül?” táblázatot (a számok az 50. és az 52. slide-on).
 Ha még mindig csúszik, **ebben a sorrendben vághatsz tovább:** az „Arányos mutatók” (16), a „Melyik mutató kinek?” (18), a „Hány harmonikus kell?” (23). **Ne vágd:** a diagnosztikát (27–34), a visszacsatolási kört (35–42), az időrendi vágást (11–13),
-az animációt (22), a kategória vs kör összevetést (24), az új célváltozó ábráját (49) és a „Hiányzó múlt hét” slide-ot (50). **Alternatíva: két alkalom** (1–34 | 35–57).
+az animációt (22), a kategória vs kör összevetést (24), az új célváltozó ábráját (50) és a „Hiányzó múlt hét” slide-ot (51). **Alternatíva: két alkalom** (1–34 | 35–58).
 
 **Ami szándékosan nincs benne:** hiperparaméter-hangolás (a 4. órán volt; itt a hangolás egy sor a házi feladatban), SHAP és más
 magyarázhatósági módszerek, Poisson-/negatív binomiális regresszió (a log-cél és a kvantilis-sáv viszi a témát), stacking.
@@ -90,7 +90,7 @@ Javítás: csak az ISMERT múlt (`lag2, lag3, lag4, lag24, lag168, roll3`; a `ro
 **Sodródás.** Csak 2011-en tanulunk, 2012-01–10-et jósoljuk: **XGBoost alap 128,9 (az összforgalom 63%-át jósolja)**, XGBoost + lag2 115,0 (71%), XGBoost + hat lag 106,1 (82%), lineáris alap 144,4 (62%),
 **lineáris + lagok 78,4 (91%)**. A fa nem extrapolál; a „gépi tanulás veri a lineárist” feltétele, hogy a jövő a tanítóra hasonlítson. (Egy ilyen próba egyetlen forgatókönyv: egy évnyi tanító adat, egy évnyi növekedés.)
 
-**Új célváltozó: változás a múlt héthez képest** (47–51; a sodródás-blokk folytatása, a meglévő slide-okat nem váltja ki). *Ötlet:* ne a szintet (`cnt`), hanem a múlt heti azonos órához képesti **változást** jósoljuk: `delta = cnt − wk`, vagy a **log-arányt** `log(1+cnt) − log(1+wk)`; a jóslat visszaalakítva `wk + modell`, illetve `expm1(log(1+wk) + modell)` (ez sosem negatív).
+**Új célváltozó: változás a múlt héthez képest** (47–52; a sodródás-blokk folytatása, a meglévő slide-okat nem váltja ki). A 47. slide definiálja a szint-, a változás- és a log-arány célt, valamint a jelöléseket (`wk`, `lag2`, `lag24`, `lag336`, `d2`); a 49. slide táblázatában (sorok: célváltozó × időszak, oszlopok: a három jellemzőkészlet) a „normál” sor az időrendi foldokat (2012-05–10, 1 seed), a „növekedés” sor a 2011-en tanult, 2012-re jósló próbát (3 seed átlaga) jelenti; a „mind az öt” = lag2, wk, d2, lag24, lag336. *Ötlet:* ne a szintet (`cnt`), hanem a múlt heti azonos órához képesti **változást** jósoljuk: `delta = cnt − wk`, vagy a **log-arányt** `log(1+cnt) − log(1+wk)`; a jóslat visszaalakítva `wk + modell`, illetve `expm1(log(1+wk) + modell)` (ez sosem negatív).
 A szint nő (jan–okt átlag 150,1 → 244,1), a változás átlaga alig (2,0 → 4,1); a delta szórása nő a szinttel (72,4 → 100,9), a log-arányé nem (0,58 → 0,52): ez a log-forma érve.
 *Jellemzők:* a múlt heti szintet (`wk`) **be kell adni jellemzőként is**, különben a változás-cél összeomlik: csak `lag2`-vel a delta 94,2, a log-arány 147,0 (normál foldok RMSE; a szint-cél 62,1). Teljes készlet: `BASE + lag2, wk, d2 (= lag2 − a lag2 óra múlt heti értéke), lag24, lag336`.
 *Sodródás-próba* (2011-en tanul, 2012-01–10 teszt; XGBoost, a 3 seed átlaga): szint-cél **95,4** (az összforgalom 86%-a), **delta 73,1** (93%), **log-arány 74,6** (90%; RMSLE 0,325, a legjobb); lineáris + késleltetések 78,4 (91%), a „múlt heti azonos óra” szabály 101,0.

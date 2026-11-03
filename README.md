@@ -48,7 +48,7 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    fa → Random Forest → XGBoost, diagnosztika (kalibráció, reziduum vs becslés és a log-cél, negatív jóslat,
    szegmensek, autokorreláció), egy visszacsatolási kör (szándékosan szivárgó jellemző, majd késleltetések),
    sodródás (a fa nem extrapolál) és a célváltozó átfogalmazása ellene (változás a múlt héthez képest: delta és log-arány,
-   hiányzó múlt heti érték szomszéd-kitöltéssel), záró teszt bootstrap-intervallummal és kvantilis-sávval. 57 slide (kb. 87 perc; a kivett
+   hiányzó múlt heti érték szomszéd-kitöltéssel), záró teszt bootstrap-intervallummal és kvantilis-sávval. 58 slide (kb. 88 perc; a kivett
    slide-ok a `slides-cut.js`-ben vannak), 6 kérdés. A közös kód a `bike.py`, a számokat a `results.py` (`results.json`), az ábrákat a `build_assets.py`
    állítja elő. Házi: King County házárak.
 
