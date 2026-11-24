@@ -52,6 +52,12 @@ A `slides.html` egy sima statikus fájl — böngészőben nyitva (vagy
    slide-ok a `slides-cut.js`-ben vannak), 6 kérdés. A közös kód a `bike.py`, a számokat a `results.py` (`results.json`), az ábrákat a `build_assets.py`
    állítja elő. Házi: King County házárak.
 
+6. `06-magyarazhatosag-es-ai-agens` — záró óra, 65 slide (60 percre vágandó, a lesson-plan.md adja a sorrendet): (A) magyarázhatóság az 5. óra kerékpár-adatán: lineáris és
+   logisztikus együtthatók (nyers, standardizált, log-cél/log-jellemző, esélyhányados, kollinearitás, interakció), a fák
+   beépített fontossága vs permutációs fontosság (zaj-oszlop demó), SHAP (waterfall, beeswarm, interakció); (B) AI kódoló ügynök a
+   parancssorban: CLI-alapok és -eszközök, Claude Code (módok, terv olvasása, kontextus, CLAUDE.md, memória), promptolás és az
+   5. óra házija (King County) hét promptban. A számokat az `expl.py` (`results.json`), az ábrákat a `build_assets.py` állítja elő.
+
 ## Előadások (`lectures/`)
 
 A `lessons/` mellett egy külön, top-level `lectures/` ág **más formátumú**

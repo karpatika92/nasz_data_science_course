@@ -1,0 +1,7 @@
+- Python via uv only (uv add / uv run), format with ruff. Never pip.
+- One notebook per task: notebook.ipynb, top-to-bottom reproducible, fixed seeds.
+- Split first, then look. Fit every transformation inside the training fold only.
+- Never use the test set until I say so. Never pick a model or feature on it.
+- Every number in text must be printed by code in the notebook. If you didn't run it, say "not run".
+- State each assumption in one line (`Assumed: ...`) instead of silently picking.
+- Keep it simple. Tell me what you did NOT do.
